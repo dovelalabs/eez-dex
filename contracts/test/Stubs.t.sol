@@ -5,24 +5,17 @@ import {Test} from "forge-std/Test.sol";
 import {DexBridge} from "../src/bridge/DexBridge.sol";
 import {DexBridgeL2} from "../src/bridge/DexBridgeL2.sol";
 import {Credit} from "../src/interfaces/IDexBridge.sol";
-import {SettlementRouter} from "../src/l1/SettlementRouter.sol";
 import {WindowBook} from "../src/l2/WindowBook.sol";
-import {Order, Side, WindowLeg} from "../src/types/Types.sol";
+import {Order, Side} from "../src/types/Types.sol";
 
 /// @notice Every later phase's entry point exists, compiles, and fails loudly
 /// naming its owner. These assertions are what makes the stub tree a contract
 /// rather than a placeholder: a phase that lands a partial implementation
 /// breaks its own row here, and no other phase's.
 ///
-/// `UniswapV3Adapter`'s row is gone because CT-3 is implemented; it is
-/// exercised by `test/l1/UniswapV3Adapter.t.sol` instead.
+/// Phase 2a's rows are gone because WP-1 is implemented: `SettlementRouter`
+/// and `UniswapV3Adapter` are exercised by `test/l1/` instead.
 contract StubsTest is Test {
-    function test_phase2a_settlement_router_is_a_stub() public {
-        SettlementRouter router = new SettlementRouter();
-        vm.expectRevert(bytes("not implemented: Phase 2a"));
-        router.settle(new WindowLeg[](0));
-    }
-
     function test_phase2b_window_book_is_a_stub() public {
         WindowBook book = new WindowBook();
         Order memory order;
