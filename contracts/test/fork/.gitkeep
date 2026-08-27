@@ -1,0 +1,3 @@
+TS-2's mainnet-fork suite lands here (Phase 2a). The directory is committed so
+`make contracts-fork` and foundry.toml's `fork` profile resolve in a fresh
+clone; the default profile excludes this path.

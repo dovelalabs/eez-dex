@@ -1,0 +1,24 @@
+[package]
+name = "eez-dex-settler"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.93"
+license = "MIT"
+description = "The eez-dex settler: watches the window, builds and simulates the settlement leg, submits it to the L2->L1 front, and reconciles the outcome."
+
+[[bin]]
+name = "eez-dex-settler"
+path = "src/main.rs"
+
+[lib]
+name = "eez_dex_settler"
+path = "src/lib.rs"
+
+# No dependencies yet. WP-3 adds the node's RPC and signing crates from the
+# generated settler/framework-deps.toml, which scripts/framework-pin.sh writes
+# from FRAMEWORK_COMMIT (RL-1). Until then the scaffold builds offline and
+# `cargo test` is instant.
+[dependencies]
+
+[lints.rust]
+missing_docs = "warn"

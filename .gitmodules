@@ -1,0 +1,12 @@
+[submodule "contracts/lib/forge-std"]
+	path = contracts/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std.git
+[submodule "contracts/lib/openzeppelin-contracts"]
+	path = contracts/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts.git
+# The gitlink below pins the protocol revision and MUST equal
+# FRAMEWORK_COMMIT's EEZ_CORE_PROTOCOL_REV; scripts/framework-pin.sh --check
+# fails if they diverge. Bumping it is part of the single pin commit (RL-1).
+[submodule "contracts/lib/eez-core-protocol"]
+	path = contracts/lib/eez-core-protocol
+	url = https://github.com/eez-association/eez-core-protocol.git

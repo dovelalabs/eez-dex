@@ -2,12 +2,25 @@
 eez-dex-internal/
 .idea/
 .claude/settings.local.json
-.env
 
-# Build outputs
-node_modules/
-target/
+# Secrets. .env.example is the template and is committed.
+.env
+.env.*
+!.env.example
+
+# Foundry
 out/
 cache/
+broadcast/
+
+# Rust
+target/
+
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Python
 .venv/
 __pycache__/

@@ -1,0 +1,57 @@
+# Solidity settings are fixed by RD-2 §4: solc 0.8.34, via_ir, optimizer_runs
+# 200, for bytecode parity with the framework. Remappings are generated from
+# FRAMEWORK_COMMIT by scripts/framework-pin.sh — edit the pin, not remappings.
+
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+test = "test"
+solc = "0.8.34"
+via_ir = true
+optimizer = true
+optimizer_runs = 200
+# The fork suite (TS-2) needs a real RPC and runs sequentially, never in CI.
+no_match_path = "test/fork/**"
+
+[profile.default.fuzz]
+runs = 256
+
+[profile.default.invariant]
+runs = 256
+depth = 32
+fail_on_revert = false
+
+# TS-2's mainnet-fork suite: `FOUNDRY_PROFILE=fork forge test`. ETH_RPC and
+# FORK_BLOCK come from .env (see .env.example); the block is pinned so recorded
+# gas per residual size is reproducible and can feed EC-1's parameters.
+[profile.fork]
+src = "src"
+out = "out"
+libs = ["lib"]
+test = "test"
+solc = "0.8.34"
+via_ir = true
+optimizer = true
+optimizer_runs = 200
+match_path = "test/fork/**"
+no_match_path = ""
+
+[profile.fork.fuzz]
+runs = 32
+
+# Formatting matches eez-core-protocol so shared code reads the same in both
+# trees. `forge fmt --check` is part of `make lint`.
+[profile.default.fmt]
+line_length = 120
+tab_width = 4
+bracket_spacing = false
+int_types = "long"
+multiline_func_header = "all"
+quote_style = "double"
+number_underscore = "preserve"
+
+[rpc_endpoints]
+mainnet = "${ETH_RPC}"
+
+[etherscan]
