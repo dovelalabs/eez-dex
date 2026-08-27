@@ -129,6 +129,54 @@ abstract contract SettlementRouterGenesisSuite is L1Fixture {
         assertEq(MockERC20(tokenB).balanceOf(ALICE), 0, "nothing was delivered");
     }
 
+    /// @notice The *other* bound of the same check. Selling B moves B per A up,
+    /// so this residual's impact pushes the realised average past the band's
+    /// ceiling while `P0` still sits at its centre — the only shape in which
+    /// `executionPriceX96 > maxPriceX96` is reachable, and so the only test
+    /// that pins CT-1's second check as genuinely two-sided.
+    function test_ct1_reverts_when_realised_price_is_above_the_band() public {
+        uint256 residualIn = 1 ether;
+        uint256 realised = _expectedExecutionPriceX96(Side.SELL_B_FOR_A, residualIn);
+
+        // A B-side residual is released into the router by the frame, not
+        // carried as value; the genesis form never sells B, so this leg is here
+        // for the band arithmetic alone.
+        MockERC20(tokenB).mint(address(router), residualIn);
+        WindowLeg[] memory legs = _legs(_leg(Side.SELL_B_FOR_A, residualIn, 10, _soleDistribution(ALICE, residualIn)));
+        assertGt(realised, legs[0].maxPriceX96, "the fee alone breaks a 10 bp band upward");
+        assertLe(_spotPriceX96(), legs[0].maxPriceX96, "and P0 itself is inside, so only the second check can catch it");
+
+        vm.prank(ZONE_PROXY);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                SettlementRouter.ExecutionPriceOutsideBand.selector, realised, legs[0].minPriceX96, legs[0].maxPriceX96
+            )
+        );
+        router.settle(legs);
+
+        assertEq(MockERC20(tokenA).balanceOf(ALICE), 0, "nothing was delivered");
+    }
+
+    /// @notice Both bounds are inclusive for the realised price as well as for
+    /// `P0`: a leg whose realised average lands exactly on the band's floor
+    /// settles, because CT-1 asks for the price to lie *inside* the band.
+    function test_ct1_accepts_a_realised_price_exactly_on_the_band_floor() public {
+        uint256 residualIn = 1 ether;
+        uint256 realised = _expectedExecutionPriceX96(Side.SELL_A_FOR_B, residualIn);
+        uint256 spot = _spotPriceX96();
+
+        // Floor exactly at the realised price, ceiling exactly at P0: both of
+        // CT-1's checks sit on a bound and both must pass.
+        WindowLeg[] memory legs = _legs(_bandLeg(residualIn, realised, spot, _soleDistribution(ALICE, residualIn)));
+
+        vm.deal(ZONE_PROXY, residualIn);
+        vm.prank(ZONE_PROXY);
+        WindowResult[] memory results = router.settle{value: residualIn}(legs);
+
+        assertEq(results[0].referencePriceX96, spot, "P0 on the ceiling");
+        assertEq(results[0].executionPriceX96, realised, "and the realised average on the floor");
+    }
+
     /// @notice The failure-matrix row: the pool moves in the residual's favour
     /// past a *crossed* order's limit between selection and settlement. The
     /// upper bound of the band catches it on L1, so the frame is evicted free
