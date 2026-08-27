@@ -246,8 +246,9 @@ contract WindowBook is IWindowBook, Ownable {
     error ValueMismatch();
     error InsufficientBalance();
     error TransferFailed();
-    /// @notice Nothing selectable remains, so there is nothing to settle. Raised before
-    /// any L1 call (FL-7).
+    /// @notice Nothing selectable remains — or the selection is too small to net, so it
+    /// neither crosses nor leaves a residual — and there is nothing to settle. Raised
+    /// before any L1 call (FL-7).
     error NothingToSettle();
     /// @notice `minPriceX96 > maxPriceX96`: no price satisfies every selected order.
     /// Raised before any L1 call (FL-7).
@@ -637,6 +638,13 @@ contract WindowBook is IWindowBook, Ownable {
             built.crossPot = Math.mulDiv(sel.sumA, priceX96, Q96); // B paid to the A side
             residualIn = sel.sumB - built.crossPot;
         }
+
+        // A selection whose whole volume is worth less than one unit of the other asset
+        // crosses nothing and swaps nothing: every fill would be zero and the input
+        // would leave the CT-13 ledger without ever reaching a recipient, the L1 leg or
+        // the dust bucket. Foreseeable on L2, so it reverts here rather than paying for
+        // an empty leg (FL-7, CT-13).
+        if (residualIn == 0 && built.crossPot == 0) revert NothingToSettle();
 
         (uint256 minPriceX96, uint256 maxPriceX96) = _priceBand(sel, _minBuyAmounts(sel));
         if (minPriceX96 > maxPriceX96) revert EmptyPriceBand(minPriceX96, maxPriceX96);

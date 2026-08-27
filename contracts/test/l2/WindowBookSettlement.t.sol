@@ -142,6 +142,31 @@ contract WindowBookSettlementTest is WindowBookFixture {
         _assertEscrowInvariant();
     }
 
+    /// @dev Regression (CT-13): a selection whose whole volume is worth less than one
+    /// unit of the other asset nets to nothing — no cross, no residual. Settling it once
+    /// closed every order at a zero fill and left the input inside the contract but
+    /// outside the ledger. It is foreseeable on L2, so it reverts before the L1 call.
+    function test_ct13_a_selection_too_small_to_net_reverts_before_any_l1_call() public {
+        // **[genesis]** with zone ETH as B: 1000 wei is worth less than one unit of A at
+        // 2000 B per A, so the netting rounds the whole window away.
+        BookConfig memory cfg = _defaultConfig();
+        cfg.profile = Profile.GENESIS;
+        cfg.assetB = address(0);
+        cfg.bridgeL2 = address(0);
+        _deploy(cfg);
+
+        bytes32 a = _placeEth(alice, Side.SELL_B_FOR_A, 1000, 0);
+
+        vm.prank(settler);
+        vm.expectRevert(WindowBook.NothingToSettle.selector);
+        book.settleWindow(_ids(a), uint64(block.timestamp + 24));
+
+        assertEq(proxy.callCount(), 0, "FL-7: nothing to net is foreseeable on L2");
+        assertEq(uint8(book.statusOf(a)), uint8(OrderStatus.OPEN), "the order stays open");
+        assertEq(book.escrowed(address(0)), 1000, "escrow intact");
+        assertEq(book.escrowInvariantDrift(address(0)), 0, "CT-13: nothing left the ledger");
+    }
+
     /// @dev A revert anywhere in the frame reverts the whole transaction, which is
     /// poison-evicted at compose time: no fills, no escrow moved, the window still open.
     function test_fl7_a_reverting_l1_leg_leaves_the_window_untouched() public {
