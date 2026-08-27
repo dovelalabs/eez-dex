@@ -10,10 +10,11 @@ import {SettlementRouter} from "../src/l1/SettlementRouter.sol";
 import {WindowBook} from "../src/l2/WindowBook.sol";
 import {Order, Side, WindowLeg} from "../src/types/Types.sol";
 
-/// @notice Every later phase's entry point exists, compiles, and fails loudly
-/// naming its owner. These assertions are what makes the stub tree a contract
-/// rather than a placeholder: a phase that lands a partial implementation
-/// breaks its own row here, and no other phase's.
+/// @notice Every unwritten phase's entry point exists, compiles, and fails
+/// loudly naming its owner; a phase that has landed asserts that it no longer
+/// does. These assertions are what makes the stub tree a contract rather than a
+/// placeholder: a phase that lands a partial implementation breaks its own row
+/// here, and no other phase's.
 contract StubsTest is Test {
     function test_phase2a_settlement_router_is_a_stub() public {
         SettlementRouter router = new SettlementRouter();
@@ -51,21 +52,30 @@ contract StubsTest is Test {
         book.setSettler(address(this));
     }
 
-    function test_phase2c_bridge_pair_is_a_stub() public {
+    /// @notice Phase 2c has landed, so the bridge pair's row asserts the
+    /// opposite of the others: no entry point still names an unwritten phase.
+    /// What the pair actually does is pinned by TS-B in `test/bridge/`.
+    function test_phase2c_bridge_pair_is_implemented() public {
         DexBridge bridge = new DexBridge();
-        vm.expectRevert(bytes("not implemented: Phase 2c"));
-        bridge.release(address(0), 0, address(0));
-        vm.expectRevert(bytes("not implemented: Phase 2c"));
-        bridge.deposit(address(0), 0, new Credit[](0));
+        _assertImplemented(address(bridge), abi.encodeCall(DexBridge.release, (address(0), 0, address(0))));
+        _assertImplemented(address(bridge), abi.encodeCall(DexBridge.deposit, (address(0), 0, new Credit[](0))));
 
         DexBridgeL2 bridgeL2 = new DexBridgeL2();
-        vm.expectRevert(bytes("not implemented: Phase 2c"));
-        bridgeL2.l2TokenFor(address(0));
-        vm.expectRevert(bytes("not implemented: Phase 2c"));
-        bridgeL2.credit(address(0), new Credit[](0));
-        vm.expectRevert(bytes("not implemented: Phase 2c"));
-        bridgeL2.mint(address(0), address(0), 0);
-        vm.expectRevert(bytes("not implemented: Phase 2c"));
-        bridgeL2.burn(address(0), address(0), 0);
+        _assertImplemented(address(bridgeL2), abi.encodeCall(DexBridgeL2.l2TokenFor, (address(0))));
+        _assertImplemented(address(bridgeL2), abi.encodeCall(DexBridgeL2.credit, (address(0), new Credit[](0))));
+        _assertImplemented(address(bridgeL2), abi.encodeCall(DexBridgeL2.mint, (address(0), address(0), 0)));
+        _assertImplemented(address(bridgeL2), abi.encodeCall(DexBridgeL2.burn, (address(0), address(0), 0)));
+    }
+
+    /// @dev The call may still revert — these are bare implementations with no
+    /// counterpart wired — but never with the stub's message.
+    function _assertImplemented(address target, bytes memory call) private {
+        (bool ok, bytes memory returned) = target.call(call);
+        if (ok) return;
+        assertNotEq(
+            keccak256(returned),
+            keccak256(abi.encodeWithSignature("Error(string)", "not implemented: Phase 2c")),
+            "Phase 2c entry point is still a stub"
+        );
     }
 }
