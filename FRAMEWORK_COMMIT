@@ -1,0 +1,52 @@
+# FRAMEWORK_COMMIT — the single pin of the eez framework (RD-2 RL-1)
+#
+# eez-dex consumes eez-rollup0 as a pinned dependency; it is not part of the
+# framework tree. This file is the ONLY place a framework revision is written
+# down. Three consumers are generated from it by scripts/framework-pin.sh:
+#
+#   1. contracts/remappings.txt   the Foundry remapping to the pinned
+#                                 eez-core-protocol source — never to
+#                                 eez-rollup0's devnet contracts/
+#   2. settler/framework-deps.toml  the cargo `git+rev` dependency on the
+#                                 node's RPC and signing crates
+#   3. scenario/framework-pin.env   the Kurtosis package reference
+#
+# Regenerate with `make pin`; `make pin-check` (part of `make lint`, and so of
+# `make check`) fails if a generated file has drifted from this file.
+#
+# BUMPING THIS FILE IS A DELIBERATE, SINGLE COMMIT (RL-1). It changes the
+# Solidity ABI surface, the settler's crate API, and the enclave image set at
+# once, so it never rides along with product work:
+#
+#   chore(pin): bump FRAMEWORK_COMMIT to <short sha>
+#
+# To bump: check out the new eez-rollup0 revision, read its eez-core-protocol
+# gitlink (`git ls-tree <rev> eez-core-protocol`), update both revisions below,
+# run `make pin`, then `make check`.
+
+# --- eez-rollup0 : the framework ---------------------------------------------
+EEZ_ROLLUP0_REPO=https://github.com/inertialabsxyz/eez-rollup0.git
+EEZ_ROLLUP0_COMMIT=62c4fb10530a2f3b96156a9193c348b1268bcbb7
+EEZ_ROLLUP0_DATE=2026-08-25
+EEZ_ROLLUP0_SUBJECT=fix: chained inter-state (#97)
+
+# --- eez-core-protocol : the Solidity interfaces the framework pins by gitlink -
+# Authoritative reference is the gitlink revision recorded by
+# EEZ_ROLLUP0_COMMIT. The framework tags no releases yet (RD-2 §12, ANSWERS.md
+# Q8), so EEZ_CORE_PROTOCOL_TAG records the nearest tag for provenance only;
+# it becomes an exact tag once the framework starts tagging.
+EEZ_CORE_PROTOCOL_REPO=https://github.com/eez-association/eez-core-protocol.git
+EEZ_CORE_PROTOCOL_REV=6fcc90b65063831cb7797e9fa361004064d28f9f
+EEZ_CORE_PROTOCOL_TAG=v01.01.01.00.07-76-g6fcc90b
+EEZ_CORE_PROTOCOL_DATE=2026-07-31
+
+# --- Kurtosis : the enclave package the scenario drives (UP-3) ----------------
+# UP-3 fixes the package name; until it lands the manifest still names
+# eez-association/… while the remote is inertialabsxyz/…, so the scenario
+# consumes the package by repository URL at EEZ_ROLLUP0_COMMIT.
+KURTOSIS_PACKAGE=github.com/inertialabsxyz/eez-rollup0/testing/kurtosis
+
+# --- the settler's framework crates (RD-2 §6 WP-3, SV-1) ---------------------
+# Space-separated cargo package names taken from EEZ_ROLLUP0_COMMIT: the L1 RPC
+# client and the cross-chain protocol / entry-building and signing crate.
+SETTLER_FRAMEWORK_CRATES=eez-l1 eez-protocol
