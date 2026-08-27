@@ -1,0 +1,24 @@
+{
+  "name": "@eez-dex/indexer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "eez-dex read-side gateway: the IX-2 event schema and the IX-1 stream.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./schema/index.ts"
+  },
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "test": "node --test \"test/**/*.test.ts\"",
+    "ci": "npm run lint && npm test"
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3"
+  }
+}
