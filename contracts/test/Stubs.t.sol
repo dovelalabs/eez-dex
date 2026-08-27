@@ -7,13 +7,15 @@ import {DexBridgeL2} from "../src/bridge/DexBridgeL2.sol";
 import {Credit} from "../src/interfaces/IDexBridge.sol";
 import {UniswapV3Adapter} from "../src/l1/adapters/UniswapV3Adapter.sol";
 import {SettlementRouter} from "../src/l1/SettlementRouter.sol";
-import {WindowBook} from "../src/l2/WindowBook.sol";
-import {Order, Side, WindowLeg} from "../src/types/Types.sol";
+import {Side, WindowLeg} from "../src/types/Types.sol";
 
 /// @notice Every later phase's entry point exists, compiles, and fails loudly
 /// naming its owner. These assertions are what makes the stub tree a contract
 /// rather than a placeholder: a phase that lands a partial implementation
 /// breaks its own row here, and no other phase's.
+///
+/// WP-2 has landed, so `WindowBook` and `Mirror` no longer have a row: their
+/// suite is `test/l2/`.
 contract StubsTest is Test {
     function test_phase2a_settlement_router_is_a_stub() public {
         SettlementRouter router = new SettlementRouter();
@@ -27,28 +29,6 @@ contract StubsTest is Test {
         adapter.quoteState();
         vm.expectRevert(bytes("not implemented: Phase 2a"));
         adapter.swap(Side.SELL_A_FOR_B, 1, 0);
-    }
-
-    function test_phase2b_window_book_is_a_stub() public {
-        WindowBook book = new WindowBook();
-        Order memory order;
-
-        vm.expectRevert(bytes("not implemented: Phase 2b"));
-        book.place(order);
-        vm.expectRevert(bytes("not implemented: Phase 2b"));
-        book.cancel(bytes32(0));
-        vm.expectRevert(bytes("not implemented: Phase 2b"));
-        book.reclaim(bytes32(0));
-        vm.expectRevert(bytes("not implemented: Phase 2b"));
-        book.withdraw(address(0), 0);
-        vm.expectRevert(bytes("not implemented: Phase 2b"));
-        book.quote(1, Side.SELL_A_FOR_B);
-        vm.expectRevert(bytes("not implemented: Phase 2b"));
-        book.latestPrice();
-        vm.expectRevert(bytes("not implemented: Phase 2b"));
-        book.settleWindow(new bytes32[](0), 0);
-        vm.expectRevert(bytes("not implemented: Phase 2b"));
-        book.setSettler(address(this));
     }
 
     function test_phase2c_bridge_pair_is_a_stub() public {
