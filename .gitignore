@@ -1,0 +1,13 @@
+# Private companion checkout (separate git remote) and IDE / local state
+eez-dex-internal/
+.idea/
+.claude/settings.local.json
+.env
+
+# Build outputs
+node_modules/
+target/
+out/
+cache/
+.venv/
+__pycache__/
