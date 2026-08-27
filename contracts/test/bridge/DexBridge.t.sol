@@ -261,6 +261,34 @@ contract DexBridgeTest is BridgeFixture {
         assertEq(weth.balanceOf(router), 20 ether);
     }
 
+    /// @notice Lowering a limit mid-window below what has already gone out is
+    /// a legitimate guardian-style reaction to trouble. It must leave the
+    /// limiter reporting and rejecting cleanly, not reverting on arithmetic:
+    /// the reserve read is EC-4's on-L1 audit surface and has to stay callable.
+    function test_tsb_release_rate_limit_lowered_below_usage_reports_zero() public {
+        vm.prank(address(timelockL1));
+        bridge.setTokenSupport(address(weth), true, 10 ether);
+
+        weth.mint(address(this), 100 ether);
+        _depositTo(address(weth), user, 100 ether);
+
+        vm.prank(bridge.l2BridgeProxy());
+        bridge.release(address(weth), 6 ether, router);
+
+        vm.prank(address(timelockL1));
+        bridge.setTokenSupport(address(weth), true, 4 ether);
+
+        assertEq(bridge.releasableThisWindow(address(weth)), 0, "nothing left in the tightened window");
+
+        vm.prank(bridge.l2BridgeProxy());
+        vm.expectRevert(abi.encodeWithSelector(DexBridge.ReleaseRateLimited.selector, address(weth), 1 ether, 0));
+        bridge.release(address(weth), 1 ether, router);
+
+        // The next window still refills to the new, lower limit.
+        vm.warp(block.timestamp + RATE_LIMIT_WINDOW);
+        assertEq(bridge.releasableThisWindow(address(weth)), 4 ether, "refilled to the tightened limit");
+    }
+
     /// @notice Default-deny: a supported token with no limit configured cannot
     /// release at all.
     function test_tsb_release_rate_limit_defaults_to_denied() public {

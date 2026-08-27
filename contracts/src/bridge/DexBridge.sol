@@ -263,7 +263,7 @@ contract DexBridge is IDexBridge, Initializable, UUPSUpgradeable, ReentrancyGuar
         // timestamp latitude cannot meaningfully advance it.
         // forge-lint: disable-next-line(block-timestamp)
         if (block.timestamp >= uint256(config.rateWindowStart) + rateLimitWindow) return config.releaseLimitPerWindow;
-        return config.releaseLimitPerWindow - config.releasedInWindow;
+        return _remaining(config.releaseLimitPerWindow, config.releasedInWindow);
     }
 
     // --- governance -----------------------------------------------------------
@@ -337,9 +337,17 @@ contract DexBridge is IDexBridge, Initializable, UUPSUpgradeable, ReentrancyGuar
             config.rateWindowStart = uint64(block.timestamp);
             used = 0;
         }
-        uint256 remaining = limit - used;
+        uint256 remaining = _remaining(limit, used);
         if (amount > remaining) revert ReleaseRateLimited(token, amount, remaining);
         config.releasedInWindow = used + amount;
+    }
+
+    /// @dev Governance may tighten a limit mid-window, below what has already
+    /// gone out. The window is then simply spent: the limiter must say so and
+    /// reject, never revert on the subtraction — `releasableThisWindow` is the
+    /// on-L1 audit surface EC-4 promises stays readable at any time.
+    function _remaining(uint256 limit, uint256 used) private pure returns (uint256) {
+        return limit > used ? limit - used : 0;
     }
 
     /// @dev Calls `DexBridgeL2` through its L1 proxy, deploying the proxy if it
