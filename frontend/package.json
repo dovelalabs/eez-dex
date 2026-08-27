@@ -1,0 +1,31 @@
+{
+  "name": "@eez-dex/frontend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "eez-dex trading UI and the window theater: demo, replay and observe modes.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "lint": "tsc --noEmit",
+    "test": "node --test \"test/**/*.test.ts\"",
+    "ci": "npm run lint && npm test && npm run build"
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@eez-dex/indexer": "file:../indexer",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^5.1.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.2"
+  }
+}
