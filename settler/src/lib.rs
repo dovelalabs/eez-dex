@@ -22,9 +22,11 @@
 #![forbid(unsafe_code)]
 
 pub mod abi;
+pub mod attempt;
 pub mod builder;
 pub mod config;
 pub mod math;
+pub mod metrics;
 pub mod mirror;
 pub mod reconciler;
 pub mod selection;

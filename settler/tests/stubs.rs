@@ -1,7 +1,11 @@
-//! Every Phase 3 entry point exists, compiles, and fails loudly naming its
-//! owner. `unimplemented!("Phase 3")` panics with `not implemented: Phase 3`,
-//! and this pins that: a phase that lands a partial implementation breaks its
-//! own row here and no other phase's.
+//! What is implemented, and what is still a stub naming its owner.
+//!
+//! The scaffold left every Phase 3 entry point as `unimplemented!("Phase 3")`
+//! and pinned that here, so a phase that landed a partial implementation broke
+//! its own row and no other phase's. Phase 3 is now landing those
+//! implementations, and this file is the record of how far it has got: a task
+//! still stubbed panics with `not implemented: Phase 3`, and one that is done
+//! answers instead.
 
 use std::collections::HashMap;
 use std::panic::{self, AssertUnwindSafe};
@@ -46,6 +50,7 @@ fn panic_message(f: impl FnOnce()) -> String {
         .expect("a panic message")
 }
 
+/// The four tasks are still stubs; the store they share is not.
 #[test]
 fn phase3_task_constructors_are_stubs() {
     let config = config();
@@ -62,12 +67,19 @@ fn phase3_task_constructors_are_stubs() {
         panic_message(|| {
             Reconciler::new(&config);
         }),
-        panic_message(|| {
-            StateStore::open(&config);
-        }),
     ] {
         assert_eq!(message, "not implemented: Phase 3");
     }
+}
+
+/// SV-1's state store is real: the tasks are driven over it, so nothing else
+/// in Phase 3 can be tested until it answers.
+#[test]
+fn sv1_the_shared_state_store_is_implemented() {
+    let store = StateStore::open(&config());
+    assert_eq!(store.current_window(), 0);
+    assert!(store.open_orders().is_empty(), "it opens empty (SV-5)");
+    assert!(!store.halted);
 }
 
 /// The configuration is not a stub: it is frozen and real, so a misconfigured
