@@ -291,6 +291,24 @@ impl WindowState {
     }
 }
 
+/// A window whose settlement was still unresolved when the book opened the
+/// next one (SV-4).
+///
+/// `settleWindow` advances `windowId` inside the very transaction whose
+/// outcome the reconciler has to classify, so the window the settler is
+/// reconciling and the window the book says is open are never the same one
+/// once a settlement lands. Keeping the closing window aside is what lets its
+/// outcome, its metrics and its EC-4 audit happen at all.
+#[derive(Debug, Clone)]
+pub struct SettlingWindow {
+    /// The window as it stood.
+    pub window: WindowState,
+    /// Its settlement attempt (SV-3, SV-5).
+    pub attempt: Attempt,
+    /// The selection the attempt carried, for the audit.
+    pub selection: Option<crate::selection::Selection>,
+}
+
 /// The shared state store.
 #[derive(Debug)]
 pub struct StateStore {
@@ -334,6 +352,9 @@ pub struct StateStore {
     pub omitted_orders: Vec<OrderId>,
     /// Why the last window rolled back, when one did (IX-2).
     pub rollback_cause: Option<crate::reconciler::RollbackCause>,
+    /// The closing window, when the book opened the next one before its
+    /// settlement resolved (SV-4).
+    pub settling: Option<SettlingWindow>,
     /// The configured window length, which the EC-6 meter may override.
     configured_slots: WindowSlots,
     /// `WINDOW_HALT`.
@@ -368,6 +389,7 @@ impl StateStore {
             selection: None,
             omitted_orders: Vec::new(),
             rollback_cause: None,
+            settling: None,
             configured_slots: config.window_slots,
             window_halt: config.window_halt,
             flow_threshold: config.flow_threshold,
@@ -417,9 +439,58 @@ impl StateStore {
         self.metrics
             .set(names::WINDOW_SLOTS, f64::from(slots.as_u8()));
 
+        // `settleWindow` advances `windowId` inside the transaction whose
+        // outcome is still to be classified, so the book opening a new window
+        // is the normal way a settlement stops being the current one. Losing
+        // the attempt here would lose the window's outcome, its metrics and
+        // EC-4's audit with it, so the closing window is kept aside for the
+        // reconciler instead (SV-4).
+        if self.attempt.tx_hash().is_some() && !self.attempt.is_resolved() {
+            self.settling = Some(SettlingWindow {
+                window: self.window.clone(),
+                attempt: self.attempt.clone(),
+                selection: self.selection.clone(),
+            });
+        }
+
         self.window = WindowState::opened(id, l2_block, unix, slots);
         self.attempt = Attempt::idle(id);
         self.selection = None;
+    }
+
+    /// Swaps the closing window into the live slots so the reconciler can
+    /// classify it, returning the open window to be put back (SV-4).
+    ///
+    /// `None` when there is nothing set aside, or when the live attempt is
+    /// itself still the one to reconcile — the reconciler never has two
+    /// windows in hand at once.
+    pub fn enter_settling(&mut self) -> Option<SettlingWindow> {
+        if self.attempt.tx_hash().is_some() {
+            return None;
+        }
+        let settling = self.settling.take()?;
+        let open = SettlingWindow {
+            window: std::mem::replace(&mut self.window, settling.window),
+            attempt: std::mem::replace(&mut self.attempt, settling.attempt),
+            selection: std::mem::replace(&mut self.selection, settling.selection),
+        };
+        Some(open)
+    }
+
+    /// Puts the open window back after [`StateStore::enter_settling`].
+    ///
+    /// A closing window that resolved, or that re-formed, is done with; one
+    /// still awaiting evidence goes back aside for the next tick.
+    pub fn leave_settling(&mut self, open: SettlingWindow) {
+        let unfinished = self.attempt.tx_hash().is_some() && !self.attempt.is_resolved();
+        self.settling = unfinished.then(|| SettlingWindow {
+            window: self.window.clone(),
+            attempt: self.attempt.clone(),
+            selection: self.selection.clone(),
+        });
+        self.window = open.window;
+        self.attempt = open.attempt;
+        self.selection = open.selection;
     }
 
     /// Refreshes the open window's chain facts without re-opening it.

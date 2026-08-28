@@ -460,3 +460,133 @@ fn sv1_the_settler_survives_a_chain_that_stops_answering() {
     assert_eq!(failures, 1, "the submitter said so; nobody else guessed");
     assert_eq!(front.submitted().len(), 1, "nothing was duplicated");
 }
+
+#[test]
+fn sv4_a_window_is_reconciled_after_the_book_opens_the_next_one() {
+    // Regression: `settleWindow` advances `windowId` inside the very
+    // transaction whose outcome the reconciler classifies, so on a real chain
+    // the book is always one window ahead by the time the settlement is
+    // observable. The store used to drop the attempt when it adopted the new
+    // window, and with it `windows_total`, every per-settlement metric and
+    // EC-4's audit — the reconciler could never resolve a window at all.
+    let (l2, l1, front) = chains(eight_orders());
+    let mut settler = Settler::new(&l2, &l1, &front);
+    let mut state = store();
+
+    settler.tick(&mut state);
+    let tx_hash = state.attempt.tx_hash().expect("a settlement in flight");
+    let result = state
+        .selection
+        .as_ref()
+        .and_then(|selection| selection.evaluation.as_ref())
+        .expect("a settleable selection")
+        .result;
+
+    land_the_bundle(&mut state, &l2, &l1, &front);
+    // The Sync block that carried it also filled every order and opened the
+    // next window, which is what the book does (CT-9).
+    for fill in &state
+        .selection
+        .as_ref()
+        .unwrap()
+        .evaluation
+        .as_ref()
+        .unwrap()
+        .fills
+    {
+        l2.push_event(BookEvent::Filled {
+            id: fill.id,
+            amount_out: fill.amount_out,
+            fee_amount: fill.fee_amount,
+            route_fee_amount: fill.route_fee_amount,
+            impact_amount: fill.impact_amount,
+        });
+    }
+    l2.push_event(BookEvent::Settled {
+        window_id: 0,
+        result,
+        tx_hash,
+        l2_block: 6,
+        unix: 1_800_000_012,
+    });
+    l2.set_window(1, 1, 6, result.post, 1_800_000_012);
+    l2.set_open_orders(Vec::new());
+    l2.set_safe_block(12);
+
+    settler.tick(&mut state);
+
+    assert_eq!(state.window.id, 1, "the book moved on");
+    assert_eq!(
+        state.metrics.window_count("settled"),
+        1.0,
+        "the closing window's outcome is still recorded (SV-4)"
+    );
+    assert_eq!(state.metrics.get(names::FILLS_PER_SETTLEMENT), 8.0);
+    assert!(state.metrics.get(names::GAS_PER_FILL_WEI) > 0.0);
+    assert!(state.metrics.get(names::IMPACT_BPS) >= 0.0);
+    assert_eq!(
+        state.metrics.get(names::SELECTION_OMITTED_TOTAL),
+        0.0,
+        "EC-4's audit ran, and found nothing omitted"
+    );
+    assert!(state.metrics.violations().is_empty());
+    assert!(
+        state.settling.is_none(),
+        "a resolved window is not carried into the next one"
+    );
+    assert_eq!(front.submitted().len(), 1, "and still exactly one");
+}
+
+#[test]
+fn ec4_an_order_the_settler_omitted_is_caught_after_the_book_moves_on() {
+    // The audit that matters is the one on the live path: the settler settled
+    // seven of eight fillable orders, the book opened window 1, and the eighth
+    // must still be named (EC-4).
+    let (l2, l1, front) = chains(eight_orders());
+    let mut settler = Settler::new(&l2, &l1, &front);
+    let mut state = store();
+    settler.tick(&mut state);
+
+    let full = state.attempt.selection().to_vec();
+    assert_eq!(full.len(), 8);
+    let starved = full[7];
+
+    // Rewrite the attempt to the adversary's selection, keeping the
+    // transaction the front holds.
+    let tx_hash = state.attempt.tx_hash().unwrap();
+    let deadline = state.attempt_deadline().unwrap();
+    state.attempt.reform();
+    state.attempt.build(full[..7].to_vec()).unwrap();
+    state
+        .attempt
+        .submit(tx_hash, full[..7].to_vec(), 1_800_000_000, deadline)
+        .unwrap();
+
+    land_the_bundle(&mut state, &l2, &l1, &front);
+    l2.push_event(BookEvent::Settled {
+        window_id: 0,
+        result: state
+            .selection
+            .as_ref()
+            .unwrap()
+            .evaluation
+            .as_ref()
+            .unwrap()
+            .result,
+        tx_hash,
+        l2_block: 6,
+        unix: 1_800_000_012,
+    });
+    l2.set_window(1, 1, 6, fixture_mirror(), 1_800_000_012);
+    l2.set_safe_block(12);
+
+    settler.tick(&mut state);
+
+    assert_eq!(state.metrics.get(names::SELECTION_OMITTED_TOTAL), 1.0);
+    assert_eq!(state.omitted_orders, vec![starved]);
+    assert_eq!(
+        state.metrics.violations(),
+        vec![names::SELECTION_OMITTED_TOTAL],
+        "the metric that must be zero is not"
+    );
+}

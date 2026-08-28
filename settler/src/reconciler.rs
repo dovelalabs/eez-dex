@@ -209,8 +209,23 @@ pub fn audit_selection(
         tick: result.post.tick,
     };
 
+    // The candidate set is the one the boundary saw: the orders still open,
+    // plus the ones this settlement filled. Auditing over the leftovers alone
+    // would recompute a different leg from the one that settled, and could
+    // call an order fillable that only the pooled impact of the whole
+    // selection put outside its limit.
+    let mut candidates = state.open_orders();
+    for id in submitted {
+        if !candidates.iter().any(|order| order.id == *id)
+            && let Some(tracked) = state.orders.get(id)
+        {
+            candidates.push(tracked.order.clone());
+        }
+    }
+    candidates.sort_by_key(|order| order.id);
+
     let recomputed = select_fillable(
-        &state.open_orders(),
+        &candidates,
         SelectionInputs {
             params,
             mirror: mirror_state,
@@ -374,6 +389,23 @@ impl<R2: L2Reader, R1: L1Reader, F: Front> Task for Reconciler<R2, R1, F> {
     }
 
     fn tick(&mut self, state: &mut StateStore) -> Result<(), TaskError> {
+        // `settleWindow` advances `windowId` inside the transaction being
+        // reconciled, so by the time the outcome is observable the book has
+        // opened the next window and the store has moved on. The closing
+        // window is kept aside for exactly this (SV-4).
+        if let Some(open) = state.enter_settling() {
+            let outcome = self.reconcile(state);
+            state.leave_settling(open);
+            return outcome;
+        }
+        self.reconcile(state)
+    }
+}
+
+impl<R2: L2Reader, R1: L1Reader, F: Front> Reconciler<R2, R1, F> {
+    /// One window's reconciliation, over whichever window is in the live
+    /// slots.
+    fn reconcile(&mut self, state: &mut StateStore) -> Result<(), TaskError> {
         let Some(tx_hash) = state.attempt.tx_hash() else {
             return Ok(());
         };
