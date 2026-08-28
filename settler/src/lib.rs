@@ -27,10 +27,14 @@ pub mod config;
 pub mod math;
 pub mod mirror;
 pub mod reconciler;
+pub mod selection;
 pub mod state;
 pub mod submitter;
+#[cfg(test)]
+pub mod testkit;
 pub mod types;
 pub mod watcher;
+pub mod window;
 
 pub use config::{Config, ConfigError, FeeModel, Profile, RouteFeeModel, WindowSlots};
 
