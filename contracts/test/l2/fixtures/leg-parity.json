@@ -1,0 +1,54 @@
+{
+  "description": "TS-1 leg parity. WP-2 builds the leg on-chain (CT-9) and WP-3's window builder simulates the same one off-chain (SV-2). Identical inputs must produce this identical WindowLeg on both sides. WP-2 asserts it in test_ts1_leg_parity_fixture; WP-3 asserts its builder against this file.",
+  "requirements": ["CT-9", "SV-2", "TS-1"],
+  "orientation": "A is the pool's token0 and B its token1; prices are B per A in Q96.",
+  "profile": "full",
+  "config": {
+    "feeMode": "BPS",
+    "feeBps": 1,
+    "routeFeeModel": "absorb",
+    "routeFeeWei": "0",
+    "windowSlots": 1
+  },
+  "mirror": {
+    "sqrtPriceX96": "3543191142285914205922034323214",
+    "liquidity": "44721359549995793928183",
+    "tick": 0,
+    "spotPriceX96": "158456325028528675187087900671953",
+    "comment": "2000 B per A, in a pool of 1000 A and 2,000,000 B."
+  },
+  "orders": [
+    {
+      "owner": "alice",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "10000000000000000000",
+      "minBuyAmount": "19000000000000000000000",
+      "feeAmount": "1000000000000000",
+      "netIn": "9999000000000000000"
+    },
+    {
+      "owner": "bob",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "10000000000000000000000",
+      "minBuyAmount": "4900000000000000000",
+      "feeAmount": "1000000000000000000",
+      "netIn": "9999000000000000000000"
+    }
+  ],
+  "expectedLeg": {
+    "windowId": 0,
+    "residualSide": "SELL_A_FOR_B",
+    "residualIn": "4999500000000000000",
+    "minPriceX96": "150548563633465587986532158854286",
+    "maxPriceX96": "161673958567373288081193052940747",
+    "deadline": 1800000024,
+    "distribution": "0x"
+  },
+  "derivation": {
+    "crossedInA": "4999500000000000000",
+    "residualIn": "netInA - floor(netInB * 2**96 / spotPriceX96)",
+    "minPriceX96": "ceil(minBuyAmountA * 2**96 / netInA) — the tightest sell-side limit, widened by that side's fee because it is derived from netIn",
+    "maxPriceX96": "floor(netInB * 2**96 / minBuyAmountB) — the tightest buy-side limit",
+    "distribution": "empty in the full form; [genesis] abi.encode(Credit[]) of (recipient, netIn) over the residual side"
+  }
+}
