@@ -143,6 +143,13 @@ mod generated {
         /// `SettlementRouter` on L1 — the leg the builder simulates (CT-1, CT-2).
 
         interface ISettlementRouterAbi {
+            /// `block.timestamp > leg.deadline` on L1 (CT-1).
+            error Expired();
+            /// `P0`, read in-leg before the swap, is outside the band (CT-1).
+            error ReferencePriceOutsideBand(uint256 priceX96, uint256 minPriceX96, uint256 maxPriceX96);
+            /// The swap's realised average price is outside the band (CT-1).
+            error ExecutionPriceOutsideBand(uint256 priceX96, uint256 minPriceX96, uint256 maxPriceX96);
+
             function settle(WindowLeg[] legs) external payable returns (WindowResult[] results);
         }
 

@@ -621,7 +621,12 @@ impl LegSimulator for L1Rpc {
             .client
             .runtime
             .block_on(async { self.client.provider.call(request).await })
-            .map_err(|error| classify_revert(&error.to_string(), leg))?;
+            .map_err(|error| {
+                let decoded = error
+                    .as_error_resp()
+                    .and_then(|payload| payload.as_decoded_interface_error::<RouterError>());
+                classify_revert(decoded, &error.to_string(), leg)
+            })?;
 
         let results = abi::ISettlementRouterAbi::settleCall::abi_decode_returns(&returned)
             .map_err(|e| SimulationError::Unavailable(e.to_string()))?;
@@ -632,27 +637,65 @@ impl LegSimulator for L1Rpc {
     }
 }
 
+/// `SettlementRouter`'s own errors, as `sol!` generates the set (CT-1).
+type RouterError = abi::ISettlementRouterAbi::ISettlementRouterAbiErrors;
+
 /// Turns a revert from the simulated leg into the reason the selection loop
 /// can act on.
 ///
-/// The router's band errors are what FL-8 selects against, so they are matched
-/// by name; anything else is `Unavailable`, which stops the settler rather
-/// than making it drop orders to chase a revert it does not understand.
-fn classify_revert(message: &str, leg: &WindowLeg) -> SimulationError {
+/// The router's band errors are what FL-8 selects against, and **which end of
+/// the band was missed decides which order relieves it**: a price under the
+/// floor is relieved only by dropping the sell-side order that set the floor,
+/// and one over the ceiling only by dropping the buy-side order that set the
+/// ceiling. The error carries the price it rejected, so the end is read from
+/// the revert data rather than guessed — a JSON-RPC error's *message* is
+/// `execution reverted` and the ABI-encoded error lives in its `data` field,
+/// never in its text. Anything the settler cannot attribute is `Unavailable`,
+/// which stops it rather than making it drop orders to chase a revert it does
+/// not understand.
+fn classify_revert(
+    decoded: Option<RouterError>,
+    message: &str,
+    leg: &WindowLeg,
+) -> SimulationError {
+    match decoded {
+        Some(RouterError::ReferencePriceOutsideBand(band)) => {
+            return if band.priceX96 < band.minPriceX96 {
+                SimulationError::ReferenceBelowBand {
+                    price: band.priceX96,
+                    min: band.minPriceX96,
+                }
+            } else {
+                SimulationError::ReferenceAboveBand {
+                    price: band.priceX96,
+                    max: band.maxPriceX96,
+                }
+            };
+        }
+        Some(RouterError::ExecutionPriceOutsideBand(band)) => {
+            return if band.priceX96 < band.minPriceX96 {
+                SimulationError::ExecutionBelowBand {
+                    price: band.priceX96,
+                    min: band.minPriceX96,
+                }
+            } else {
+                SimulationError::ExecutionAboveBand {
+                    price: band.priceX96,
+                    max: band.maxPriceX96,
+                }
+            };
+        }
+        Some(RouterError::Expired(_)) => return SimulationError::Expired,
+        None => {}
+    }
+
+    // No revert data — an endpoint that returns the error's name and nothing
+    // else. The name is all there is, so the end of the band cannot be read
+    // and the leg's own bounds are reported instead.
     if message.contains("ReferencePriceOutsideBand") {
-        return if message.contains("Below") {
-            SimulationError::ReferenceBelowBand {
-                price: U256::ZERO,
-                min: leg.min_price_x96,
-            }
-        } else {
-            // The router does not say which end; the band does. A reference
-            // price the leg rejected is outside one of the two bounds, and the
-            // selection loop only needs to know which to relieve.
-            SimulationError::ReferenceAboveBand {
-                price: U256::ZERO,
-                max: leg.max_price_x96,
-            }
+        return SimulationError::ReferenceAboveBand {
+            price: U256::ZERO,
+            max: leg.max_price_x96,
         };
     }
     if message.contains("ExecutionPriceOutsideBand") {
@@ -879,20 +922,113 @@ mod tests {
         };
         assert!(matches!(
             classify_revert(
+                None,
                 "execution reverted: ExecutionPriceOutsideBand(1,10,20)",
                 &leg
             ),
             SimulationError::ExecutionBelowBand { .. }
         ));
         assert!(matches!(
-            classify_revert("execution reverted: Expired()", &leg),
+            classify_revert(None, "execution reverted: Expired()", &leg),
             SimulationError::Expired
         ));
         // A revert the settler does not understand stops it rather than making
         // it drop orders to chase something it cannot attribute.
         assert!(matches!(
-            classify_revert("execution reverted: NotZone(0x00)", &leg),
+            classify_revert(None, "execution reverted: NotZone(0x00)", &leg),
             SimulationError::Unavailable(_)
+        ));
+    }
+
+    #[test]
+    fn fl8_the_end_of_the_band_is_read_from_the_reverts_data_not_its_text() {
+        // Regression: a JSON-RPC error's message is `execution reverted` and
+        // the ABI-encoded error is in its `data` field, so classifying by text
+        // read *every* band revert as the same end. A price under the floor
+        // then dropped buy-side orders, which cannot relieve a floor, and the
+        // selection loop stalled instead of rolling the orders FL-8 says roll.
+        let leg = WindowLeg {
+            window_id: 0,
+            residual_side: crate::types::Side::SellAForB,
+            residual_in: U256::from(1u8),
+            min_price_x96: U256::from(10u8),
+            max_price_x96: U256::from(20u8),
+            deadline: 1,
+            distribution: Vec::new(),
+        };
+        let message = "server returned an error response: error code 3: \
+                       execution reverted, data: \"0x…\"";
+
+        let below = RouterError::ReferencePriceOutsideBand(
+            abi::ISettlementRouterAbi::ReferencePriceOutsideBand {
+                priceX96: U256::from(9u8),
+                minPriceX96: U256::from(10u8),
+                maxPriceX96: U256::from(20u8),
+            },
+        );
+        assert_eq!(
+            classify_revert(Some(below), message, &leg),
+            SimulationError::ReferenceBelowBand {
+                price: U256::from(9u8),
+                min: U256::from(10u8),
+            },
+            "a price under the floor is relieved by moving the floor"
+        );
+
+        let above = RouterError::ReferencePriceOutsideBand(
+            abi::ISettlementRouterAbi::ReferencePriceOutsideBand {
+                priceX96: U256::from(21u8),
+                minPriceX96: U256::from(10u8),
+                maxPriceX96: U256::from(20u8),
+            },
+        );
+        assert_eq!(
+            classify_revert(Some(above), message, &leg),
+            SimulationError::ReferenceAboveBand {
+                price: U256::from(21u8),
+                max: U256::from(20u8),
+            }
+        );
+
+        let executed_above = RouterError::ExecutionPriceOutsideBand(
+            abi::ISettlementRouterAbi::ExecutionPriceOutsideBand {
+                priceX96: U256::from(21u8),
+                minPriceX96: U256::from(10u8),
+                maxPriceX96: U256::from(20u8),
+            },
+        );
+        assert_eq!(
+            classify_revert(Some(executed_above), message, &leg),
+            SimulationError::ExecutionAboveBand {
+                price: U256::from(21u8),
+                max: U256::from(20u8),
+            },
+            "the realised price has two ends too (CT-1)"
+        );
+    }
+
+    #[test]
+    fn ct1_the_routers_errors_decode_from_their_abi_encoding() {
+        // The settler reads the band from the revert data, so the selectors it
+        // decodes must be the router's own. Round-tripping through the ABI is
+        // what pins that to the contract rather than to this file.
+        use alloy_sol_types::{SolError, SolInterface};
+
+        let encoded = abi::ISettlementRouterAbi::ReferencePriceOutsideBand {
+            priceX96: U256::from(1u8),
+            minPriceX96: U256::from(2u8),
+            maxPriceX96: U256::from(3u8),
+        }
+        .abi_encode();
+        assert!(matches!(
+            RouterError::abi_decode(&encoded),
+            Ok(RouterError::ReferencePriceOutsideBand(_))
+        ));
+
+        let expired = abi::ISettlementRouterAbi::Expired {}.abi_encode();
+        assert!(matches!(
+            RouterError::abi_decode(&expired),
+            Ok(RouterError::Expired(_))
         ));
     }
 
