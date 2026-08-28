@@ -5,32 +5,16 @@ import {Test} from "forge-std/Test.sol";
 import {DexBridge} from "../src/bridge/DexBridge.sol";
 import {DexBridgeL2} from "../src/bridge/DexBridgeL2.sol";
 import {Credit} from "../src/interfaces/IDexBridge.sol";
-import {UniswapV3Adapter} from "../src/l1/adapters/UniswapV3Adapter.sol";
-import {SettlementRouter} from "../src/l1/SettlementRouter.sol";
-import {Side, WindowLeg} from "../src/types/Types.sol";
 
 /// @notice Every later phase's entry point exists, compiles, and fails loudly
 /// naming its owner. These assertions are what makes the stub tree a contract
 /// rather than a placeholder: a phase that lands a partial implementation
 /// breaks its own row here, and no other phase's.
 ///
-/// WP-2 has landed, so `WindowBook` and `Mirror` no longer have a row: their
-/// suite is `test/l2/`.
+/// WP-1 and WP-2 are implemented, so their rows are gone: `SettlementRouter`
+/// and `UniswapV3Adapter` are exercised by `test/l1/`, `WindowBook` and
+/// `Mirror` by `test/l2/`. WP-B is the last row standing.
 contract StubsTest is Test {
-    function test_phase2a_settlement_router_is_a_stub() public {
-        SettlementRouter router = new SettlementRouter();
-        vm.expectRevert(bytes("not implemented: Phase 2a"));
-        router.settle(new WindowLeg[](0));
-    }
-
-    function test_phase2a_uniswap_adapter_is_a_stub() public {
-        UniswapV3Adapter adapter = new UniswapV3Adapter();
-        vm.expectRevert(bytes("not implemented: Phase 2a"));
-        adapter.quoteState();
-        vm.expectRevert(bytes("not implemented: Phase 2a"));
-        adapter.swap(Side.SELL_A_FOR_B, 1, 0);
-    }
-
     function test_phase2c_bridge_pair_is_a_stub() public {
         DexBridge bridge = new DexBridge();
         vm.expectRevert(bytes("not implemented: Phase 2c"));
