@@ -79,9 +79,13 @@ impl<S: LegSimulator> Task for WindowBuilder<S> {
         if !state.at_slot_boundary() {
             return Ok(());
         }
-        // One settlement per window. While the front holds one, or one is
-        // owed its single resubmission, there is nothing to select (SV-3).
-        if state.attempt.is_in_flight() || state.attempt.is_resolved() {
+        // One settlement per window. While the front holds one, while one is
+        // owed its single resubmission, or once the window has resolved, there
+        // is nothing to select (SV-3, SV-5).
+        if state.attempt.is_in_flight()
+            || state.attempt.is_known_dropped()
+            || state.attempt.is_resolved()
+        {
             return Ok(());
         }
 

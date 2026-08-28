@@ -243,12 +243,26 @@ impl<R2: L2Reader, F: Front, S: SettlementSigner> Task for Submitter<R2, F, S> {
         let ids = match &submission {
             Submission::Settlement { ids } => ids.clone(),
             // CT-6: a leg with zero residual that only reads and returns pool
-            // state. `settleWindow` builds it from the ids it is given, so an
-            // empty list is the only way to ask for one.
+            // state. `settleWindow` builds the leg from the ids it is given,
+            // so an empty list is the only way to ask for one.
+            //
+            // KNOWN GAP: `WindowBook.settleWindow` reverts `NothingToSettle`
+            // on an empty selection today, so this cannot land until WP-2
+            // gains CT-6's zero-residual path. The revert is before any L1
+            // call — L2 gas, no L1 gas, escrow untouched, window still open —
+            // and it is raised against Phase 2b rather than worked around
+            // here (RL-2). See settler/README.md, "Known gaps".
             Submission::Refresh => Vec::new(),
         };
 
         let settler = self.signer.address();
+        // A settlement the front still holds is never resubmitted (SV-5). The
+        // attempt state says so within one process; across a restart the store
+        // has rebuilt from logs and has no memory of the transaction, so the
+        // front is asked directly. Nothing about this is a timeout.
+        if self.front.holds_from(settler)? {
+            return Ok(());
+        }
         let nonce = self.l2.nonce(settler)?;
         let fees = self.l2.gas_params(self.l1_gas)?;
         let deadline = self.deadline(state.l1.timestamp);
@@ -435,10 +449,12 @@ mod tests {
         submitter.tick(&mut state).unwrap();
         let first = front.submitted()[0];
 
-        // Three consecutive relay drops evict it (SV-5).
+        // Three consecutive relay drops evict it (SV-5). The front no longer
+        // holds it, which is what a drop means.
         for _ in 0..3 {
             state.attempt.note_relay_drop();
         }
+        front.set_holds_from_settler(false);
         assert!(state.attempt.owes_resubmission());
 
         // The resubmission takes a fresh nonce from the chain rather than
@@ -452,6 +468,7 @@ mod tests {
         for _ in 0..3 {
             state.attempt.note_relay_drop();
         }
+        front.set_holds_from_settler(false);
         assert!(!state.attempt.owes_resubmission());
         assert_eq!(
             submitter.decide(&state),

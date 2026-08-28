@@ -15,9 +15,14 @@
 //!   enforces every limit (CT-9, CT-10). What the settler owes is liveness and
 //!   fairness, and both are observable on-chain (EC-4).
 //!
-//! Only [`config`] is frozen at the scaffold. The task framework below is a
-//! Phase 3 stub and Phase 3 may reshape it; every body is
-//! `unimplemented!("Phase 3")`, which panics with `not implemented: Phase 3`.
+//! [`config`] is frozen at the scaffold: A.5's keys and metric names live
+//! there and nowhere else, because WP-4 asserts on those strings and WP-5
+//! reads them.
+//!
+//! The [`Task`] trait, [`state::StateStore`] and [`attempt::Attempt`] are
+//! written **product-agnostic** — a task trait, a state store, an attempt
+//! state machine — so a second product could extract them later. No such
+//! extraction is in scope (SV-1, RD-2 §12).
 
 #![forbid(unsafe_code)]
 
@@ -32,6 +37,7 @@ pub mod mirror;
 pub mod reconciler;
 pub mod selection;
 pub mod state;
+pub mod stream;
 pub mod submitter;
 #[cfg(any(test, feature = "testkit"))]
 pub mod testkit;
@@ -42,8 +48,9 @@ pub mod window;
 pub use config::{Config, ConfigError, FeeModel, Profile, RouteFeeModel, WindowSlots};
 pub use selection::Selection;
 
-/// Why a task tick failed. Phase 3 owns the variants; a task that cannot make
-/// progress says so rather than guessing.
+/// Why a task tick failed. A task that cannot make progress says so rather
+/// than guessing — an unanswered simulation is never a window where everyone
+/// rolled (SV-2).
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum TaskError {

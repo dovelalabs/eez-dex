@@ -216,6 +216,15 @@ pub trait Front {
     fn submit(&self, signed: &[u8]) -> Result<B256, ChainError>;
     /// What the front says about a transaction it was given.
     fn status(&self, tx_hash: B256) -> Result<FrontStatus, ChainError>;
+    /// Whether the front is holding **any** settlement from `settler`.
+    ///
+    /// This is what makes a restart safe (SV-5). The attempt state lives in
+    /// the store and the store rebuilds from logs, so a settler that came back
+    /// mid-window has no memory of the transaction it signed — but the front
+    /// does, and one it still holds must never be resubmitted. Asking the
+    /// front is evidence; assuming from elapsed time would be the guess SV-5
+    /// forbids.
+    fn holds_from(&self, settler: Address) -> Result<bool, ChainError>;
 }
 
 /// Offline signing of the one settlement transaction per window (SV-3).
@@ -700,6 +709,35 @@ impl Front for FrontRpc {
                 None => FrontStatus::Held,
             },
         })
+    }
+
+    /// A pending nonce ahead of the latest one means the front is holding a
+    /// transaction from this key. It is the observable every node offers, and
+    /// it answers the only question the submitter has to ask before signing.
+    fn holds_from(&self, settler: Address) -> Result<bool, ChainError> {
+        let pending = self
+            .client
+            .runtime
+            .block_on(async {
+                self.client
+                    .provider
+                    .get_transaction_count(settler)
+                    .pending()
+                    .await
+            })
+            .map_err(|e| ChainError::Rpc(e.to_string()))?;
+        let latest = self
+            .client
+            .runtime
+            .block_on(async {
+                self.client
+                    .provider
+                    .get_transaction_count(settler)
+                    .latest()
+                    .await
+            })
+            .map_err(|e| ChainError::Rpc(e.to_string()))?;
+        Ok(pending > latest)
     }
 }
 

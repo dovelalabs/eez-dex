@@ -6,8 +6,6 @@
 //! start: **window state rebuilds from L2 logs** (SV-5), and the log scan does
 //! not care whether this process saw them the first time.
 
-use alloy_primitives::Address;
-
 use crate::chain::{BookEvent, L1Reader, L2Reader};
 use crate::state::{OrderPhase, StateStore, TrackedOrder};
 use crate::{Task, TaskError};
@@ -162,16 +160,12 @@ impl From<crate::chain::ChainError> for TaskError {
     }
 }
 
-/// The assets a book trades, for the CT-13 sweep.
-pub fn book_assets(asset_a: Address, asset_b: Address) -> [Address; 2] {
-    [asset_a, asset_b]
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::testkit::{FakeL1, FakeL2, fixture_mirror, order, store, wei};
     use crate::types::{OrderId, Side};
+    use alloy_primitives::Address;
 
     #[test]
     fn sv5_window_state_rebuilds_from_l2_logs() {

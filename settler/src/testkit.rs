@@ -421,6 +421,10 @@ impl FakeL1 {
     }
 
     /// The simulator the builder runs against this head (SV-2).
+    ///
+    /// A snapshot: a test that moves the pool afterwards must take a new one.
+    /// [`FakeL1`] itself is the live simulator, and that is what the tasks
+    /// take, so mid-window drift reaches them the way it reaches `L1Rpc`.
     pub fn simulator(&self) -> crate::selection::MirrorSimulator {
         let inner = self.0.borrow();
         crate::selection::MirrorSimulator {
@@ -428,6 +432,15 @@ impl FakeL1 {
             l1_block: inner.head.number,
             l1_timestamp: inner.head.timestamp,
         }
+    }
+}
+
+impl crate::selection::LegSimulator for FakeL1 {
+    fn simulate(
+        &self,
+        leg: &crate::types::WindowLeg,
+    ) -> Result<crate::types::WindowResult, crate::selection::SimulationError> {
+        self.simulator().simulate(leg)
     }
 }
 
@@ -454,6 +467,7 @@ struct FakeFrontInner {
     status: BTreeMap<B256, FrontStatus>,
     default_status: FrontStatus,
     fail: Option<String>,
+    holds: bool,
 }
 
 /// An L2->L1 front that records what it was given.
@@ -467,6 +481,7 @@ impl Default for FakeFront {
             status: BTreeMap::new(),
             default_status: FrontStatus::Held,
             fail: None,
+            holds: false,
         })))
     }
 }
@@ -497,6 +512,12 @@ impl FakeFront {
     pub fn fail_with(&self, reason: &str) {
         self.0.borrow_mut().fail = Some(reason.to_string());
     }
+
+    /// Sets whether the front is holding a settlement from the settler key —
+    /// what a restarted settler asks before signing anything (SV-5).
+    pub fn set_holds_from_settler(&self, holds: bool) {
+        self.0.borrow_mut().holds = holds;
+    }
 }
 
 impl Front for FakeFront {
@@ -507,6 +528,7 @@ impl Front for FakeFront {
         }
         let tx_hash = alloy_primitives::keccak256(signed);
         inner.submitted.push(tx_hash);
+        inner.holds = true;
         Ok(tx_hash)
     }
 
@@ -517,6 +539,10 @@ impl Front for FakeFront {
             .get(&tx_hash)
             .copied()
             .unwrap_or(inner.default_status))
+    }
+
+    fn holds_from(&self, _settler: Address) -> Result<bool, ChainError> {
+        Ok(self.0.borrow().holds)
     }
 }
 
