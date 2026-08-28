@@ -52,11 +52,52 @@ contracts: deps
 lint-contracts: deps
 	cd contracts && forge fmt --check && forge build --sizes
 
-# Mainnet-fork suite (TS-2). Not part of `check`: it needs a real RPC and runs
-# sequentially. Copy .env.example to .env and set ETH_RPC and FORK_BLOCK.
+# Mainnet-fork suite (TS-2, TS-B). Not part of `check`: it needs a real RPC and
+# runs sequentially. Copy .env.example to .env and set ETH_RPC and FORK_BLOCK.
+#
+# `forge test` exits 0 both when it discovers no tests and when every case
+# reports [SKIP], so the bare command cannot gate a PR (RL-4). This target adds
+# the two assertions it is missing:
+#
+#   * ETH_RPC must be set. Chosen over "fail on any skip" as the primary guard
+#     because it names the cause before a minute is spent on the network, and an
+#     unset RPC is the only reason a fork case skips today (DexBridgeFork's
+#     setUp returns early). The skip assertion below backstops any future one.
+#   * the run must print a summary, pass at least FORK_MIN_TESTS, and skip
+#     none — so a filter or path that stops matching goes red instead of
+#     quietly reporting success having proved nothing.
+#
+# FORK_TEST_PATH is overridable so the guard itself can be exercised:
+#   make contracts-fork FORK_TEST_PATH='test/no-such-suite/**'   # must exit 1
+FORK_TEST_PATH ?= test/fork/**
+FORK_MIN_TESTS ?= 9
+
 .PHONY: contracts-fork
 contracts-fork: deps
-	cd contracts && FOUNDRY_PROFILE=fork forge test --match-path 'test/fork/**'
+	@if [ -z "$${ETH_RPC:-}" ] && [ -f .env ]; then set -a; . ./.env; set +a; fi; \
+	  if [ -z "$${ETH_RPC:-}" ]; then \
+	    echo "make: ETH_RPC is unset. The TS-B rows would report [SKIP] and this"; \
+	    echo "make: gate would pass having proved nothing. Copy .env.example to"; \
+	    echo "make: .env, or export ETH_RPC (https://eth.drpc.org works keyless)."; \
+	    exit 1; \
+	  fi; \
+	  log="$$(mktemp)"; trap 'rm -f "$$log" "$$log.status"' EXIT; \
+	  ( cd contracts && FOUNDRY_PROFILE=fork forge test --match-path '$(FORK_TEST_PATH)'; \
+	    echo $$? >"$$log.status" ) 2>&1 | tee "$$log"; \
+	  status="$$(cat "$$log.status")"; \
+	  summary="$$(grep -E '^Ran .*tests? passed,' "$$log" | tail -1)"; \
+	  passed="$$(printf '%s' "$$summary" | sed -n 's/.*: \([0-9][0-9]*\) tests* passed.*/\1/p')"; \
+	  skipped="$$(printf '%s' "$$summary" | sed -n 's/.*, \([0-9][0-9]*\) skipped.*/\1/p')"; \
+	  if [ "$$status" -ne 0 ]; then exit "$$status"; fi; \
+	  if [ -z "$$passed" ]; then \
+	    echo "make: the fork gate discovered no tests - it proved nothing (RL-4)"; exit 1; \
+	  fi; \
+	  if [ "$$passed" -lt $(FORK_MIN_TESTS) ]; then \
+	    echo "make: the fork gate passed $$passed tests, expected at least $(FORK_MIN_TESTS) (TS-2, TS-B)"; exit 1; \
+	  fi; \
+	  if [ "$${skipped:-0}" -ne 0 ]; then \
+	    echo "make: the fork gate skipped $$skipped tests - a skipped row is not a passing one"; exit 1; \
+	  fi
 
 # ---------------------------------------------------------------- settler ---
 
