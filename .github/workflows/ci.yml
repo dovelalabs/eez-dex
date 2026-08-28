@@ -118,6 +118,16 @@ jobs:
           key: foundry-${{ env.FOUNDRY_VERSION }}-${{ hashFiles('contracts/foundry.toml', 'contracts/remappings.txt', 'contracts/src/**/*.sol', 'contracts/test/**/*.sol') }}
           restore-keys: foundry-${{ env.FOUNDRY_VERSION }}-
 
+      # Both blocks are pinned, so the fetched storage is immutable and safe to
+      # keep between runs. It also keeps the keyless fallback endpoint viable:
+      # a warm cache re-reads from disk instead of re-fetching every slot.
+      - name: Cache Foundry's RPC data for the pinned blocks
+        uses: actions/cache@v4
+        with:
+          path: ~/.foundry/cache/rpc
+          key: foundry-rpc-${{ hashFiles('contracts/test/fork/**/*.sol') }}
+          restore-keys: foundry-rpc-
+
       - name: Run the mainnet-fork suites
         # The keyless fallback keeps the job running on a fork of the
         # repository, where the secret is not available.

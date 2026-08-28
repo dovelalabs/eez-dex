@@ -67,6 +67,11 @@ lint-contracts: deps
 #     none — so a filter or path that stops matching goes red instead of
 #     quietly reporting success having proved nothing.
 #
+# `--threads 1` runs the suites sequentially, as .claude/rules/testing.md says
+# this suite does: two suites forking in parallel put enough concurrent load on
+# the keyless endpoint to draw HTTP 408s that are an endpoint limit, never a
+# contract failure.
+#
 # FORK_TEST_PATH is overridable so the guard itself can be exercised:
 #   make contracts-fork FORK_TEST_PATH='test/no-such-suite/**'   # must exit 1
 FORK_TEST_PATH ?= test/fork/**
@@ -82,7 +87,7 @@ contracts-fork: deps
 	    exit 1; \
 	  fi; \
 	  log="$$(mktemp)"; trap 'rm -f "$$log" "$$log.status"' EXIT; \
-	  ( cd contracts && FOUNDRY_PROFILE=fork forge test --match-path '$(FORK_TEST_PATH)'; \
+	  ( cd contracts && FOUNDRY_PROFILE=fork forge test --match-path '$(FORK_TEST_PATH)' --threads 1; \
 	    echo $$? >"$$log.status" ) 2>&1 | tee "$$log"; \
 	  status="$$(cat "$$log.status")"; \
 	  summary="$$(grep -E '^Ran .*tests? passed,' "$$log" | tail -1)"; \
