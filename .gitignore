@@ -1,5 +1,5 @@
-# Private companion checkout (separate git remote) and IDE / local state
-eez-dex-internal/
+# IDE and local-only state. The private companion repo (requirements, prompts,
+# economics) is a separate checkout outside this tree, so nothing to ignore here.
 .idea/
 .claude/settings.local.json
 
