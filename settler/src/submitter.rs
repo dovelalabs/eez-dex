@@ -6,16 +6,27 @@
 //! state machine refuses a second submission, so a bug here cannot become two
 //! settlements for one window.
 //!
-//! Two conditions besides a selection make this task act:
+//! Besides a selection, a **known-dropped** settlement is resubmitted exactly
+//! **once** (SV-5). And one thing makes the submitter wait: on a **missed L1
+//! slot** the framework's Sync block is empty and the window stretches. The
+//! settler does not resubmit — it waits for the next steady slot.
 //!
-//! * an **empty window** submits a CT-6 refresh, but only when the mirror's age
-//!   exceeds `MIRROR_REFRESH_AGE`. Quote demand is not observable on-chain
-//!   (`quote` is a view), so the threshold is the sole trigger;
-//! * a **known-dropped** settlement is resubmitted exactly **once** (SV-5).
+//! ## The mirror refresh, and why an orderless one is not submitted
 //!
-//! And one makes it wait: on a **missed L1 slot** the framework's Sync block is
-//! empty and the window stretches. The settler does not resubmit — it waits for
-//! the next steady slot.
+//! SV-3 has an empty window submit a CT-6 refresh once the mirror's age exceeds
+//! `MIRROR_REFRESH_AGE`. [`Submitter::needs_mirror_refresh`] is that rule, and
+//! the threshold is the sole trigger — quote demand is not observable on-chain,
+//! because `quote` is a view.
+//!
+//! CT-6's zero-residual leg is real and reachable: a window whose orders net to
+//! nothing sends `residualIn == 0`, the router reads and returns pool state
+//! without swapping, and `WindowBook` adopts it as the new mirror. What has no
+//! path is a refresh with **no orders at all** — CT-9 requires `settleWindow`
+//! to revert before any L1 call when no order remains, and it does. So the
+//! submitter reports [`HoldReason::RefreshHasNoPath`] rather than posting a
+//! transaction the spec says must revert: it would cost L2 gas every quiet
+//! window and refresh nothing. RD-2 §12 is where the tension between SV-3 and
+//! CT-9 belongs; see `settler/README.md`.
 
 use crate::chain::{Front, L2Reader, SettlementSigner};
 use crate::config::Config;
@@ -25,24 +36,14 @@ use crate::state::{StateStore, WindowPhase};
 use crate::types::OrderId;
 use crate::{Task, TaskError};
 
-/// Why the submitter is posting.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Submission {
-    /// A window with orders to settle (CT-9).
-    Settlement {
-        /// The selected ids, ascending.
-        ids: Vec<OrderId>,
-    },
-    /// A CT-6 empty settlement, because the mirror aged past
-    /// `MIRROR_REFRESH_AGE` with nothing to settle (SV-3).
-    Refresh,
-}
-
 /// What the submitter decided to do this tick, and why not, when it did not.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Decision {
-    /// Post this.
-    Post(Submission),
+    /// Post a settlement for these ids, ascending (CT-9).
+    Post {
+        /// The selected ids, ascending.
+        ids: Vec<OrderId>,
+    },
     /// Do nothing. The reason is for the log, not for the control flow.
     Hold(HoldReason),
 }
@@ -64,6 +65,14 @@ pub enum HoldReason {
     BelowMinimumNotional,
     /// One resubmission was owed and has been spent (SV-5).
     ResubmissionSpent,
+    /// The mirror has aged past `MIRROR_REFRESH_AGE` and the window holds no
+    /// order to carry a CT-6 leg.
+    ///
+    /// `settleWindow` reverts before any L1 call when no order remains (CT-9),
+    /// so a refresh submitted here would cost L2 gas and refresh nothing. The
+    /// mirror stays stale and says so — `mirror_age_slots` is the metric that
+    /// carries it (A.5, FL-1).
+    RefreshHasNoPath,
 }
 
 /// Posts the settlement transaction.
@@ -146,7 +155,7 @@ impl<R2: L2Reader, F: Front, S: SettlementSigner> Submitter<R2, F, S> {
             return if ids.is_empty() {
                 Decision::Hold(HoldReason::NothingToDo)
             } else {
-                Decision::Post(Submission::Settlement { ids })
+                Decision::Post { ids }
             };
         }
         if state.attempt.is_known_dropped() {
@@ -163,10 +172,12 @@ impl<R2: L2Reader, F: Front, S: SettlementSigner> Submitter<R2, F, S> {
 
         let ids = state.attempt.selection().to_vec();
         if ids.is_empty() {
-            // An empty window refreshes the mirror only on age. Quote demand
-            // is not observable on-chain, so the threshold is the sole trigger.
-            return if state.mirror.age_slots(state.l1.timestamp) > self.mirror_refresh_age {
-                Decision::Post(Submission::Refresh)
+            // A window with no orders cannot carry a CT-6 leg: `settleWindow`
+            // reverts before any L1 call when no order remains (CT-9). The
+            // refresh is due and has nowhere to go, which is a fact worth
+            // reporting rather than a transaction worth burning gas on.
+            return if self.needs_mirror_refresh(state) {
+                Decision::Hold(HoldReason::RefreshHasNoPath)
             } else {
                 Decision::Hold(HoldReason::NothingToDo)
             };
@@ -179,7 +190,18 @@ impl<R2: L2Reader, F: Front, S: SettlementSigner> Submitter<R2, F, S> {
             return Decision::Hold(HoldReason::BelowMinimumNotional);
         }
 
-        Decision::Post(Submission::Settlement { ids })
+        Decision::Post { ids }
+    }
+
+    /// SV-3's refresh rule: an empty window refreshes the mirror **only** when
+    /// its age exceeds `MIRROR_REFRESH_AGE`.
+    ///
+    /// Quote demand is not observable on-chain — `quote` is a view — so the
+    /// threshold is the sole trigger. The rule is separate from the decision
+    /// because it is the half of SV-3 the settler owns: whether a refresh can
+    /// be *carried* is CT-9's, and today it cannot be carried without orders.
+    pub fn needs_mirror_refresh(&self, state: &StateStore) -> bool {
+        state.mirror.age_slots(state.l1.timestamp) > self.mirror_refresh_age
     }
 
     /// The window's gross volume before crossing, valued in A (EC-1, A.5).
@@ -230,7 +252,7 @@ impl<R2: L2Reader, F: Front, S: SettlementSigner> Task for Submitter<R2, F, S> {
     }
 
     fn tick(&mut self, state: &mut StateStore) -> Result<(), TaskError> {
-        let Decision::Post(submission) = self.decide(state) else {
+        let Decision::Post { ids } = self.decide(state) else {
             return Ok(());
         };
         if !self.fits_in_bundle() {
@@ -239,21 +261,6 @@ impl<R2: L2Reader, F: Front, S: SettlementSigner> Task for Submitter<R2, F, S> {
                 reason: "a settlement needs one of the bundle's cross-layer slots (EC-5)".into(),
             }));
         }
-
-        let ids = match &submission {
-            Submission::Settlement { ids } => ids.clone(),
-            // CT-6: a leg with zero residual that only reads and returns pool
-            // state. `settleWindow` builds the leg from the ids it is given,
-            // so an empty list is the only way to ask for one.
-            //
-            // KNOWN GAP: `WindowBook.settleWindow` reverts `NothingToSettle`
-            // on an empty selection today, so this cannot land until WP-2
-            // gains CT-6's zero-residual path. The revert is before any L1
-            // call — L2 gas, no L1 gas, escrow untouched, window still open —
-            // and it is raised against Phase 2b rather than worked around
-            // here (RL-2). See settler/README.md, "Known gaps".
-            Submission::Refresh => Vec::new(),
-        };
 
         let settler = self.signer.address();
         // A settlement the front still holds is never resubmitted (SV-5). The
@@ -289,9 +296,7 @@ impl<R2: L2Reader, F: Front, S: SettlementSigner> Task for Submitter<R2, F, S> {
             .map_err(|e| TaskError::Rpc(e.to_string()))?;
         state.window.transition(WindowPhase::Settling);
 
-        if matches!(submission, Submission::Refresh) {
-            state.record_empty_window();
-        } else if let Some(ratio) = self.netting_ratio(state) {
+        if let Some(ratio) = self.netting_ratio(state) {
             state
                 .metrics
                 .observe(crate::config::metrics::NETTING_RATIO, ratio);
@@ -386,38 +391,110 @@ mod tests {
     }
 
     #[test]
-    fn sv3_an_empty_window_refreshes_the_mirror_only_on_age() {
+    fn sv3_the_mirror_refresh_triggers_on_age_and_on_nothing_else() {
+        let l1 = FakeL1::at(2000);
+        let (mut state, l2) = ready(Vec::new(), &l1);
+        let front = FakeFront::new();
+        let submitter = submitter(&l2, &front);
+
+        // `MIRROR_REFRESH_AGE` defaults to 5 slots. At exactly five the mirror
+        // is still fresh enough to leave alone; quote demand is not observable
+        // on-chain, so the threshold is the sole trigger.
+        state.l1.timestamp = 1_800_000_000;
+        assert!(!submitter.needs_mirror_refresh(&state));
+        state.l1.timestamp = 1_800_000_060;
+        assert!(
+            !submitter.needs_mirror_refresh(&state),
+            "five slots is not past five"
+        );
+        state.l1.timestamp = 1_800_000_072;
+        assert!(submitter.needs_mirror_refresh(&state));
+    }
+
+    #[test]
+    fn ct9_an_orderless_refresh_is_withheld_rather_than_sent_to_revert() {
+        // CT-9 requires `settleWindow` to revert before any L1 call when no
+        // order remains, so a refresh carrying no orders has nowhere to go.
+        // The submitter says so instead of burning L2 gas on it every quiet
+        // window. See RD-2 §12 and settler/README.md.
         let l1 = FakeL1::at(2000);
         let (mut state, l2) = ready(Vec::new(), &l1);
         let front = FakeFront::new();
 
-        // Fresh mirror: nothing to do, even with no orders at all.
+        // Fresh mirror, no orders: nothing to do at all.
         assert_eq!(
             submitter(&l2, &front).decide(&state),
             Decision::Hold(HoldReason::NothingToDo)
         );
 
-        // `MIRROR_REFRESH_AGE` defaults to 5 slots; at exactly five it still
-        // holds, and past it the CT-6 refresh goes.
-        l1.set_timestamp(1_800_000_000 + 5 * 12);
-        state.l1.timestamp = 1_800_000_060;
-        assert_eq!(
-            submitter(&l2, &front).decide(&state),
-            Decision::Hold(HoldReason::NothingToDo)
-        );
-
+        // Stale mirror, still no orders: the refresh is due and unreachable.
         state.l1.timestamp = 1_800_000_072;
         assert_eq!(
             submitter(&l2, &front).decide(&state),
-            Decision::Post(Submission::Refresh)
+            Decision::Hold(HoldReason::RefreshHasNoPath)
         );
         submitter(&l2, &front).tick(&mut state).unwrap();
-        assert_eq!(front.submitted().len(), 1);
         assert!(
-            state.attempt.selection().is_empty(),
-            "CT-6: no orders, no swap"
+            front.submitted().is_empty(),
+            "nothing the contract is specified to reject is posted"
         );
-        assert_eq!(state.metrics.window_count("empty"), 1.0);
+
+        // And the staleness is not hidden: it is what `mirror_age_slots` says.
+        state.record_mirror_age(state.l1.timestamp);
+        assert_eq!(
+            state.metrics.get(crate::config::metrics::MIRROR_AGE_SLOTS),
+            6.0
+        );
+    }
+
+    #[test]
+    fn ct6_a_window_that_nets_to_nothing_still_refreshes_the_mirror() {
+        // CT-6's zero-residual leg *is* reachable from L2: a window whose
+        // orders net to nothing sends `residualIn == 0`, the router reads and
+        // returns pool state without swapping, and the book adopts it as the
+        // new mirror. What has no path is an *orderless* refresh.
+        let l1 = FakeL1::at(2000);
+        // 10 A against 20,000 B at the mirror's ~2000: the two sides cancel.
+        let crossing = vec![
+            order(1, Side::SellAForB, "10000000000000000000", "0"),
+            order(2, Side::SellBForA, "20000000000000000000000", "0"),
+        ];
+        let (state, _l2) = ready(crossing, &l1);
+
+        let built = &state
+            .selection
+            .as_ref()
+            .expect("a selection")
+            .evaluation
+            .as_ref()
+            .expect("a settleable selection")
+            .built;
+        // Whichever side the remainder falls on, it is dust beside that
+        // side's own volume — a thousandth of it or less.
+        let selection = &state
+            .selection
+            .as_ref()
+            .unwrap()
+            .evaluation
+            .as_ref()
+            .unwrap()
+            .selection;
+        let residual_side_total = if built.residual_is_a {
+            selection.sum_a
+        } else {
+            selection.sum_b
+        };
+        assert!(
+            built.leg.residual_in * crate::testkit::wei("1000") < residual_side_total,
+            "the window nets away all but dust; residual {} against {}",
+            built.leg.residual_in,
+            residual_side_total
+        );
+        assert!(
+            !built.cross_pot.is_zero(),
+            "and it crosses, which is why CT-9 does not reject it"
+        );
+        assert_eq!(state.attempt.selection().len(), 2, "so it still settles");
     }
 
     #[test]

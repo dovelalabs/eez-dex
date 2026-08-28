@@ -103,16 +103,34 @@ configuration is not there: a suite that silently passed without an enclave
 would be worse than no suite. It is not part of `make check` — it needs
 Kurtosis and Docker, and it runs at the chain's own pace.
 
-## Known gaps
+## Open questions raised by this package
 
-- **CT-6's empty settlement has no path on L2.** SV-3 has the settler submit a
-  mirror refresh when an empty window's mirror ages past `MIRROR_REFRESH_AGE`,
-  and the submitter does exactly that. `WindowBook.settleWindow` currently
-  reverts `NothingToSettle` on an empty selection (`WindowBook.sol:487`), so
-  the refresh cannot land until WP-2 gains CT-6's zero-residual path. The
-  revert happens before any L1 call, so it costs L2 gas and nothing else —
-  escrow is untouched and the window stays open. Raised against Phase 2b rather
-  than worked around here (RD-2 RL-2).
+- **An orderless mirror refresh has no path, and RD-2 asks for one.** SV-3 has
+  an empty window submit a CT-6 refresh once the mirror ages past
+  `MIRROR_REFRESH_AGE`, and A.6's "Empty window" row asserts it. CT-9 requires
+  `settleWindow` to revert before any L1 call when **no order remains**, and
+  A.2 repeats it. Both are implemented exactly as written — this is a tension
+  inside the spec, not a defect in any package.
+
+  CT-6 itself is fine and is reachable: it is a WP-1 requirement,
+  `SettlementRouter._settleLeg` returns pool state without swapping when
+  `residualIn == 0`, and a window whose orders **net to nothing** sends exactly
+  that leg, so the mirror refreshes. What cannot be expressed is a refresh with
+  *no orders at all*.
+
+  The settler implements SV-3's rule (`Submitter::needs_mirror_refresh`) and,
+  when the refresh is due but unreachable, reports `HoldReason::RefreshHasNoPath`
+  instead of posting a transaction the spec says must revert — that would cost
+  L2 gas every quiet window and refresh nothing. The mirror stays stale and
+  `mirror_age_slots` says so.
+
+  Resolving it is a maintainer decision, not a commit from this package
+  (RD-2 RL-2). The shapes it could take: relax CT-9 to allow an empty selection
+  when the leg carries zero residual; or give `WindowBook` a separate
+  settler-only `refreshMirror(deadline)` entry point; or accept that a
+  completely quiet window lets its mirror age, and amend SV-3 and A.6 to say
+  so. The third costs nothing and may well be right — a window with no orders
+  has no one to quote for.
 - **The framework crates are not linked.** SV-1 asks the settler to reuse the
   node's RPC and signing crates at the `FRAMEWORK_COMMIT` pin. `eez-l1` and
   `eez-protocol` depend transitively on reth from a git revision, which would

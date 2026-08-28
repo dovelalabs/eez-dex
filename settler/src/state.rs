@@ -451,6 +451,12 @@ impl StateStore {
                 attempt: self.attempt.clone(),
                 selection: self.selection.clone(),
             });
+        } else if self.attempt.tx_hash().is_none() {
+            // The window closed with nothing to settle. That is `empty`, not
+            // `unposted`: nothing failed to post, there was nothing to post
+            // (A.5). Counted here because this is the boundary, and exactly
+            // once because a window is adopted once.
+            self.record_empty_window();
         }
 
         self.window = WindowState::opened(id, l2_block, unix, slots);
@@ -817,13 +823,19 @@ mod tests {
     }
 
     #[test]
-    fn a5_an_empty_window_is_not_an_unposted_one() {
+    fn a5_an_empty_window_is_counted_at_the_boundary_and_is_not_unposted() {
         let mut store = StateStore::open(&config());
-        store.record_empty_window();
-        store.record_empty_window();
-        assert!(!store.halted);
+        // Two windows close with nothing to settle.
+        store.adopt_window(1, 6, 1_800_000_012, 1);
+        store.adopt_window(2, 12, 1_800_000_024, 1);
+
         assert_eq!(store.metrics.window_count("empty"), 2.0);
-        assert_eq!(store.metrics.get(names::UNPOSTED_WINDOW), 0.0);
+        assert_eq!(
+            store.metrics.get(names::UNPOSTED_WINDOW),
+            0.0,
+            "nothing failed to post; there was nothing to post"
+        );
+        assert!(!store.halted, "a quiet chain never halts the settler");
     }
 
     #[test]
