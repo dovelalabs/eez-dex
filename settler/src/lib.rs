@@ -24,6 +24,7 @@
 pub mod abi;
 pub mod attempt;
 pub mod builder;
+pub mod chain;
 pub mod config;
 pub mod math;
 pub mod metrics;
@@ -32,13 +33,14 @@ pub mod reconciler;
 pub mod selection;
 pub mod state;
 pub mod submitter;
-#[cfg(test)]
+#[cfg(any(test, feature = "testkit"))]
 pub mod testkit;
 pub mod types;
 pub mod watcher;
 pub mod window;
 
 pub use config::{Config, ConfigError, FeeModel, Profile, RouteFeeModel, WindowSlots};
+pub use selection::Selection;
 
 /// Why a task tick failed. Phase 3 owns the variants; a task that cannot make
 /// progress says so rather than guessing.

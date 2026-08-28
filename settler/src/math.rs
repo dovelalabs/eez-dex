@@ -75,6 +75,35 @@ fn narrow(wide: U512) -> Result<U256, MathError> {
     Ok(U256::from_limbs([limbs[0], limbs[1], limbs[2], limbs[3]]))
 }
 
+/// The `sqrtPriceX96` a pool would carry to price at `price_x96` — the inverse
+/// of `Mirror.spotPriceX96`.
+///
+/// The reconciler's EC-4 audit needs the pool *as the leg found it*: what it
+/// has is the settled `P0`, and what the simulator wants is a `PoolState`. The
+/// root is rounded **up**, because `spotPriceX96` squares and then truncates,
+/// so a floor root would price one wei light and the audit would recompute
+/// against a slightly different pool than the one that settled.
+pub fn sqrt_price_from_price_x96(price_x96: U256) -> U256 {
+    let target = U512::from(price_x96) << 96usize;
+    if target.is_zero() {
+        return U256::ZERO;
+    }
+    let mut guess = U512::from(1u8) << target.bit_len().div_ceil(2);
+    loop {
+        let next = (guess + target / guess) >> 1usize;
+        if next >= guess {
+            break;
+        }
+        guess = next;
+    }
+    let root = if guess * guess < target {
+        guess + U512::from(1u8)
+    } else {
+        guess
+    };
+    narrow(root).unwrap_or(U256::MAX)
+}
+
 /// The mirror's age in L1 slots: `(timestamp - mirror_timestamp) / 12`.
 ///
 /// The L1 head is not visible from L2 and the Sync block's timestamp equals the
@@ -125,6 +154,22 @@ mod tests {
             mul_div(U256::from(1u8), U256::from(1u8), U256::ZERO),
             Err(MathError::DivisionByZero)
         );
+    }
+
+    #[test]
+    fn ec4_the_square_root_inverts_the_mirrors_spot_price() {
+        for price in [1u64, 1_900, 2_000, 2_100, 4_000_000] {
+            let price_x96 = U256::from(price) << 96usize;
+            let sqrt = sqrt_price_from_price_x96(price_x96);
+            // `spotPriceX96` is `mulDiv(sqrt, sqrt, Q96)`; rounding the root up
+            // is what keeps the round trip on the price rather than one under.
+            assert_eq!(
+                mul_div(sqrt, sqrt, Q96).unwrap() / Q96,
+                U256::from(price),
+                "sqrt_price_from_price_x96({price}) must price at {price}"
+            );
+        }
+        assert_eq!(sqrt_price_from_price_x96(U256::ZERO), U256::ZERO);
     }
 
     #[test]

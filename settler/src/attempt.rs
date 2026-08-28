@@ -136,6 +136,12 @@ impl Attempt {
         )
     }
 
+    /// True when the front no longer holds the transaction, on evidence —
+    /// whether or not the one resubmission is still owed (SV-5).
+    pub fn is_known_dropped(&self) -> bool {
+        matches!(self.state, AttemptState::KnownDropped { .. })
+    }
+
     /// True when the window has reached a terminal outcome.
     pub fn is_resolved(&self) -> bool {
         matches!(self.state, AttemptState::Resolved { .. })

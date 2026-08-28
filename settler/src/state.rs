@@ -319,6 +319,21 @@ pub struct StateStore {
     /// True once the halt threshold was crossed. No settlement is submitted
     /// while halted.
     pub halted: bool,
+    /// The L2 safe head — one L1 confirmation, revocable. Operations read
+    /// here; accounting reads `finalized` (SV-4).
+    pub l2_safe: crate::chain::HeadInfo,
+    /// `WindowSettled` logs the watcher has seen and the reconciler has not
+    /// yet matched to an L1 receipt (SV-4).
+    pub observed_settlements: Vec<crate::chain::BookEvent>,
+    /// The window builder's latest selection, and what it implies for every
+    /// order (SV-2). It is what the submitter posts and what the reconciler
+    /// audits itself against (EC-4).
+    pub selection: Option<crate::selection::Selection>,
+    /// Fillable orders the reconciler's audit found the settler left out
+    /// (EC-4). Must stay empty; `selection_omitted_total` counts them.
+    pub omitted_orders: Vec<OrderId>,
+    /// Why the last window rolled back, when one did (IX-2).
+    pub rollback_cause: Option<crate::reconciler::RollbackCause>,
     /// The configured window length, which the EC-6 meter may override.
     configured_slots: WindowSlots,
     /// `WINDOW_HALT`.
@@ -348,6 +363,11 @@ impl StateStore {
             flow: FlowMeter::default(),
             unposted_windows: 0,
             halted: false,
+            l2_safe: crate::chain::HeadInfo::default(),
+            observed_settlements: Vec::new(),
+            selection: None,
+            omitted_orders: Vec::new(),
+            rollback_cause: None,
             configured_slots: config.window_slots,
             window_halt: config.window_halt,
             flow_threshold: config.flow_threshold,
@@ -369,11 +389,17 @@ impl StateStore {
             .collect()
     }
 
-    /// Opens the next window, applying the EC-6 setting at the boundary.
+    /// Adopts the window the book says is open, at the boundary.
     ///
-    /// This is the only place `WINDOW_SLOTS` changes: switching inside a window
-    /// would change the length of one already being traded (EC-6).
-    pub fn advance_window(&mut self, l2_block: u64, unix: u64) {
+    /// The closing window's order count feeds the EC-6 meter, which is read at
+    /// the boundary and nowhere else: switching inside a window would change
+    /// the length of one already being traded.
+    ///
+    /// `slots` is the book's own `windowSlots`. The contract is the authority
+    /// on the length in force; what the settler decides is what the length
+    /// *should* be ([`StateStore::desired_window_slots`]), which the operator
+    /// applies through `setWindowSlots`.
+    pub fn adopt_window(&mut self, id: u64, l2_block: u64, unix: u64, slots: u8) {
         let orders_this_window = self
             .orders
             .values()
@@ -384,15 +410,62 @@ impl StateStore {
             self.window.slots.as_u8(),
         );
 
-        let slots = self
-            .flow
-            .desired_slots(self.flow_threshold, self.configured_slots);
+        let slots = match slots {
+            1 => WindowSlots::One,
+            _ => WindowSlots::Two,
+        };
         self.metrics
             .set(names::WINDOW_SLOTS, f64::from(slots.as_u8()));
 
-        let next = self.window.id + 1;
-        self.window = WindowState::opened(next, l2_block, unix, slots);
-        self.attempt = Attempt::idle(next);
+        self.window = WindowState::opened(id, l2_block, unix, slots);
+        self.attempt = Attempt::idle(id);
+        self.selection = None;
+    }
+
+    /// Refreshes the open window's chain facts without re-opening it.
+    ///
+    /// The book's `windowStartBlock` and `windowSlots` are what the boundary
+    /// arithmetic is measured against, and both are the chain's to state. This
+    /// is separate from [`StateStore::adopt_window`] because re-opening resets
+    /// the attempt and feeds the EC-6 meter, and neither should happen because
+    /// the settler read the same window twice.
+    pub fn sync_window(&mut self, start_block: u64, slots: u8) {
+        let slots = match slots {
+            1 => WindowSlots::One,
+            _ => WindowSlots::Two,
+        };
+        self.window.opened_at_l2_block = start_block;
+        self.window.slots = slots;
+        self.metrics
+            .set(names::WINDOW_SLOTS, f64::from(slots.as_u8()));
+    }
+
+    /// The EC-6 length the measured flow calls for: two slots below
+    /// `FLOW_THRESHOLD` orders per slot, one above it.
+    ///
+    /// It is a decision, not an instruction: `setWindowSlots` is the owner's
+    /// (RD-2 §3), and the book adopts a change at the next boundary anyway.
+    pub fn desired_window_slots(&self) -> WindowSlots {
+        self.flow
+            .desired_slots(self.flow_threshold, self.configured_slots)
+    }
+
+    /// L2 blocks left before this window's Sync block (CT-8, EC-6).
+    ///
+    /// Six blocks to an L1 slot: 12 s over 2 s (RD-2 §1).
+    pub fn blocks_remaining(&self) -> u32 {
+        let length = u64::from(self.window.slots.as_u8()) * 6;
+        let elapsed = self
+            .l2_safe
+            .number
+            .saturating_sub(self.window.opened_at_l2_block);
+        u32::try_from(length.saturating_sub(elapsed)).unwrap_or(u32::MAX)
+    }
+
+    /// Whether the window is at its Sync block — the moment the builder
+    /// selects and the submitter posts (SV-2, SV-3).
+    pub fn at_slot_boundary(&self) -> bool {
+        self.blocks_remaining() == 0
     }
 
     /// Records a window that reached a terminal outcome (A.4, A.5).
@@ -473,6 +546,14 @@ impl StateStore {
     /// The window's settlement transaction, if the front holds or held one.
     pub fn settlement_tx(&self) -> Option<B256> {
         self.attempt.tx_hash()
+    }
+
+    /// The deadline the in-flight settlement was signed with (SV-3).
+    pub fn attempt_deadline(&self) -> Option<u64> {
+        match &self.attempt.state {
+            crate::attempt::AttemptState::InFlight { deadline, .. } => Some(*deadline),
+            _ => None,
+        }
     }
 }
 
@@ -583,16 +664,13 @@ mod tests {
     }
 
     #[test]
-    fn ec6_the_window_length_switches_at_the_boundary_on_measured_flow() {
+    fn ec6_the_window_length_is_decided_at_the_boundary_on_measured_flow() {
         let mut store = StateStore::open(&config());
         assert_eq!(store.window.slots, WindowSlots::Two, "the EC-6 default");
+        assert_eq!(store.desired_window_slots(), WindowSlots::Two);
 
-        // A quiet window: two slots stand.
-        store.advance_window(6, 1_800_000_012);
-        assert_eq!(store.window.slots, WindowSlots::Two);
-
-        // A busy one — 20 orders over two slots is 10 per slot, above the
-        // threshold of 4 — drops it to one slot, at the boundary.
+        // 20 orders in one two-slot window is 10 per slot, above the threshold
+        // of 4 — but nothing is measured until the window closes.
         for id in 1..=20u8 {
             let mut o = order(id, Side::SellAForB, "1000000000000000000", "0");
             o.placed_window = store.window.id;
@@ -601,13 +679,51 @@ mod tests {
                 .insert(o.id, TrackedOrder::placed(o, 1, 1_800_000_000));
         }
         assert_eq!(
-            store.window.slots,
+            store.desired_window_slots(),
             WindowSlots::Two,
-            "not inside the window"
+            "no measurement until a window has closed"
         );
-        store.advance_window(12, 1_800_000_024);
+
+        store.adopt_window(1, 12, 1_800_000_024, 2);
+        assert_eq!(
+            store.desired_window_slots(),
+            WindowSlots::One,
+            "EC-6: one slot above the flow threshold"
+        );
+        // The book is the authority on the length in force, and it still says
+        // two until its owner calls `setWindowSlots` (RD-2 §3).
+        assert_eq!(store.window.slots, WindowSlots::Two);
+        assert_eq!(store.metrics.get(names::WINDOW_SLOTS), 2.0);
+
+        store.adopt_window(2, 24, 1_800_000_036, 1);
         assert_eq!(store.window.slots, WindowSlots::One);
         assert_eq!(store.metrics.get(names::WINDOW_SLOTS), 1.0);
+    }
+
+    #[test]
+    fn ct8_the_slot_boundary_is_six_l2_blocks_per_slot() {
+        let mut store = StateStore::open(&config());
+        store.adopt_window(1, 100, 1_800_000_000, 1);
+        store.l2_safe.number = 100;
+        assert_eq!(store.blocks_remaining(), 6);
+        assert!(!store.at_slot_boundary());
+
+        store.l2_safe.number = 105;
+        assert_eq!(store.blocks_remaining(), 1);
+        assert!(!store.at_slot_boundary());
+
+        store.l2_safe.number = 106;
+        assert!(
+            store.at_slot_boundary(),
+            "the sixth block is the Sync block"
+        );
+
+        // A two-slot window is twelve blocks (EC-6).
+        store.adopt_window(2, 200, 1_800_000_012, 2);
+        store.l2_safe.number = 210;
+        assert!(!store.at_slot_boundary());
+        store.l2_safe.number = 212;
+        assert!(store.at_slot_boundary());
     }
 
     #[test]
