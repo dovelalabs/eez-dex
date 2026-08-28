@@ -83,10 +83,26 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "invariant violated"
             );
         }
+        // EC-6: the measured flow calls for a window length. The book adopts a
+        // change at the next boundary and `setWindowSlots` is the owner's, so
+        // what the settler owes is the decision, said out loud at the boundary
+        // where it applies — not a call it is not permitted to make.
+        let desired = state.desired_window_slots();
+        if state.at_slot_boundary() && desired != state.window.slots {
+            tracing::info!(
+                current = state.window.slots.as_u8(),
+                desired = desired.as_u8(),
+                orders_per_slot = state.flow.orders_per_slot(),
+                "measured flow calls for a different WINDOW_SLOTS (EC-6); \
+                 apply it with setWindowSlots"
+            );
+        }
+
         tracing::debug!(
             window = state.window.id,
             blocks_remaining = state.blocks_remaining(),
             mirror_age = state.metrics.get(metrics::MIRROR_AGE_SLOTS),
+            window_slots = state.metrics.get(metrics::WINDOW_SLOTS),
             "tick"
         );
 
