@@ -86,6 +86,15 @@ deploy() {
 
 send() { cast send --rpc-url "$RPC" --private-key "$1" "${@:2}" >/dev/null; }
 
+# address_below <a> <b> — true when `a` sorts below `b` as a Uniswap v3 pool
+# sorts its tokens. Both are lowercase 0x-prefixed and the same length, so a
+# string comparison is the numeric one — but only in the C locale, where the
+# order of digits and letters is their byte order.
+address_below() {
+    local LC_ALL=C
+    [[ "$1" < "$2" ]]
+}
+
 # --- fund the DEX's L1 identities ---------------------------------------------
 # The ethereum-package prefunds its own accounts, not ours. The poster is the
 # only key this step is given, so it is what funds the deployer and the account
@@ -99,20 +108,28 @@ done
 # --- the pair -----------------------------------------------------------------
 # A must sort below B so that A is the pool's `token0`, which is the
 # orientation `sqrtPriceX96` is quoted in and the one every price in this
-# repository is stated against (A.1). The mock's address is a function of the
-# deployer's nonce, so the ordering is arranged by deploying B again until it
-# sorts above A — deterministic on a fresh chain, and cheap.
+# repository is stated against (A.1). A mock's address is a function of the
+# deployer's nonce, so the ordering is arranged by deploying until it falls the
+# right way — deterministic on a fresh chain, and cheap.
+#
+# **Both** sides are redeployed each round. Redeploying only B leaves the
+# outcome hostage to where A landed: an A high in the address space makes each
+# draw of B fail with the same high probability every time, and the retries run
+# out rather than converge. Redeploying the pair makes every round an
+# independent coin flip, so sixteen of them fail once in 65,536 runs.
 
 say "deploying the pair"
-ASSET_A="$(deploy MockWETH)"
+ASSET_A=""
 ASSET_B=""
-for _ in 1 2 3 4 5 6 7 8; do
+for attempt in $(seq 1 16); do
+    ASSET_A="$(deploy MockWETH)"
     ASSET_B="$(deploy MockERC20 "constructor(string,string,uint8)" "eez-dex USD" DUSD 18)"
-    [[ "$ASSET_B" > "$ASSET_A" ]] && break
-    say "  B sorts below A; deploying it again so A stays token0"
+    address_below "$ASSET_A" "$ASSET_B" && break
+    say "  B sorted below A; deploying the pair again so A stays token0 (attempt $attempt)"
+    ASSET_A=""
     ASSET_B=""
 done
-[[ -n "$ASSET_B" ]] || die "could not place B above A in address order after eight attempts"
+[[ -n "$ASSET_A" && -n "$ASSET_B" ]] || die "could not place A below B in address order"
 
 # --- the venue ----------------------------------------------------------------
 
