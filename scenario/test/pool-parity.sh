@@ -27,22 +27,33 @@ die()  { echo "  parity: $*" >&2; exit 1; }
 
 for tool in anvil cast jq node forge; do command -v "$tool" >/dev/null || die "$tool is not in PATH"; done
 
-if [[ ! -d "$OUT" ]]; then
-    say "compiling contracts"
+artifact() { find "$OUT" -name "$1.json" -path "*/$1.sol/*" 2>/dev/null | head -1; }
+
+# A restored build cache can be partial, so the check is for the artifacts this
+# script actually deploys rather than for the directory holding them.
+for contract in MockWETH MockERC20 MockPool UniswapV3Adapter; do
+    [[ -n "$(artifact "$contract")" ]] && continue
+    say "compiling contracts ($contract is not built)"
     (cd "$ROOT/contracts" && forge build) >/dev/null || die "forge build failed"
-fi
+    break
+done
 
 bytecode() {
     local file
-    file="$(find "$OUT" -name "$1.json" -path "*/$1.sol/*" | head -1)"
+    file="$(artifact "$1")"
     [[ -n "$file" ]] || die "no compiled artifact for $1"
     jq -er '.bytecode.object' "$file"
 }
 
-ANVIL_LOG="$(mktemp -t anvil-parity)"
+# `mktemp -t <name>` appends the random suffix on BSD and demands it in the
+# template on GNU, so the template carries it explicitly and the directory is
+# named rather than implied.
+ANVIL_LOG="$(mktemp "${TMPDIR:-/tmp}/anvil-parity.XXXXXX")"
 ANVIL_PID=""
-# Invoked by the trap below, which shellcheck cannot see.
-# shellcheck disable=SC2329
+# Invoked by the trap below, which shellcheck cannot see. The code for that
+# moved between shellcheck releases — 0.9 calls it SC2317, 0.11 SC2329 — and
+# CI is not always on the same one as a developer, so both are named.
+# shellcheck disable=SC2317,SC2329
 cleanup() { [[ -n "$ANVIL_PID" ]] && kill "$ANVIL_PID" 2>/dev/null; rm -f "$ANVIL_LOG"; true; }
 trap cleanup EXIT
 

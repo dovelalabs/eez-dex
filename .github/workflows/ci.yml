@@ -303,7 +303,8 @@ jobs:
       - name: Report whether RL-4's enclave half ran
         run: |
           if [ -n "${{ vars.EEZ_ENCLAVE_RUNNER }}" ]; then
-            echo "The enclave rows ran on ${{ vars.EEZ_ENCLAVE_RUNNER }}."
+            echo "The enclave rows are enabled on ${{ vars.EEZ_ENCLAVE_RUNNER }};"
+            echo "their own check reports whether they passed."
           else
             echo "::warning::RL-4's enclave rows did NOT run: no EEZ_ENCLAVE_RUNNER is configured."
             echo "The happy path and the failure matrix need a runner with Docker, Kurtosis"
