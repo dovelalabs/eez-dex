@@ -27,6 +27,7 @@
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 
 import type { PoolState, RollbackCause, Side } from "../../indexer/schema/index.ts";
+import type { BundleReading } from "./assert.ts";
 import { chargeFees, priceBand } from "./book.ts";
 import type { BookOrder, BookParams } from "./book.ts";
 import { Chain, decodeSettleWindow, readBalance, readBookLogs, readEscrowLedger, readMirror, readOpenOrders, readPool } from "./chain.ts";
@@ -39,18 +40,44 @@ import type { Observation, Profile } from "./observation.ts";
 /** L2 blocks in one L1 slot. */
 const BLOCKS_PER_SLOT = 6;
 
-/** A failure the harness induced, with the evidence that it happened. */
-export interface Mark {
-  readonly kind: "evicted" | "rolled_back";
-  readonly windowId: string;
-  readonly atL2Block: number;
-  readonly txHash?: string;
-  /** Eviction: why the composed transaction would have reverted. */
-  readonly reason?: string;
-  /** Rollback: which of SV-4's three paths, and so whether gas was spent. */
-  readonly cause?: RollbackCause;
-  readonly l1GasSpent?: boolean;
-}
+/**
+ * Something the harness induced or counted that the chain alone does not say.
+ *
+ * The two failure kinds carry the evidence that the failure happened. The
+ * `bundle` kind carries EC-5's arithmetic, which is not readable from either
+ * chain: how many cross-layer transactions rode one slot's bundle is the wave
+ * harness's own confirmed tally (UP-2), so the shell writes it down and the
+ * assertions read it here rather than guessing at it from a block's contents.
+ */
+export type Mark =
+  | {
+      readonly kind: "evicted";
+      readonly windowId: string;
+      readonly atL2Block: number;
+      readonly txHash?: string;
+      /** Why the composed transaction would have reverted. */
+      readonly reason?: string;
+    }
+  | {
+      readonly kind: "rolled_back";
+      readonly windowId: string;
+      readonly atL2Block: number;
+      readonly txHash?: string;
+      /** Which of SV-4's three paths, and so whether gas was spent. */
+      readonly cause?: RollbackCause;
+      readonly l1GasSpent?: boolean;
+    }
+  | {
+      readonly kind: "bundle";
+      /** The slot the bundle was taken in. */
+      readonly l1Block: number;
+      /** Cross-layer transactions in it, of every product. */
+      readonly crossLayerTxs: number;
+      /** How many of them were this DEX's. */
+      readonly dexTxs: number;
+      /** `MAX_USER_TXS_PER_BUNDLE`, matching the node's env. */
+      readonly cap: number;
+    };
 
 /** Where the observer points and what it is watching. */
 export interface ObserveConfig {
@@ -106,6 +133,7 @@ export class Observer {
   private previous: Snapshot | null = null;
   private started = false;
   private marksSeen = 0;
+  private bundle: BundleReading | null = null;
   private readonly orders = new Map<string, BookOrder & { placed: BookLog }>();
   private readonly pendingReceipts: { settlementId: string; l1Block: number }[] = [];
 
@@ -389,7 +417,7 @@ export class Observer {
           txHash: mark.txHash ?? null,
           reason: mark.reason ?? "unknown",
         });
-      } else {
+      } else if (mark.kind === "rolled_back") {
         this.observations.push({
           kind: "settlement_rolled_back",
           at,
@@ -399,6 +427,15 @@ export class Observer {
           cause: mark.cause ?? "bundle_missed",
           l1GasSpent: mark.l1GasSpent ?? false,
         });
+      } else {
+        // Not a fact of either chain, so it never enters the IX-2 stream: it
+        // is a reading the assertions take at the end of the run (EC-5).
+        this.bundle = {
+          l1Block: mark.l1Block,
+          crossLayerTxs: mark.crossLayerTxs,
+          dexTxs: mark.dexTxs,
+          cap: mark.cap,
+        };
       }
     }
     this.marksSeen = lines.length;
@@ -435,6 +472,7 @@ export class Observer {
       balances,
       openOrders: await readOpenOrders(this.l2, book),
       legInputs: this.legInputs,
+      ...(this.bundle === null ? {} : { bundle: this.bundle }),
       expect,
     };
   }

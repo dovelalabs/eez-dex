@@ -435,6 +435,12 @@ dex_row_shared_slot() {
     check "EC-5" "the DEX and the other product fit inside MAX_USER_TXS_PER_BUNDLE" \
         "$(( 1 + ${others:-0} <= ${DEX_MAX_USER_TXS_PER_BUNDLE:-3} ? 0 : 1 ))"
     check "EC-5" "the DEX settlement was unaffected" "$(dex_settle_and_wait; echo $?)"
+
+    # The cap arithmetic as a reading, so the TypeScript asserts it too rather
+    # than the shell being the only witness to the one row TS-4 names.
+    dex_mark "$(printf '{"kind":"bundle","l1Block":%s,"crossLayerTxs":%s,"dexTxs":1,"cap":%s}' \
+        "$(cast block-number --rpc-url "$DEX_L1_RPC")" \
+        "$(( 1 + ${others:-0} ))" "${DEX_MAX_USER_TXS_PER_BUNDLE:-3}")"
     say "window was $window, is $(dex_window_id)"
 }
 

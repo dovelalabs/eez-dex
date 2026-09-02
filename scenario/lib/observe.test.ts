@@ -13,6 +13,9 @@
  */
 
 import assert from "node:assert/strict";
+import { mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { test } from "node:test";
 
 import { EVENTS, encodeCall, selector, topic0 } from "./abi.ts";
@@ -24,6 +27,8 @@ import { Observer } from "./observe.ts";
 import type { ObserveConfig } from "./observe.ts";
 import { sqrtPriceForPrice } from "./pool.ts";
 import { record } from "./record.ts";
+import { assertRun } from "./assert.ts";
+import type { Readings } from "./assert.ts";
 import { validate } from "./validate.ts";
 import { FIXTURE_PARAMS } from "./fixture.ts";
 
@@ -294,6 +299,47 @@ test("hx2: the readings carry the ledger, the balances and the open book", async
   assert.equal((readings["balances"] as unknown[]).length, 4, "two assets by two traders");
   assert.deepEqual(readings["openOrders"], []);
   assert.equal((readings["legInputs"] as unknown[]).length, 1);
+});
+
+test("ec5: a bundle mark becomes the cap arithmetic the assertions read (TS-4)", async () => {
+  const { logs, head } = scriptedRun();
+  const { l1, l2 } = fakeChains(logs, head);
+  const marks = join(mkdtempSync(join(tmpdir(), "dex-marks-")), "marks.jsonl");
+  const observer = new Observer({ ...config(), marksFile: marks }, l1, l2);
+  await observer.start();
+  head.value = 14;
+  await observer.step();
+
+  // Without the mark there is nothing to assert, and `checkBundle` must not
+  // report a pass it did not earn.
+  const before = (await observer.readings({ mode: "matrix" })) as Record<string, unknown>;
+  assert.equal(before["bundle"], undefined);
+
+  // The shared-slot row's own numbers: the DEX's settlement plus another
+  // product's cross-layer transaction, inside the node's cap (EC-5).
+  writeFileSync(marks, `${JSON.stringify({ kind: "bundle", l1Block: 1002, crossLayerTxs: 2, dexTxs: 1, cap: 3 })}\n`);
+  await observer.step();
+
+  const readings = (await observer.readings({ mode: "matrix" })) as Record<string, unknown>;
+  assert.deepEqual(readings["bundle"], { l1Block: 1002, crossLayerTxs: 2, dexTxs: 1, cap: 3 });
+  // And it never enters the IX-2 stream: a bundle is a reading, not a fact of
+  // either chain.
+  assert.ok(observer.observations.every((observation) => observation.kind !== ("bundle" as never)));
+
+  const events = validate(record(observer.observations).events);
+  const passing = assertRun(events, { ...readings, expect: { mode: "matrix" } } as unknown as Readings);
+  assert.ok(
+    passing.lines.some((line) => line.includes("EC-5") && line.includes("PASS")),
+    passing.lines.join("\n"),
+  );
+
+  // A bundle over the cap, or a DEX that took two seats, is a failure.
+  const over = assertRun(events, {
+    ...readings,
+    bundle: { l1Block: 1002, crossLayerTxs: 4, dexTxs: 2, cap: 3 },
+    expect: { mode: "matrix" },
+  } as unknown as Readings);
+  assert.ok(over.failures >= 2, over.lines.join("\n"));
 });
 
 test("a4: a mark that evicts a window with nothing in flight is rejected", async () => {
