@@ -56,14 +56,23 @@ make pin                      # regenerate every framework reference
 make contracts-fork           # the mainnet-fork suite; needs a real ETH_RPC
 make scenario                 # the enclave scenario; needs Kurtosis and Docker
 make fix                      # format and auto-fix everything lint checks
+
+scenario/dex-scenario.sh --self-test   # the scenario's hermetic half; no enclave
+scenario/dex-scenario.sh --matrix      # appendix A.6's failure matrix
 ```
 
 ## Status
 
-The repository is at the scaffold. The shared types, the contract interfaces, the test
-fixtures, the event schema and the settler's configuration are frozen and tested; every
-product module is a stub that names the phase that owns it. `make check` passes on the
-stubbed tree.
+The contracts, the settler and the harness have landed: `SettlementRouter` and the
+Uniswap v3 adapter on L1, `WindowBook` and `Mirror` on L2, the `DexBridge` pair, the
+settler's four tasks, and the enclave scenario with appendix A.6's failure matrix and
+the recorded run the frontend replays. The indexer and the frontend are still stubs
+that name the phase that owns them.
+
+`make check` is green. The scenario's hermetic half — the settlement oracle, the
+recorder, the A.6 assertions and `MockPool`'s curve checked against the contract —
+runs on every pull request; the rows that need a network run where a Kurtosis runner
+is configured.
 
 ## Licence
 
