@@ -1,0 +1,3971 @@
+[
+  {
+    "schemaVersion": 1,
+    "seq": 1,
+    "kind": "window",
+    "atUnix": 1788000000,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "0",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 1,
+      "openedAtUnix": 1788000000,
+      "syncL2Block": null,
+      "orderIds": [],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "0",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 2,
+    "kind": "mirror",
+    "atUnix": 1788000000,
+    "mirror": {
+      "schemaVersion": 1,
+      "windowId": "0",
+      "state": {
+        "sqrtPriceX96": "4339505179874779489431521786241",
+        "liquidity": "2000000000000000000000000",
+        "tick": 80067
+      },
+      "referencePriceX96": "237684487542793012780631851007941",
+      "l1Block": 1000,
+      "mirrorTimestamp": 1788000000,
+      "ageSlots": 0,
+      "source": "genesis",
+      "observedAtUnix": 1788000000
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 3,
+    "kind": "order",
+    "atUnix": 1788000000,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+      "owner": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "3000000000000000000",
+      "minBuyAmount": "8981101799999999999999",
+      "recipient": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 1,
+      "placedAtUnix": 1788000000,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 4,
+    "kind": "window",
+    "atUnix": 1788000000,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "0",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 1,
+      "openedAtUnix": 1788000000,
+      "syncL2Block": null,
+      "orderIds": [
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "3000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 5,
+    "kind": "order",
+    "atUnix": 1788000000,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+      "owner": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "9000000000000000000000",
+      "minBuyAmount": "2992200750000000000",
+      "recipient": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 1,
+      "placedAtUnix": 1788000000,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 6,
+    "kind": "window",
+    "atUnix": 1788000000,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "0",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 1,
+      "openedAtUnix": 1788000000,
+      "syncL2Block": null,
+      "orderIds": [
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "6000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 7,
+    "kind": "l2_block",
+    "atUnix": 1788000002,
+    "l2Block": 2,
+    "windowId": "0",
+    "blocksRemaining": 5
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 8,
+    "kind": "order",
+    "atUnix": 1788000002,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+      "owner": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "5000000000000000000",
+      "minBuyAmount": "14953504499999999999999",
+      "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 2,
+      "placedAtUnix": 1788000002,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 9,
+    "kind": "window",
+    "atUnix": 1788000002,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "0",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 1,
+      "openedAtUnix": 1788000000,
+      "syncL2Block": null,
+      "orderIds": [
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+        "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "11000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 10,
+    "kind": "order",
+    "atUnix": 1788000002,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+      "owner": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "15000000000000000000000",
+      "minBuyAmount": "4982001750000000000",
+      "recipient": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 2,
+      "placedAtUnix": 1788000002,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 11,
+    "kind": "window",
+    "atUnix": 1788000002,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "0",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 1,
+      "openedAtUnix": 1788000000,
+      "syncL2Block": null,
+      "orderIds": [
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+        "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+        "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "16000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 12,
+    "kind": "l2_block",
+    "atUnix": 1788000004,
+    "l2Block": 3,
+    "windowId": "0",
+    "blocksRemaining": 4
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 13,
+    "kind": "order",
+    "atUnix": 1788000004,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+      "owner": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5975402399999999999999",
+      "recipient": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 3,
+      "placedAtUnix": 1788000004,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 14,
+    "kind": "window",
+    "atUnix": 1788000004,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "0",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 1,
+      "openedAtUnix": 1788000000,
+      "syncL2Block": null,
+      "orderIds": [
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+        "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+        "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+        "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "18000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 15,
+    "kind": "order",
+    "atUnix": 1788000004,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4",
+      "owner": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "6000000000000000000000",
+      "minBuyAmount": "1990800900000000000",
+      "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 3,
+      "placedAtUnix": 1788000004,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 16,
+    "kind": "window",
+    "atUnix": 1788000004,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "0",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 1,
+      "openedAtUnix": 1788000000,
+      "syncL2Block": null,
+      "orderIds": [
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+        "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+        "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+        "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+        "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "20000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 17,
+    "kind": "l2_block",
+    "atUnix": 1788000006,
+    "l2Block": 4,
+    "windowId": "0",
+    "blocksRemaining": 3
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 18,
+    "kind": "order",
+    "atUnix": 1788000006,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x8e817a71baaa14ec9c590edf257c88bc65aaaa9f70346ce2bc7182f5d8bcde76",
+      "owner": "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "4000000000000000000",
+      "minBuyAmount": "11938805999999999999999",
+      "recipient": "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 4,
+      "placedAtUnix": 1788000006,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 19,
+    "kind": "window",
+    "atUnix": 1788000006,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "0",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 1,
+      "openedAtUnix": 1788000000,
+      "syncL2Block": null,
+      "orderIds": [
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+        "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+        "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+        "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+        "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4",
+        "0x8e817a71baaa14ec9c590edf257c88bc65aaaa9f70346ce2bc7182f5d8bcde76"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "24000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 20,
+    "kind": "order",
+    "atUnix": 1788000006,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xf8e3eaa91e9255d54d00d46f548b1b012f9c5d4ba4885d9ade7895250c052a42",
+      "owner": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "12000000000000000000000",
+      "minBuyAmount": "3977602200000000000",
+      "recipient": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 4,
+      "placedAtUnix": 1788000006,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 21,
+    "kind": "window",
+    "atUnix": 1788000006,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "0",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 1,
+      "openedAtUnix": 1788000000,
+      "syncL2Block": null,
+      "orderIds": [
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+        "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+        "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+        "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+        "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4",
+        "0x8e817a71baaa14ec9c590edf257c88bc65aaaa9f70346ce2bc7182f5d8bcde76",
+        "0xf8e3eaa91e9255d54d00d46f548b1b012f9c5d4ba4885d9ade7895250c052a42"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "28000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 22,
+    "kind": "l2_block",
+    "atUnix": 1788000008,
+    "l2Block": 5,
+    "windowId": "0",
+    "blocksRemaining": 2
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 23,
+    "kind": "l2_block",
+    "atUnix": 1788000010,
+    "l2Block": 6,
+    "windowId": "0",
+    "blocksRemaining": 1
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 24,
+    "kind": "slot",
+    "atUnix": 1788000010,
+    "l1Block": 1001,
+    "windowId": "0"
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 25,
+    "kind": "l2_block",
+    "atUnix": 1788000012,
+    "l2Block": 7,
+    "windowId": "0",
+    "blocksRemaining": 0
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 26,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4",
+      "owner": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "6000000000000000000000",
+      "minBuyAmount": "1990800900000000000",
+      "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 3,
+      "placedAtUnix": 1788000004,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 27,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+      "owner": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "5000000000000000000",
+      "minBuyAmount": "14953504499999999999999",
+      "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 2,
+      "placedAtUnix": 1788000002,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 28,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+      "owner": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "15000000000000000000000",
+      "minBuyAmount": "4982001750000000000",
+      "recipient": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 2,
+      "placedAtUnix": 1788000002,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 29,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x8e817a71baaa14ec9c590edf257c88bc65aaaa9f70346ce2bc7182f5d8bcde76",
+      "owner": "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "4000000000000000000",
+      "minBuyAmount": "11938805999999999999999",
+      "recipient": "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 4,
+      "placedAtUnix": 1788000006,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 30,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+      "owner": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5975402399999999999999",
+      "recipient": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 3,
+      "placedAtUnix": 1788000004,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 31,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+      "owner": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "9000000000000000000000",
+      "minBuyAmount": "2992200750000000000",
+      "recipient": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 1,
+      "placedAtUnix": 1788000000,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 32,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+      "owner": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "3000000000000000000",
+      "minBuyAmount": "8981101799999999999999",
+      "recipient": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 1,
+      "placedAtUnix": 1788000000,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 33,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xf8e3eaa91e9255d54d00d46f548b1b012f9c5d4ba4885d9ade7895250c052a42",
+      "owner": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "12000000000000000000000",
+      "minBuyAmount": "3977602200000000000",
+      "recipient": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 4,
+      "placedAtUnix": 1788000006,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 34,
+    "kind": "window",
+    "atUnix": 1788000012,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "0",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 1,
+      "openedAtUnix": 1788000000,
+      "syncL2Block": null,
+      "orderIds": [
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+        "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+        "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+        "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+        "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4",
+        "0x8e817a71baaa14ec9c590edf257c88bc65aaaa9f70346ce2bc7182f5d8bcde76",
+        "0xf8e3eaa91e9255d54d00d46f548b1b012f9c5d4ba4885d9ade7895250c052a42"
+      ],
+      "selectedOrderIds": [
+        "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4",
+        "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+        "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+        "0x8e817a71baaa14ec9c590edf257c88bc65aaaa9f70346ce2bc7182f5d8bcde76",
+        "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xf8e3eaa91e9255d54d00d46f548b1b012f9c5d4ba4885d9ade7895250c052a42"
+      ],
+      "settlementId": null,
+      "grossIn": "28000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 35,
+    "kind": "window",
+    "atUnix": 1788000012,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "0",
+      "state": "settling",
+      "slots": 1,
+      "openedAtL2Block": 1,
+      "openedAtUnix": 1788000000,
+      "syncL2Block": 7,
+      "orderIds": [
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+        "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+        "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+        "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+        "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4",
+        "0x8e817a71baaa14ec9c590edf257c88bc65aaaa9f70346ce2bc7182f5d8bcde76",
+        "0xf8e3eaa91e9255d54d00d46f548b1b012f9c5d4ba4885d9ade7895250c052a42"
+      ],
+      "selectedOrderIds": [
+        "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4",
+        "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+        "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+        "0x8e817a71baaa14ec9c590edf257c88bc65aaaa9f70346ce2bc7182f5d8bcde76",
+        "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xf8e3eaa91e9255d54d00d46f548b1b012f9c5d4ba4885d9ade7895250c052a42"
+      ],
+      "settlementId": "0x892880ef9475d65239ec46f7c7a95b01df7b1f17ef7355e6d099c0a7fab8c412",
+      "grossIn": "28000000000000000000",
+      "residualIn": "0",
+      "residualSide": "SELL_A_FOR_B",
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 36,
+    "kind": "settlement",
+    "atUnix": 1788000012,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0x892880ef9475d65239ec46f7c7a95b01df7b1f17ef7355e6d099c0a7fab8c412",
+      "windowId": "0",
+      "outcome": "submitted",
+      "leg": {
+        "windowId": "0",
+        "residualSide": "SELL_A_FOR_B",
+        "residualIn": "0",
+        "minPriceX96": "237209118567707426755044175277277",
+        "maxPriceX96": "238280188012825075469305113792481",
+        "deadline": 1788000036
+      },
+      "result": null,
+      "l1Receipt": null,
+      "rollbackCause": null,
+      "l1GasSpent": false,
+      "filledOrderIds": [],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000012,
+      "settledAtUnix": null,
+      "amortisation": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 37,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4",
+      "owner": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "6000000000000000000000",
+      "minBuyAmount": "1990800900000000000",
+      "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 3,
+      "placedAtUnix": 1788000004,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": {
+        "windowId": "0",
+        "amountOut": "1999800000000000000",
+        "feeAmount": "600000000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "0",
+        "priceX96": "237684487542793012780631851007941",
+        "crossed": true,
+        "settlementId": "0x892880ef9475d65239ec46f7c7a95b01df7b1f17ef7355e6d099c0a7fab8c412"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 38,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+      "owner": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "5000000000000000000",
+      "minBuyAmount": "14953504499999999999999",
+      "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 2,
+      "placedAtUnix": 1788000002,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": {
+        "windowId": "0",
+        "amountOut": "14998500000000000000000",
+        "feeAmount": "500000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "0",
+        "priceX96": "237684487542793012780631851008000",
+        "crossed": false,
+        "settlementId": "0x892880ef9475d65239ec46f7c7a95b01df7b1f17ef7355e6d099c0a7fab8c412"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 39,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+      "owner": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "15000000000000000000000",
+      "minBuyAmount": "4982001750000000000",
+      "recipient": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 2,
+      "placedAtUnix": 1788000002,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": {
+        "windowId": "0",
+        "amountOut": "4999500000000000000",
+        "feeAmount": "1500000000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "0",
+        "priceX96": "237684487542793012780631851007941",
+        "crossed": true,
+        "settlementId": "0x892880ef9475d65239ec46f7c7a95b01df7b1f17ef7355e6d099c0a7fab8c412"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 40,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x8e817a71baaa14ec9c590edf257c88bc65aaaa9f70346ce2bc7182f5d8bcde76",
+      "owner": "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "4000000000000000000",
+      "minBuyAmount": "11938805999999999999999",
+      "recipient": "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 4,
+      "placedAtUnix": 1788000006,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": {
+        "windowId": "0",
+        "amountOut": "11998800000000000000000",
+        "feeAmount": "400000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "0",
+        "priceX96": "237684487542793012780631851008000",
+        "crossed": false,
+        "settlementId": "0x892880ef9475d65239ec46f7c7a95b01df7b1f17ef7355e6d099c0a7fab8c412"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 41,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+      "owner": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5975402399999999999999",
+      "recipient": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 3,
+      "placedAtUnix": 1788000004,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": {
+        "windowId": "0",
+        "amountOut": "5999400000000000000000",
+        "feeAmount": "200000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "0",
+        "priceX96": "237684487542793012780631851008000",
+        "crossed": false,
+        "settlementId": "0x892880ef9475d65239ec46f7c7a95b01df7b1f17ef7355e6d099c0a7fab8c412"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 42,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+      "owner": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "9000000000000000000000",
+      "minBuyAmount": "2992200750000000000",
+      "recipient": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 1,
+      "placedAtUnix": 1788000000,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": {
+        "windowId": "0",
+        "amountOut": "2999700000000000000",
+        "feeAmount": "900000000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "0",
+        "priceX96": "237684487542793012780631851007941",
+        "crossed": true,
+        "settlementId": "0x892880ef9475d65239ec46f7c7a95b01df7b1f17ef7355e6d099c0a7fab8c412"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 43,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+      "owner": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "3000000000000000000",
+      "minBuyAmount": "8981101799999999999999",
+      "recipient": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 1,
+      "placedAtUnix": 1788000000,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": {
+        "windowId": "0",
+        "amountOut": "8999100000000000000000",
+        "feeAmount": "300000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "0",
+        "priceX96": "237684487542793012780631851008000",
+        "crossed": false,
+        "settlementId": "0x892880ef9475d65239ec46f7c7a95b01df7b1f17ef7355e6d099c0a7fab8c412"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 44,
+    "kind": "order",
+    "atUnix": 1788000012,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xf8e3eaa91e9255d54d00d46f548b1b012f9c5d4ba4885d9ade7895250c052a42",
+      "owner": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "12000000000000000000000",
+      "minBuyAmount": "3977602200000000000",
+      "recipient": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 4,
+      "placedAtUnix": 1788000006,
+      "windowId": "0",
+      "rolledCount": 0,
+      "fill": {
+        "windowId": "0",
+        "amountOut": "3999600000000000000",
+        "feeAmount": "1200000000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "0",
+        "priceX96": "237684487542793012780631851007941",
+        "crossed": true,
+        "settlementId": "0x892880ef9475d65239ec46f7c7a95b01df7b1f17ef7355e6d099c0a7fab8c412"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 45,
+    "kind": "settlement",
+    "atUnix": 1788000012,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0x892880ef9475d65239ec46f7c7a95b01df7b1f17ef7355e6d099c0a7fab8c412",
+      "windowId": "0",
+      "outcome": "settled",
+      "leg": {
+        "windowId": "0",
+        "residualSide": "SELL_A_FOR_B",
+        "residualIn": "0",
+        "minPriceX96": "237209118567707426755044175277277",
+        "maxPriceX96": "238280188012825075469305113792481",
+        "deadline": 1788000036
+      },
+      "result": {
+        "amountIn": "0",
+        "amountOut": "0",
+        "referencePriceX96": "237684487542793012780631851007941",
+        "executionPriceX96": "237684487542793012780631851007941",
+        "post": {
+          "sqrtPriceX96": "4339505179874779489431521786241",
+          "liquidity": "2000000000000000000000000",
+          "tick": 80067
+        },
+        "l1Block": 1002
+      },
+      "l1Receipt": null,
+      "rollbackCause": null,
+      "l1GasSpent": false,
+      "filledOrderIds": [
+        "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4",
+        "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+        "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+        "0x8e817a71baaa14ec9c590edf257c88bc65aaaa9f70346ce2bc7182f5d8bcde76",
+        "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xf8e3eaa91e9255d54d00d46f548b1b012f9c5d4ba4885d9ade7895250c052a42"
+      ],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000012,
+      "settledAtUnix": 1788000012,
+      "amortisation": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 46,
+    "kind": "window",
+    "atUnix": 1788000012,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "0",
+      "state": "settled",
+      "slots": 1,
+      "openedAtL2Block": 1,
+      "openedAtUnix": 1788000000,
+      "syncL2Block": 7,
+      "orderIds": [
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+        "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+        "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+        "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+        "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4",
+        "0x8e817a71baaa14ec9c590edf257c88bc65aaaa9f70346ce2bc7182f5d8bcde76",
+        "0xf8e3eaa91e9255d54d00d46f548b1b012f9c5d4ba4885d9ade7895250c052a42"
+      ],
+      "selectedOrderIds": [
+        "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4",
+        "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+        "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+        "0x8e817a71baaa14ec9c590edf257c88bc65aaaa9f70346ce2bc7182f5d8bcde76",
+        "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xf8e3eaa91e9255d54d00d46f548b1b012f9c5d4ba4885d9ade7895250c052a42"
+      ],
+      "settlementId": "0x892880ef9475d65239ec46f7c7a95b01df7b1f17ef7355e6d099c0a7fab8c412",
+      "grossIn": "27997200000000000000",
+      "residualIn": "0",
+      "residualSide": "SELL_A_FOR_B",
+      "nettingRatio": 1
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 47,
+    "kind": "mirror",
+    "atUnix": 1788000012,
+    "mirror": {
+      "schemaVersion": 1,
+      "windowId": "0",
+      "state": {
+        "sqrtPriceX96": "4339505179874779489431521786241",
+        "liquidity": "2000000000000000000000000",
+        "tick": 80067
+      },
+      "referencePriceX96": "237684487542793012780631851007941",
+      "l1Block": 1002,
+      "mirrorTimestamp": 1788000012,
+      "ageSlots": 0,
+      "source": "refresh",
+      "observedAtUnix": 1788000012
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 48,
+    "kind": "window",
+    "atUnix": 1788000012,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "1",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 7,
+      "openedAtUnix": 1788000012,
+      "syncL2Block": null,
+      "orderIds": [],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "0",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 49,
+    "kind": "metrics",
+    "atUnix": 1788000012,
+    "metrics": {
+      "counterfactual_l1_gas_wei": 0,
+      "escrow_invariant_drift_wei": 0,
+      "fills_per_settlement": 8,
+      "gas_per_fill_wei": 0,
+      "impact_bps": 0,
+      "mirror_age_slots": 0,
+      "netting_ratio": 1,
+      "roll_rate": 0,
+      "selection_omitted_total": 0,
+      "time_to_settle_seconds": 0,
+      "unposted_window": 0,
+      "window_slots": 1,
+      "windows_total{outcome=\"empty\"}": 0,
+      "windows_total{outcome=\"evicted\"}": 0,
+      "windows_total{outcome=\"rolled_back\"}": 0,
+      "windows_total{outcome=\"settled\"}": 1
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 50,
+    "kind": "settlement",
+    "atUnix": 1788000012,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0x892880ef9475d65239ec46f7c7a95b01df7b1f17ef7355e6d099c0a7fab8c412",
+      "windowId": "0",
+      "outcome": "settled",
+      "leg": {
+        "windowId": "0",
+        "residualSide": "SELL_A_FOR_B",
+        "residualIn": "0",
+        "minPriceX96": "237209118567707426755044175277277",
+        "maxPriceX96": "238280188012825075469305113792481",
+        "deadline": 1788000036
+      },
+      "result": {
+        "amountIn": "0",
+        "amountOut": "0",
+        "referencePriceX96": "237684487542793012780631851007941",
+        "executionPriceX96": "237684487542793012780631851007941",
+        "post": {
+          "sqrtPriceX96": "4339505179874779489431521786241",
+          "liquidity": "2000000000000000000000000",
+          "tick": 80067
+        },
+        "l1Block": 1002
+      },
+      "l1Receipt": {
+        "txHash": "0x79f87562de5a6e340b428ed40e96baf2f7cb3b1bd1d81dbfde62ef259d683bc9",
+        "blockNumber": 1002,
+        "gasUsed": "282000",
+        "effectiveGasPriceWei": "1000000000",
+        "gasCostWei": "282000000000000",
+        "status": "success"
+      },
+      "rollbackCause": null,
+      "l1GasSpent": true,
+      "filledOrderIds": [
+        "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4",
+        "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+        "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+        "0x8e817a71baaa14ec9c590edf257c88bc65aaaa9f70346ce2bc7182f5d8bcde76",
+        "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+        "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+        "0xf8e3eaa91e9255d54d00d46f548b1b012f9c5d4ba4885d9ade7895250c052a42"
+      ],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000012,
+      "settledAtUnix": 1788000012,
+      "amortisation": {
+        "schemaVersion": 1,
+        "settlementId": "0x892880ef9475d65239ec46f7c7a95b01df7b1f17ef7355e6d099c0a7fab8c412",
+        "windowId": "0",
+        "fills": 8,
+        "l1GasUsed": "282000",
+        "l1GasCostWei": "282000000000000",
+        "gasPerFillWei": "35250000000000",
+        "counterfactualGasCostWei": "3200000000000000",
+        "savingsWei": "2918000000000000",
+        "perOrder": [
+          {
+            "orderId": "0x337a8ef3e2258ed07f04a1466930ed970b394337054bb426509b313d5dddbdd4",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0x38a941d2d4959baae54ba9c14502abe54ffd4ad0db290295f453ef9d7d5a3f2d",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0x507f3e9a1e9fe1471f33d54ddf434e74c59588f91306d8a9b19e60d6bc2f5d80",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0x8e817a71baaa14ec9c590edf257c88bc65aaaa9f70346ce2bc7182f5d8bcde76",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0xa09c927cac17c4ffbf85ef6d81a8b8673e35b025054344e2cb8cb56d2ccb04f4",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0xd2c60015525619472b5586be2bc113bd0b8fde5198d128f4586831db289865bd",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0xf8e3eaa91e9255d54d00d46f548b1b012f9c5d4ba4885d9ade7895250c052a42",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 51,
+    "kind": "l2_block",
+    "atUnix": 1788000014,
+    "l2Block": 8,
+    "windowId": "1",
+    "blocksRemaining": 5
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 52,
+    "kind": "order",
+    "atUnix": 1788000014,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+      "owner": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5988601079999999999999",
+      "recipient": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 8,
+      "placedAtUnix": 1788000014,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 53,
+    "kind": "window",
+    "atUnix": 1788000014,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "1",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 7,
+      "openedAtUnix": 1788000012,
+      "syncL2Block": null,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "2000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 54,
+    "kind": "order",
+    "atUnix": 1788000014,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+      "owner": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "6000000000000000000000",
+      "minBuyAmount": "1995000480000000000",
+      "recipient": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 8,
+      "placedAtUnix": 1788000014,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 55,
+    "kind": "window",
+    "atUnix": 1788000014,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "1",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 7,
+      "openedAtUnix": 1788000012,
+      "syncL2Block": null,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "4000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 56,
+    "kind": "l2_block",
+    "atUnix": 1788000016,
+    "l2Block": 9,
+    "windowId": "1",
+    "blocksRemaining": 4
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 57,
+    "kind": "order",
+    "atUnix": 1788000016,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+      "owner": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5981401799999999999999",
+      "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 9,
+      "placedAtUnix": 1788000016,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 58,
+    "kind": "window",
+    "atUnix": 1788000016,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "1",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 7,
+      "openedAtUnix": 1788000012,
+      "syncL2Block": null,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "6000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 59,
+    "kind": "order",
+    "atUnix": 1788000016,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62",
+      "owner": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "6000000000000000000000",
+      "minBuyAmount": "1992600720000000000",
+      "recipient": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 9,
+      "placedAtUnix": 1788000016,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 60,
+    "kind": "window",
+    "atUnix": 1788000016,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "1",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 7,
+      "openedAtUnix": 1788000012,
+      "syncL2Block": null,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "8000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 61,
+    "kind": "l2_block",
+    "atUnix": 1788000018,
+    "l2Block": 10,
+    "windowId": "1",
+    "blocksRemaining": 3
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 62,
+    "kind": "order",
+    "atUnix": 1788000018,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+      "owner": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5974202519999999999999",
+      "recipient": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 10,
+      "placedAtUnix": 1788000018,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 63,
+    "kind": "window",
+    "atUnix": 1788000018,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "1",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 7,
+      "openedAtUnix": 1788000012,
+      "syncL2Block": null,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "10000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 64,
+    "kind": "order",
+    "atUnix": 1788000018,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x54c872e8d7ad731876b4396e6694fa865375b3d72cfdeec0afaf870f0740ffd4",
+      "owner": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "6000000000000000000000",
+      "minBuyAmount": "1990200960000000000",
+      "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 10,
+      "placedAtUnix": 1788000018,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 65,
+    "kind": "window",
+    "atUnix": 1788000018,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "1",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 7,
+      "openedAtUnix": 1788000012,
+      "syncL2Block": null,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0x54c872e8d7ad731876b4396e6694fa865375b3d72cfdeec0afaf870f0740ffd4"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "12000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 66,
+    "kind": "l2_block",
+    "atUnix": 1788000020,
+    "l2Block": 11,
+    "windowId": "1",
+    "blocksRemaining": 2
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 67,
+    "kind": "l2_block",
+    "atUnix": 1788000022,
+    "l2Block": 12,
+    "windowId": "1",
+    "blocksRemaining": 1
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 68,
+    "kind": "slot",
+    "atUnix": 1788000022,
+    "l1Block": 1003,
+    "windowId": "1"
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 69,
+    "kind": "l2_block",
+    "atUnix": 1788000024,
+    "l2Block": 13,
+    "windowId": "1",
+    "blocksRemaining": 0
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 70,
+    "kind": "order",
+    "atUnix": 1788000024,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x54c872e8d7ad731876b4396e6694fa865375b3d72cfdeec0afaf870f0740ffd4",
+      "owner": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "6000000000000000000000",
+      "minBuyAmount": "1990200960000000000",
+      "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 10,
+      "placedAtUnix": 1788000018,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 71,
+    "kind": "order",
+    "atUnix": 1788000024,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+      "owner": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "6000000000000000000000",
+      "minBuyAmount": "1995000480000000000",
+      "recipient": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 8,
+      "placedAtUnix": 1788000014,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 72,
+    "kind": "order",
+    "atUnix": 1788000024,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62",
+      "owner": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "6000000000000000000000",
+      "minBuyAmount": "1992600720000000000",
+      "recipient": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 9,
+      "placedAtUnix": 1788000016,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 73,
+    "kind": "window",
+    "atUnix": 1788000024,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "1",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 7,
+      "openedAtUnix": 1788000012,
+      "syncL2Block": null,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0x54c872e8d7ad731876b4396e6694fa865375b3d72cfdeec0afaf870f0740ffd4"
+      ],
+      "selectedOrderIds": [
+        "0x54c872e8d7ad731876b4396e6694fa865375b3d72cfdeec0afaf870f0740ffd4",
+        "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+        "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62"
+      ],
+      "settlementId": null,
+      "grossIn": "12000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 74,
+    "kind": "window",
+    "atUnix": 1788000024,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "1",
+      "state": "settling",
+      "slots": 1,
+      "openedAtL2Block": 7,
+      "openedAtUnix": 1788000012,
+      "syncL2Block": 13,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0x54c872e8d7ad731876b4396e6694fa865375b3d72cfdeec0afaf870f0740ffd4"
+      ],
+      "selectedOrderIds": [
+        "0x54c872e8d7ad731876b4396e6694fa865375b3d72cfdeec0afaf870f0740ffd4",
+        "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+        "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62"
+      ],
+      "settlementId": "0x016ace8f600e798d7371f344c378646d0b41f0bf8d8da7809ad1d7825504170a",
+      "grossIn": "12000000000000000000",
+      "residualIn": "17998200000000000000000",
+      "residualSide": "SELL_B_FOR_A",
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 75,
+    "kind": "settlement",
+    "atUnix": 1788000024,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0x016ace8f600e798d7371f344c378646d0b41f0bf8d8da7809ad1d7825504170a",
+      "windowId": "1",
+      "outcome": "submitted",
+      "leg": {
+        "windowId": "1",
+        "residualSide": "SELL_B_FOR_A",
+        "residualIn": "17998200000000000000000",
+        "minPriceX96": "0",
+        "maxPriceX96": "238256302669199090598067212317562",
+        "deadline": 1788000048
+      },
+      "result": null,
+      "l1Receipt": null,
+      "rollbackCause": null,
+      "l1GasSpent": false,
+      "filledOrderIds": [],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000024,
+      "settledAtUnix": null,
+      "amortisation": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 76,
+    "kind": "order",
+    "atUnix": 1788000024,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x54c872e8d7ad731876b4396e6694fa865375b3d72cfdeec0afaf870f0740ffd4",
+      "owner": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "6000000000000000000000",
+      "minBuyAmount": "1990200960000000000",
+      "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 10,
+      "placedAtUnix": 1788000018,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": {
+        "windowId": "1",
+        "amountOut": "2025476052269632379",
+        "feeAmount": "600000000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "3990885281888158161",
+        "priceX96": "234671467804055004848449483836037",
+        "crossed": false,
+        "settlementId": "0x016ace8f600e798d7371f344c378646d0b41f0bf8d8da7809ad1d7825504170a"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 77,
+    "kind": "order",
+    "atUnix": 1788000024,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+      "owner": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "6000000000000000000000",
+      "minBuyAmount": "1995000480000000000",
+      "recipient": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 8,
+      "placedAtUnix": 1788000014,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": {
+        "windowId": "1",
+        "amountOut": "2025476052269632379",
+        "feeAmount": "600000000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "3990885281888158161",
+        "priceX96": "234671467804055004848449483836037",
+        "crossed": false,
+        "settlementId": "0x016ace8f600e798d7371f344c378646d0b41f0bf8d8da7809ad1d7825504170a"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 78,
+    "kind": "order",
+    "atUnix": 1788000024,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62",
+      "owner": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+      "side": "SELL_B_FOR_A",
+      "sellAmount": "6000000000000000000000",
+      "minBuyAmount": "1992600720000000000",
+      "recipient": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 9,
+      "placedAtUnix": 1788000016,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": {
+        "windowId": "1",
+        "amountOut": "2025476052269632379",
+        "feeAmount": "600000000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "3990885281888158161",
+        "priceX96": "234671467804055004848449483836037",
+        "crossed": false,
+        "settlementId": "0x016ace8f600e798d7371f344c378646d0b41f0bf8d8da7809ad1d7825504170a"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 79,
+    "kind": "settlement",
+    "atUnix": 1788000024,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0x016ace8f600e798d7371f344c378646d0b41f0bf8d8da7809ad1d7825504170a",
+      "windowId": "1",
+      "outcome": "settled",
+      "leg": {
+        "windowId": "1",
+        "residualSide": "SELL_B_FOR_A",
+        "residualIn": "17998200000000000000000",
+        "minPriceX96": "0",
+        "maxPriceX96": "238256302669199090598067212317562",
+        "deadline": 1788000048
+      },
+      "result": {
+        "amountIn": "17998200000000000000000",
+        "amountOut": "6076428156808897137",
+        "referencePriceX96": "234515361042222439276890092994543",
+        "executionPriceX96": "234671467804055004848449483836037",
+        "post": {
+          "sqrtPriceX96": "4311190689262464842961576999650",
+          "liquidity": "2000000000000000000000000",
+          "tick": 79936
+        },
+        "l1Block": 1004
+      },
+      "l1Receipt": null,
+      "rollbackCause": null,
+      "l1GasSpent": false,
+      "filledOrderIds": [
+        "0x54c872e8d7ad731876b4396e6694fa865375b3d72cfdeec0afaf870f0740ffd4",
+        "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+        "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62"
+      ],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000024,
+      "settledAtUnix": 1788000024,
+      "amortisation": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 80,
+    "kind": "window",
+    "atUnix": 1788000024,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "1",
+      "state": "settled",
+      "slots": 1,
+      "openedAtL2Block": 7,
+      "openedAtUnix": 1788000012,
+      "syncL2Block": 13,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0x54c872e8d7ad731876b4396e6694fa865375b3d72cfdeec0afaf870f0740ffd4"
+      ],
+      "selectedOrderIds": [
+        "0x54c872e8d7ad731876b4396e6694fa865375b3d72cfdeec0afaf870f0740ffd4",
+        "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+        "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62"
+      ],
+      "settlementId": "0x016ace8f600e798d7371f344c378646d0b41f0bf8d8da7809ad1d7825504170a",
+      "grossIn": "6080472972972972972",
+      "residualIn": "17998200000000000000000",
+      "residualSide": "SELL_B_FOR_A",
+      "nettingRatio": 0
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 81,
+    "kind": "mirror",
+    "atUnix": 1788000024,
+    "mirror": {
+      "schemaVersion": 1,
+      "windowId": "1",
+      "state": {
+        "sqrtPriceX96": "4311190689262464842961576999650",
+        "liquidity": "2000000000000000000000000",
+        "tick": 79936
+      },
+      "referencePriceX96": "234515361042222439276890092994543",
+      "l1Block": 1004,
+      "mirrorTimestamp": 1788000024,
+      "ageSlots": 0,
+      "source": "settlement",
+      "observedAtUnix": 1788000024
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 82,
+    "kind": "order",
+    "atUnix": 1788000024,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+      "owner": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5988601079999999999999",
+      "recipient": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "expiresAfter": 2,
+      "state": "rolled",
+      "placedAtL2Block": 8,
+      "placedAtUnix": 1788000014,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 83,
+    "kind": "order",
+    "atUnix": 1788000024,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+      "owner": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5981401799999999999999",
+      "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "expiresAfter": 2,
+      "state": "rolled",
+      "placedAtL2Block": 9,
+      "placedAtUnix": 1788000016,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 84,
+    "kind": "order",
+    "atUnix": 1788000024,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+      "owner": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5974202519999999999999",
+      "recipient": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "expiresAfter": 2,
+      "state": "rolled",
+      "placedAtL2Block": 10,
+      "placedAtUnix": 1788000018,
+      "windowId": "1",
+      "rolledCount": 0,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 85,
+    "kind": "order",
+    "atUnix": 1788000024,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+      "owner": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5988601079999999999999",
+      "recipient": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 8,
+      "placedAtUnix": 1788000014,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 86,
+    "kind": "order",
+    "atUnix": 1788000024,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+      "owner": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5981401799999999999999",
+      "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 9,
+      "placedAtUnix": 1788000016,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 87,
+    "kind": "order",
+    "atUnix": 1788000024,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+      "owner": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5974202519999999999999",
+      "recipient": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 10,
+      "placedAtUnix": 1788000018,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 88,
+    "kind": "window",
+    "atUnix": 1788000024,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 13,
+      "openedAtUnix": 1788000024,
+      "syncL2Block": null,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "6000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 89,
+    "kind": "metrics",
+    "atUnix": 1788000024,
+    "metrics": {
+      "counterfactual_l1_gas_wei": 400000000000000,
+      "escrow_invariant_drift_wei": 0,
+      "fills_per_settlement": 5.5,
+      "gas_per_fill_wei": 35250000000000,
+      "impact_bps": 3.328,
+      "mirror_age_slots": 0,
+      "netting_ratio": 0.5,
+      "roll_rate": 0.21428571428571427,
+      "selection_omitted_total": 0,
+      "time_to_settle_seconds": 0,
+      "unposted_window": 0,
+      "window_slots": 1,
+      "windows_total{outcome=\"empty\"}": 0,
+      "windows_total{outcome=\"evicted\"}": 0,
+      "windows_total{outcome=\"rolled_back\"}": 0,
+      "windows_total{outcome=\"settled\"}": 2
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 90,
+    "kind": "settlement",
+    "atUnix": 1788000024,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0x016ace8f600e798d7371f344c378646d0b41f0bf8d8da7809ad1d7825504170a",
+      "windowId": "1",
+      "outcome": "settled",
+      "leg": {
+        "windowId": "1",
+        "residualSide": "SELL_B_FOR_A",
+        "residualIn": "17998200000000000000000",
+        "minPriceX96": "0",
+        "maxPriceX96": "238256302669199090598067212317562",
+        "deadline": 1788000048
+      },
+      "result": {
+        "amountIn": "17998200000000000000000",
+        "amountOut": "6076428156808897137",
+        "referencePriceX96": "234515361042222439276890092994543",
+        "executionPriceX96": "234671467804055004848449483836037",
+        "post": {
+          "sqrtPriceX96": "4311190689262464842961576999650",
+          "liquidity": "2000000000000000000000000",
+          "tick": 79936
+        },
+        "l1Block": 1004
+      },
+      "l1Receipt": {
+        "txHash": "0x0c0ec1ab4d14ede5dfbb932079077cdf454ed9465982fae5f9178794509bbd6c",
+        "blockNumber": 1004,
+        "gasUsed": "237000",
+        "effectiveGasPriceWei": "1000000000",
+        "gasCostWei": "237000000000000",
+        "status": "success"
+      },
+      "rollbackCause": null,
+      "l1GasSpent": true,
+      "filledOrderIds": [
+        "0x54c872e8d7ad731876b4396e6694fa865375b3d72cfdeec0afaf870f0740ffd4",
+        "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+        "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62"
+      ],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000024,
+      "settledAtUnix": 1788000024,
+      "amortisation": {
+        "schemaVersion": 1,
+        "settlementId": "0x016ace8f600e798d7371f344c378646d0b41f0bf8d8da7809ad1d7825504170a",
+        "windowId": "1",
+        "fills": 3,
+        "l1GasUsed": "237000",
+        "l1GasCostWei": "237000000000000",
+        "gasPerFillWei": "79000000000000",
+        "counterfactualGasCostWei": "1200000000000000",
+        "savingsWei": "963000000000000",
+        "perOrder": [
+          {
+            "orderId": "0x54c872e8d7ad731876b4396e6694fa865375b3d72cfdeec0afaf870f0740ffd4",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0xb783e75c6c50486379cdb997f72be5bb2b6faae5b2251999cae874bc1b040af7",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0xc5e3ed14fa1bfe9b4c73e8fa64a2871d0df078699ddd9ebd4c1803c77febfe62",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 91,
+    "kind": "l2_block",
+    "atUnix": 1788000026,
+    "l2Block": 14,
+    "windowId": "2",
+    "blocksRemaining": 5
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 92,
+    "kind": "l2_block",
+    "atUnix": 1788000028,
+    "l2Block": 15,
+    "windowId": "2",
+    "blocksRemaining": 4
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 93,
+    "kind": "l2_block",
+    "atUnix": 1788000030,
+    "l2Block": 16,
+    "windowId": "2",
+    "blocksRemaining": 3
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 94,
+    "kind": "l2_block",
+    "atUnix": 1788000032,
+    "l2Block": 17,
+    "windowId": "2",
+    "blocksRemaining": 2
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 95,
+    "kind": "order",
+    "atUnix": 1788000032,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+      "owner": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5988601079999999999999",
+      "recipient": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 8,
+      "placedAtUnix": 1788000014,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 96,
+    "kind": "order",
+    "atUnix": 1788000032,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+      "owner": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5974202519999999999999",
+      "recipient": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 10,
+      "placedAtUnix": 1788000018,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 97,
+    "kind": "order",
+    "atUnix": 1788000032,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+      "owner": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5981401799999999999999",
+      "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 9,
+      "placedAtUnix": 1788000016,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 98,
+    "kind": "window",
+    "atUnix": 1788000032,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 13,
+      "openedAtUnix": 1788000024,
+      "syncL2Block": null,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3"
+      ],
+      "selectedOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "settlementId": null,
+      "grossIn": "6000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 99,
+    "kind": "window",
+    "atUnix": 1788000032,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": "settling",
+      "slots": 1,
+      "openedAtL2Block": 13,
+      "openedAtUnix": 1788000024,
+      "syncL2Block": 17,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3"
+      ],
+      "selectedOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "settlementId": "0x8b592d46071776079f6506a305c667eb22f0c7a82af5d5feae602b012a8d18f8",
+      "grossIn": "6000000000000000000",
+      "residualIn": "5999400000000000000",
+      "residualSide": "SELL_A_FOR_B",
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 100,
+    "kind": "settlement",
+    "atUnix": 1788000032,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0x8b592d46071776079f6506a305c667eb22f0c7a82af5d5feae602b012a8d18f8",
+      "windowId": "2",
+      "outcome": "submitted",
+      "leg": {
+        "windowId": "2",
+        "residualSide": "SELL_A_FOR_B",
+        "residualIn": "5999400000000000000",
+        "minPriceX96": "237256655465215985357587095633125",
+        "maxPriceX96": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "deadline": 1788000056
+      },
+      "result": null,
+      "l1Receipt": null,
+      "rollbackCause": null,
+      "l1GasSpent": false,
+      "filledOrderIds": [],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000032,
+      "settledAtUnix": null,
+      "amortisation": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 101,
+    "kind": "settlement",
+    "atUnix": 1788000032,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0x8b592d46071776079f6506a305c667eb22f0c7a82af5d5feae602b012a8d18f8",
+      "windowId": "2",
+      "outcome": "evicted",
+      "leg": {
+        "windowId": "2",
+        "residualSide": "SELL_A_FOR_B",
+        "residualIn": "5999400000000000000",
+        "minPriceX96": "237256655465215985357587095633125",
+        "maxPriceX96": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "deadline": 1788000056
+      },
+      "result": null,
+      "l1Receipt": null,
+      "rollbackCause": null,
+      "l1GasSpent": false,
+      "filledOrderIds": [],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000032,
+      "settledAtUnix": null,
+      "amortisation": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 102,
+    "kind": "window",
+    "atUnix": 1788000032,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": "evicted",
+      "slots": 1,
+      "openedAtL2Block": 13,
+      "openedAtUnix": 1788000024,
+      "syncL2Block": 17,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3"
+      ],
+      "selectedOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "settlementId": "0x8b592d46071776079f6506a305c667eb22f0c7a82af5d5feae602b012a8d18f8",
+      "grossIn": "6000000000000000000",
+      "residualIn": "5999400000000000000",
+      "residualSide": "SELL_A_FOR_B",
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 103,
+    "kind": "order",
+    "atUnix": 1788000032,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+      "owner": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5988601079999999999999",
+      "recipient": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 8,
+      "placedAtUnix": 1788000014,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 104,
+    "kind": "order",
+    "atUnix": 1788000032,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+      "owner": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5974202519999999999999",
+      "recipient": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 10,
+      "placedAtUnix": 1788000018,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 105,
+    "kind": "order",
+    "atUnix": 1788000032,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+      "owner": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5981401799999999999999",
+      "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 9,
+      "placedAtUnix": 1788000016,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 106,
+    "kind": "window",
+    "atUnix": 1788000032,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 13,
+      "openedAtUnix": 1788000024,
+      "syncL2Block": null,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "6000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 107,
+    "kind": "metrics",
+    "atUnix": 1788000032,
+    "metrics": {
+      "counterfactual_l1_gas_wei": 400000000000000,
+      "escrow_invariant_drift_wei": 0,
+      "fills_per_settlement": 5.5,
+      "gas_per_fill_wei": 57125000000000,
+      "impact_bps": 3.328,
+      "mirror_age_slots": 0,
+      "netting_ratio": 0.5,
+      "roll_rate": 0.21428571428571427,
+      "selection_omitted_total": 0,
+      "time_to_settle_seconds": 0,
+      "unposted_window": 0,
+      "window_slots": 1,
+      "windows_total{outcome=\"empty\"}": 0,
+      "windows_total{outcome=\"evicted\"}": 1,
+      "windows_total{outcome=\"rolled_back\"}": 0,
+      "windows_total{outcome=\"settled\"}": 2
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 108,
+    "kind": "l2_block",
+    "atUnix": 1788000034,
+    "l2Block": 18,
+    "windowId": "2",
+    "blocksRemaining": 1
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 109,
+    "kind": "slot",
+    "atUnix": 1788000034,
+    "l1Block": 1005,
+    "windowId": "2"
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 110,
+    "kind": "l2_block",
+    "atUnix": 1788000036,
+    "l2Block": 19,
+    "windowId": "2",
+    "blocksRemaining": 0
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 111,
+    "kind": "l2_block",
+    "atUnix": 1788000038,
+    "l2Block": 20,
+    "windowId": "2",
+    "blocksRemaining": 0
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 112,
+    "kind": "l2_block",
+    "atUnix": 1788000040,
+    "l2Block": 21,
+    "windowId": "2",
+    "blocksRemaining": 0
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 113,
+    "kind": "order",
+    "atUnix": 1788000040,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+      "owner": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5988601079999999999999",
+      "recipient": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 8,
+      "placedAtUnix": 1788000014,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 114,
+    "kind": "order",
+    "atUnix": 1788000040,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+      "owner": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5974202519999999999999",
+      "recipient": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 10,
+      "placedAtUnix": 1788000018,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 115,
+    "kind": "order",
+    "atUnix": 1788000040,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+      "owner": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5981401799999999999999",
+      "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 9,
+      "placedAtUnix": 1788000016,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 116,
+    "kind": "window",
+    "atUnix": 1788000040,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 13,
+      "openedAtUnix": 1788000024,
+      "syncL2Block": null,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3"
+      ],
+      "selectedOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "settlementId": null,
+      "grossIn": "6000000000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 117,
+    "kind": "window",
+    "atUnix": 1788000040,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": "settling",
+      "slots": 1,
+      "openedAtL2Block": 13,
+      "openedAtUnix": 1788000024,
+      "syncL2Block": 21,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3"
+      ],
+      "selectedOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "settlementId": "0xce6e9ab6f0aa44fdd23feb4d94809840007fc9db3157ee325215ac5822053ffa",
+      "grossIn": "6000000000000000000",
+      "residualIn": "5999400000000000000",
+      "residualSide": "SELL_A_FOR_B",
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 118,
+    "kind": "settlement",
+    "atUnix": 1788000040,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0xce6e9ab6f0aa44fdd23feb4d94809840007fc9db3157ee325215ac5822053ffa",
+      "windowId": "2",
+      "outcome": "submitted",
+      "leg": {
+        "windowId": "2",
+        "residualSide": "SELL_A_FOR_B",
+        "residualIn": "5999400000000000000",
+        "minPriceX96": "237256655465215985357587095633125",
+        "maxPriceX96": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "deadline": 1788000064
+      },
+      "result": null,
+      "l1Receipt": null,
+      "rollbackCause": null,
+      "l1GasSpent": false,
+      "filledOrderIds": [],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000040,
+      "settledAtUnix": null,
+      "amortisation": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 119,
+    "kind": "order",
+    "atUnix": 1788000040,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+      "owner": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5988601079999999999999",
+      "recipient": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 8,
+      "placedAtUnix": 1788000014,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": {
+        "windowId": "2",
+        "amountOut": "5995415743705807849423",
+        "feeAmount": "200000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "1328085431397384",
+        "priceX96": "237526639105361901525016997542107",
+        "crossed": false,
+        "settlementId": "0xce6e9ab6f0aa44fdd23feb4d94809840007fc9db3157ee325215ac5822053ffa"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 120,
+    "kind": "order",
+    "atUnix": 1788000040,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+      "owner": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5974202519999999999999",
+      "recipient": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 10,
+      "placedAtUnix": 1788000018,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": {
+        "windowId": "2",
+        "amountOut": "5995415743705807849423",
+        "feeAmount": "200000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "1328085431397384",
+        "priceX96": "237526639105361901525016997542107",
+        "crossed": false,
+        "settlementId": "0xce6e9ab6f0aa44fdd23feb4d94809840007fc9db3157ee325215ac5822053ffa"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 121,
+    "kind": "order",
+    "atUnix": 1788000040,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+      "owner": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5981401799999999999999",
+      "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 9,
+      "placedAtUnix": 1788000016,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": {
+        "windowId": "2",
+        "amountOut": "5995415743705807849423",
+        "feeAmount": "200000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "1328085431397384",
+        "priceX96": "237526639105361901525016997542107",
+        "crossed": false,
+        "settlementId": "0xce6e9ab6f0aa44fdd23feb4d94809840007fc9db3157ee325215ac5822053ffa"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 122,
+    "kind": "settlement",
+    "atUnix": 1788000040,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0xce6e9ab6f0aa44fdd23feb4d94809840007fc9db3157ee325215ac5822053ffa",
+      "windowId": "2",
+      "outcome": "settled",
+      "leg": {
+        "windowId": "2",
+        "residualSide": "SELL_A_FOR_B",
+        "residualIn": "5999400000000000000",
+        "minPriceX96": "237256655465215985357587095633125",
+        "maxPriceX96": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "deadline": 1788000064
+      },
+      "result": {
+        "amountIn": "5999400000000000000",
+        "amountOut": "17986247231117423548271",
+        "referencePriceX96": "237684487542793012780631851007941",
+        "executionPriceX96": "237526639105361901525043409570815",
+        "post": {
+          "sqrtPriceX96": "4338792671215455135335517088672",
+          "liquidity": "2000000000000000000000000",
+          "tick": 80064
+        },
+        "l1Block": 1006
+      },
+      "l1Receipt": null,
+      "rollbackCause": null,
+      "l1GasSpent": false,
+      "filledOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000040,
+      "settledAtUnix": 1788000040,
+      "amortisation": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 123,
+    "kind": "window",
+    "atUnix": 1788000040,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": "settled",
+      "slots": 1,
+      "openedAtL2Block": 13,
+      "openedAtUnix": 1788000024,
+      "syncL2Block": 21,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3"
+      ],
+      "selectedOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "settlementId": "0xce6e9ab6f0aa44fdd23feb4d94809840007fc9db3157ee325215ac5822053ffa",
+      "grossIn": "5999400000000000000",
+      "residualIn": "5999400000000000000",
+      "residualSide": "SELL_A_FOR_B",
+      "nettingRatio": 0
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 124,
+    "kind": "mirror",
+    "atUnix": 1788000040,
+    "mirror": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": {
+        "sqrtPriceX96": "4338792671215455135335517088672",
+        "liquidity": "2000000000000000000000000",
+        "tick": 80064
+      },
+      "referencePriceX96": "237684487542793012780631851007941",
+      "l1Block": 1006,
+      "mirrorTimestamp": 1788000040,
+      "ageSlots": 0,
+      "source": "settlement",
+      "observedAtUnix": 1788000040
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 125,
+    "kind": "window",
+    "atUnix": 1788000040,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "3",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 21,
+      "openedAtUnix": 1788000040,
+      "syncL2Block": null,
+      "orderIds": [],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "0",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 126,
+    "kind": "metrics",
+    "atUnix": 1788000040,
+    "metrics": {
+      "counterfactual_l1_gas_wei": 400000000000000,
+      "escrow_invariant_drift_wei": 0,
+      "fills_per_settlement": 4.666666666666667,
+      "gas_per_fill_wei": 57125000000000,
+      "impact_bps": 4.432333333333333,
+      "mirror_age_slots": 0,
+      "netting_ratio": 0.3333333333333333,
+      "roll_rate": 0.21428571428571427,
+      "selection_omitted_total": 0,
+      "time_to_settle_seconds": 0,
+      "unposted_window": 0,
+      "window_slots": 1,
+      "windows_total{outcome=\"empty\"}": 0,
+      "windows_total{outcome=\"evicted\"}": 1,
+      "windows_total{outcome=\"rolled_back\"}": 0,
+      "windows_total{outcome=\"settled\"}": 3
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 127,
+    "kind": "settlement",
+    "atUnix": 1788000040,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0xce6e9ab6f0aa44fdd23feb4d94809840007fc9db3157ee325215ac5822053ffa",
+      "windowId": "2",
+      "outcome": "settled",
+      "leg": {
+        "windowId": "2",
+        "residualSide": "SELL_A_FOR_B",
+        "residualIn": "5999400000000000000",
+        "minPriceX96": "237256655465215985357587095633125",
+        "maxPriceX96": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "deadline": 1788000064
+      },
+      "result": {
+        "amountIn": "5999400000000000000",
+        "amountOut": "17986247231117423548271",
+        "referencePriceX96": "237684487542793012780631851007941",
+        "executionPriceX96": "237526639105361901525043409570815",
+        "post": {
+          "sqrtPriceX96": "4338792671215455135335517088672",
+          "liquidity": "2000000000000000000000000",
+          "tick": 80064
+        },
+        "l1Block": 1006
+      },
+      "l1Receipt": {
+        "txHash": "0x175126d33437ac9378d9c289e0fdbffbbd7727acc58f5239a209425fd6763e73",
+        "blockNumber": 1006,
+        "gasUsed": "237000",
+        "effectiveGasPriceWei": "1000000000",
+        "gasCostWei": "237000000000000",
+        "status": "success"
+      },
+      "rollbackCause": null,
+      "l1GasSpent": true,
+      "filledOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000040,
+      "settledAtUnix": 1788000040,
+      "amortisation": {
+        "schemaVersion": 1,
+        "settlementId": "0xce6e9ab6f0aa44fdd23feb4d94809840007fc9db3157ee325215ac5822053ffa",
+        "windowId": "2",
+        "fills": 3,
+        "l1GasUsed": "237000",
+        "l1GasCostWei": "237000000000000",
+        "gasPerFillWei": "79000000000000",
+        "counterfactualGasCostWei": "1200000000000000",
+        "savingsWei": "963000000000000",
+        "perOrder": [
+          {
+            "orderId": "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 128,
+    "kind": "l2_block",
+    "atUnix": 1788000042,
+    "l2Block": 22,
+    "windowId": "3",
+    "blocksRemaining": 5
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 129,
+    "kind": "settlement",
+    "atUnix": 1788000042,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0xce6e9ab6f0aa44fdd23feb4d94809840007fc9db3157ee325215ac5822053ffa",
+      "windowId": "2",
+      "outcome": "rolled_back",
+      "leg": {
+        "windowId": "2",
+        "residualSide": "SELL_A_FOR_B",
+        "residualIn": "5999400000000000000",
+        "minPriceX96": "237256655465215985357587095633125",
+        "maxPriceX96": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "deadline": 1788000064
+      },
+      "result": {
+        "amountIn": "5999400000000000000",
+        "amountOut": "17986247231117423548271",
+        "referencePriceX96": "237684487542793012780631851007941",
+        "executionPriceX96": "237526639105361901525043409570815",
+        "post": {
+          "sqrtPriceX96": "4338792671215455135335517088672",
+          "liquidity": "2000000000000000000000000",
+          "tick": 80064
+        },
+        "l1Block": 1006
+      },
+      "l1Receipt": {
+        "txHash": "0x175126d33437ac9378d9c289e0fdbffbbd7727acc58f5239a209425fd6763e73",
+        "blockNumber": 1006,
+        "gasUsed": "237000",
+        "effectiveGasPriceWei": "1000000000",
+        "gasCostWei": "237000000000000",
+        "status": "success"
+      },
+      "rollbackCause": "postbatch_skip",
+      "l1GasSpent": true,
+      "filledOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000040,
+      "settledAtUnix": 1788000040,
+      "amortisation": {
+        "schemaVersion": 1,
+        "settlementId": "0xce6e9ab6f0aa44fdd23feb4d94809840007fc9db3157ee325215ac5822053ffa",
+        "windowId": "2",
+        "fills": 3,
+        "l1GasUsed": "237000",
+        "l1GasCostWei": "237000000000000",
+        "gasPerFillWei": "79000000000000",
+        "counterfactualGasCostWei": "1200000000000000",
+        "savingsWei": "963000000000000",
+        "perOrder": [
+          {
+            "orderId": "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 130,
+    "kind": "window",
+    "atUnix": 1788000042,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": "rolled_back",
+      "slots": 1,
+      "openedAtL2Block": 13,
+      "openedAtUnix": 1788000024,
+      "syncL2Block": 21,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3"
+      ],
+      "selectedOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "settlementId": "0xce6e9ab6f0aa44fdd23feb4d94809840007fc9db3157ee325215ac5822053ffa",
+      "grossIn": "5999400000000000000",
+      "residualIn": "5999400000000000000",
+      "residualSide": "SELL_A_FOR_B",
+      "nettingRatio": 0
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 131,
+    "kind": "order",
+    "atUnix": 1788000042,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+      "owner": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5988601079999999999999",
+      "recipient": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 8,
+      "placedAtUnix": 1788000014,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 132,
+    "kind": "order",
+    "atUnix": 1788000042,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+      "owner": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5974202519999999999999",
+      "recipient": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 10,
+      "placedAtUnix": 1788000018,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 133,
+    "kind": "order",
+    "atUnix": 1788000042,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+      "owner": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5981401799999999999999",
+      "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "expiresAfter": 2,
+      "state": "open",
+      "placedAtL2Block": 9,
+      "placedAtUnix": 1788000016,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 134,
+    "kind": "window",
+    "atUnix": 1788000042,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 13,
+      "openedAtUnix": 1788000024,
+      "syncL2Block": null,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3"
+      ],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "5999400000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 135,
+    "kind": "mirror",
+    "atUnix": 1788000042,
+    "mirror": {
+      "schemaVersion": 1,
+      "windowId": "1",
+      "state": {
+        "sqrtPriceX96": "4311190689262464842961576999650",
+        "liquidity": "2000000000000000000000000",
+        "tick": 79936
+      },
+      "referencePriceX96": "234515361042222439276890092994543",
+      "l1Block": 1004,
+      "mirrorTimestamp": 1788000024,
+      "ageSlots": 1,
+      "source": "settlement",
+      "observedAtUnix": 1788000042
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 136,
+    "kind": "metrics",
+    "atUnix": 1788000042,
+    "metrics": {
+      "counterfactual_l1_gas_wei": 400000000000000,
+      "escrow_invariant_drift_wei": 0,
+      "fills_per_settlement": 4.666666666666667,
+      "gas_per_fill_wei": 64416666666666.664,
+      "impact_bps": 4.432333333333333,
+      "mirror_age_slots": 1,
+      "netting_ratio": 0.3333333333333333,
+      "roll_rate": 0.21428571428571427,
+      "selection_omitted_total": 0,
+      "time_to_settle_seconds": 0,
+      "unposted_window": 0,
+      "window_slots": 1,
+      "windows_total{outcome=\"empty\"}": 0,
+      "windows_total{outcome=\"evicted\"}": 1,
+      "windows_total{outcome=\"rolled_back\"}": 1,
+      "windows_total{outcome=\"settled\"}": 3
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 137,
+    "kind": "l2_block",
+    "atUnix": 1788000044,
+    "l2Block": 23,
+    "windowId": "2",
+    "blocksRemaining": 0
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 138,
+    "kind": "l2_block",
+    "atUnix": 1788000046,
+    "l2Block": 24,
+    "windowId": "2",
+    "blocksRemaining": 0
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 139,
+    "kind": "slot",
+    "atUnix": 1788000046,
+    "l1Block": 1007,
+    "windowId": "2"
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 140,
+    "kind": "l2_block",
+    "atUnix": 1788000048,
+    "l2Block": 25,
+    "windowId": "2",
+    "blocksRemaining": 0
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 141,
+    "kind": "order",
+    "atUnix": 1788000048,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+      "owner": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5988601079999999999999",
+      "recipient": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 8,
+      "placedAtUnix": 1788000014,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 142,
+    "kind": "order",
+    "atUnix": 1788000048,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+      "owner": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5974202519999999999999",
+      "recipient": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 10,
+      "placedAtUnix": 1788000018,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 143,
+    "kind": "order",
+    "atUnix": 1788000048,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+      "owner": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5981401799999999999999",
+      "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "expiresAfter": 2,
+      "state": "selected",
+      "placedAtL2Block": 9,
+      "placedAtUnix": 1788000016,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 144,
+    "kind": "window",
+    "atUnix": 1788000048,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 13,
+      "openedAtUnix": 1788000024,
+      "syncL2Block": null,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3"
+      ],
+      "selectedOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "settlementId": null,
+      "grossIn": "5999400000000000000",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 145,
+    "kind": "window",
+    "atUnix": 1788000048,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": "settling",
+      "slots": 1,
+      "openedAtL2Block": 13,
+      "openedAtUnix": 1788000024,
+      "syncL2Block": 25,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3"
+      ],
+      "selectedOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "settlementId": "0xaf3391ceac4a991bc71a6456447f7a889452df1a77b470fb75dc96b822b0155b",
+      "grossIn": "5999400000000000000",
+      "residualIn": "5999400000000000000",
+      "residualSide": "SELL_A_FOR_B",
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 146,
+    "kind": "settlement",
+    "atUnix": 1788000048,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0xaf3391ceac4a991bc71a6456447f7a889452df1a77b470fb75dc96b822b0155b",
+      "windowId": "2",
+      "outcome": "submitted",
+      "leg": {
+        "windowId": "2",
+        "residualSide": "SELL_A_FOR_B",
+        "residualIn": "5999400000000000000",
+        "minPriceX96": "237256655465215985357587095633125",
+        "maxPriceX96": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "deadline": 1788000072
+      },
+      "result": null,
+      "l1Receipt": null,
+      "rollbackCause": null,
+      "l1GasSpent": false,
+      "filledOrderIds": [],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000048,
+      "settledAtUnix": null,
+      "amortisation": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 147,
+    "kind": "order",
+    "atUnix": 1788000048,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+      "owner": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5988601079999999999999",
+      "recipient": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 8,
+      "placedAtUnix": 1788000014,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": {
+        "windowId": "2",
+        "amountOut": "5993447277633276481109",
+        "feeAmount": "200000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "1328031555076306",
+        "priceX96": "237448652331735373422342246049711",
+        "crossed": false,
+        "settlementId": "0xaf3391ceac4a991bc71a6456447f7a889452df1a77b470fb75dc96b822b0155b"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 148,
+    "kind": "order",
+    "atUnix": 1788000048,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+      "owner": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5974202519999999999999",
+      "recipient": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 10,
+      "placedAtUnix": 1788000018,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": {
+        "windowId": "2",
+        "amountOut": "5993447277633276481109",
+        "feeAmount": "200000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "1328031555076306",
+        "priceX96": "237448652331735373422342246049711",
+        "crossed": false,
+        "settlementId": "0xaf3391ceac4a991bc71a6456447f7a889452df1a77b470fb75dc96b822b0155b"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 149,
+    "kind": "order",
+    "atUnix": 1788000048,
+    "order": {
+      "schemaVersion": 1,
+      "id": "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+      "owner": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "side": "SELL_A_FOR_B",
+      "sellAmount": "2000000000000000000",
+      "minBuyAmount": "5981401799999999999999",
+      "recipient": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "expiresAfter": 2,
+      "state": "filled",
+      "placedAtL2Block": 9,
+      "placedAtUnix": 1788000016,
+      "windowId": "2",
+      "rolledCount": 1,
+      "fill": {
+        "windowId": "2",
+        "amountOut": "5993447277633276481109",
+        "feeAmount": "200000000000000",
+        "routeFeeAmount": "0",
+        "impactAmount": "1328031555076306",
+        "priceX96": "237448652331735373422342246049711",
+        "crossed": false,
+        "settlementId": "0xaf3391ceac4a991bc71a6456447f7a889452df1a77b470fb75dc96b822b0155b"
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 150,
+    "kind": "settlement",
+    "atUnix": 1788000048,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0xaf3391ceac4a991bc71a6456447f7a889452df1a77b470fb75dc96b822b0155b",
+      "windowId": "2",
+      "outcome": "settled",
+      "leg": {
+        "windowId": "2",
+        "residualSide": "SELL_A_FOR_B",
+        "residualIn": "5999400000000000000",
+        "minPriceX96": "237256655465215985357587095633125",
+        "maxPriceX96": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "deadline": 1788000072
+      },
+      "result": {
+        "amountIn": "5999400000000000000",
+        "amountOut": "17980341832899829443327",
+        "referencePriceX96": "237606442537445520770943106242261",
+        "executionPriceX96": "237448652331735373422342246049711",
+        "post": {
+          "sqrtPriceX96": "4338080396493055628735862083001",
+          "liquidity": "2000000000000000000000000",
+          "tick": 80061
+        },
+        "l1Block": 1008
+      },
+      "l1Receipt": null,
+      "rollbackCause": null,
+      "l1GasSpent": false,
+      "filledOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000048,
+      "settledAtUnix": 1788000048,
+      "amortisation": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 151,
+    "kind": "window",
+    "atUnix": 1788000048,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": "settled",
+      "slots": 1,
+      "openedAtL2Block": 13,
+      "openedAtUnix": 1788000024,
+      "syncL2Block": 25,
+      "orderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3"
+      ],
+      "selectedOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "settlementId": "0xaf3391ceac4a991bc71a6456447f7a889452df1a77b470fb75dc96b822b0155b",
+      "grossIn": "5999400000000000000",
+      "residualIn": "5999400000000000000",
+      "residualSide": "SELL_A_FOR_B",
+      "nettingRatio": 0
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 152,
+    "kind": "mirror",
+    "atUnix": 1788000048,
+    "mirror": {
+      "schemaVersion": 1,
+      "windowId": "2",
+      "state": {
+        "sqrtPriceX96": "4338080396493055628735862083001",
+        "liquidity": "2000000000000000000000000",
+        "tick": 80061
+      },
+      "referencePriceX96": "237606442537445520770943106242261",
+      "l1Block": 1008,
+      "mirrorTimestamp": 1788000048,
+      "ageSlots": 0,
+      "source": "settlement",
+      "observedAtUnix": 1788000048
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 153,
+    "kind": "window",
+    "atUnix": 1788000048,
+    "window": {
+      "schemaVersion": 1,
+      "windowId": "3",
+      "state": "open",
+      "slots": 1,
+      "openedAtL2Block": 25,
+      "openedAtUnix": 1788000048,
+      "syncL2Block": null,
+      "orderIds": [],
+      "selectedOrderIds": [],
+      "settlementId": null,
+      "grossIn": "0",
+      "residualIn": "0",
+      "residualSide": null,
+      "nettingRatio": null
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 154,
+    "kind": "metrics",
+    "atUnix": 1788000048,
+    "metrics": {
+      "counterfactual_l1_gas_wei": 400000000000000,
+      "escrow_invariant_drift_wei": 0,
+      "fills_per_settlement": 4.25,
+      "gas_per_fill_wei": 64416666666666.664,
+      "impact_bps": 4.98425,
+      "mirror_age_slots": 0,
+      "netting_ratio": 0.25,
+      "roll_rate": 0.21428571428571427,
+      "selection_omitted_total": 0,
+      "time_to_settle_seconds": 0,
+      "unposted_window": 0,
+      "window_slots": 1,
+      "windows_total{outcome=\"empty\"}": 0,
+      "windows_total{outcome=\"evicted\"}": 1,
+      "windows_total{outcome=\"rolled_back\"}": 1,
+      "windows_total{outcome=\"settled\"}": 3
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 155,
+    "kind": "settlement",
+    "atUnix": 1788000048,
+    "settlement": {
+      "schemaVersion": 1,
+      "id": "0xaf3391ceac4a991bc71a6456447f7a889452df1a77b470fb75dc96b822b0155b",
+      "windowId": "2",
+      "outcome": "settled",
+      "leg": {
+        "windowId": "2",
+        "residualSide": "SELL_A_FOR_B",
+        "residualIn": "5999400000000000000",
+        "minPriceX96": "237256655465215985357587095633125",
+        "maxPriceX96": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "deadline": 1788000072
+      },
+      "result": {
+        "amountIn": "5999400000000000000",
+        "amountOut": "17980341832899829443327",
+        "referencePriceX96": "237606442537445520770943106242261",
+        "executionPriceX96": "237448652331735373422342246049711",
+        "post": {
+          "sqrtPriceX96": "4338080396493055628735862083001",
+          "liquidity": "2000000000000000000000000",
+          "tick": 80061
+        },
+        "l1Block": 1008
+      },
+      "l1Receipt": {
+        "txHash": "0x35c842ba729aef5b4313d214ae9f8721eaca6b41b8c39b9f2f5feda0da7ea25a",
+        "blockNumber": 1008,
+        "gasUsed": "237000",
+        "effectiveGasPriceWei": "1000000000",
+        "gasCostWei": "237000000000000",
+        "status": "success"
+      },
+      "rollbackCause": null,
+      "l1GasSpent": true,
+      "filledOrderIds": [
+        "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+        "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+        "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3"
+      ],
+      "droppedOrderIds": [],
+      "submittedAtUnix": 1788000048,
+      "settledAtUnix": 1788000048,
+      "amortisation": {
+        "schemaVersion": 1,
+        "settlementId": "0xaf3391ceac4a991bc71a6456447f7a889452df1a77b470fb75dc96b822b0155b",
+        "windowId": "2",
+        "fills": 3,
+        "l1GasUsed": "237000",
+        "l1GasCostWei": "237000000000000",
+        "gasPerFillWei": "79000000000000",
+        "counterfactualGasCostWei": "1200000000000000",
+        "savingsWei": "963000000000000",
+        "perOrder": [
+          {
+            "orderId": "0x320723cfc0bfa9b0f7c5b275a01ffa5e0f111f05723ba5df2b2684ab86bebe06",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0xd4cab63d22f3976e5c6383718052ed60e2992af10435708f4b775f4fc7d97cb3",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          },
+          {
+            "orderId": "0xdddcbbfa3a62165890e21b4c6da8b7f72aba588d1650f59000b0f71eae7672c3",
+            "gasUsed": "400000",
+            "gasCostWei": "400000000000000",
+            "source": "user_last_l1_swap"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 156,
+    "kind": "l2_block",
+    "atUnix": 1788000050,
+    "l2Block": 26,
+    "windowId": "3",
+    "blocksRemaining": 5
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 157,
+    "kind": "l2_block",
+    "atUnix": 1788000052,
+    "l2Block": 27,
+    "windowId": "3",
+    "blocksRemaining": 4
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 158,
+    "kind": "l2_block",
+    "atUnix": 1788000054,
+    "l2Block": 28,
+    "windowId": "3",
+    "blocksRemaining": 3
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 159,
+    "kind": "l2_block",
+    "atUnix": 1788000056,
+    "l2Block": 29,
+    "windowId": "3",
+    "blocksRemaining": 2
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 160,
+    "kind": "l2_block",
+    "atUnix": 1788000058,
+    "l2Block": 30,
+    "windowId": "3",
+    "blocksRemaining": 1
+  },
+  {
+    "schemaVersion": 1,
+    "seq": 161,
+    "kind": "slot",
+    "atUnix": 1788000058,
+    "l1Block": 1009,
+    "windowId": "3"
+  }
+]
