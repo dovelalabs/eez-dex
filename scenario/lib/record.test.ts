@@ -4,9 +4,9 @@
  * Everything here runs without an enclave. That is deliberate: the failure
  * matrix is the integration suite and it needs Kurtosis, but the *recorder*,
  * the *oracle* and the *assertions* it is built from are pure, so they are
- * exercised on every `make check` rather than once a night. When the enclave
- * run does fail, this suite is what says whether the harness or the chain is
- * at fault.
+ * exercised by `dex-scenario.sh --self-test` on every pull request rather than
+ * once a night. When the enclave run does fail, this suite is what says whether
+ * the harness or the chain is at fault.
  */
 
 import assert from "node:assert/strict";
@@ -270,6 +270,36 @@ test("hx4: a soak leaves no order stranded and reports roll_rate", () => {
   assert.ok(metrics["roll_rate"] !== undefined, "roll_rate was not reported");
   assert.ok((metrics["fills_per_settlement"] ?? 0) > 0, "the soak settled nothing");
   assert.equal(metrics["escrow_invariant_drift_wei"], 0);
+});
+
+test("hx4: the soak reports the amortisation metrics and roll_rate", () => {
+  // A.6's third pass condition. The soak is not asked to hold these to a
+  // threshold, but a run that never printed them has not met it.
+  const plan = soakPlan({ seed: DEFAULT_SOAK.seed.toString(), slots: 40 });
+  const simulation = runSoak(plan, {
+    params: FIXTURE_PARAMS,
+    gas: FIXTURE_GAS,
+    liquidity: 2_000_000n * 10n ** 18n,
+    poolFee: 500n,
+    startUnix: 1_788_000_000,
+  });
+
+  const events = validate(record(simulation.observations).events);
+  const readings = readingsFrom(
+    simulation,
+    FIXTURE_PARAMS,
+    { mode: "soak", allOrdersTerminal: false },
+    simulation.legInputs,
+  ) as unknown as Readings;
+
+  const report = assertRun(events, readings);
+  for (const metric of ["roll_rate", "fills_per_settlement", "netting_ratio", "gas_per_fill_wei", "counterfactual_l1_gas_wei"]) {
+    assert.ok(
+      report.lines.some((line) => line.includes(metric)),
+      `${metric} was not reported:\n${report.lines.join("\n")}`,
+    );
+  }
+  assert.ok(report.lines.some((line) => line.includes("amortisation:")), report.lines.join("\n"));
 });
 
 test("ct13: the soak's escrow ledger balances to the wei", () => {

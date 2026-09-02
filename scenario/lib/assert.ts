@@ -130,6 +130,15 @@ export class Checks {
     this.that(requirement, what, same, `expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
   }
 
+  /**
+   * A measurement the run is required to *report* rather than pass or fail —
+   * HX-4's amortisation metrics and `roll_rate`. It is not counted as a check,
+   * because a number nobody set a threshold on cannot be one.
+   */
+  note(requirement: string, what: string): void {
+    this.lines.push(`  ....  ${requirement.padEnd(6)} ${what}`);
+  }
+
   /** The closing summary line, and the exit status the shell reads. */
   summary(title: string): { lines: string[]; failures: number } {
     const total = this.passes + this.failures;
@@ -493,6 +502,37 @@ export function checkAllOrdersTerminal(checks: Checks, state: RunState): void {
   );
 }
 
+/**
+ * HX-4's third pass condition: "amortisation metrics and `roll_rate`
+ * reported". A soak that drifted no escrow and stranded no order has proved
+ * the mechanism is safe; these are the numbers that say whether it is worth
+ * running, and A.6 asks for them in the same breath.
+ *
+ * Every name is A.5's, taken from the frozen list — the registry publishes
+ * them at zero from the first tick, so a quiet run reports `0` rather than
+ * omitting the line, and a reader can tell the two apart.
+ */
+export function reportMetrics(checks: Checks, state: RunState): void {
+  const metrics = state.metrics;
+  const at = (name: string): number => metrics[name] ?? 0;
+  const fills = at("fills_per_settlement");
+  const perFill = at("gas_per_fill_wei");
+  const counterfactual = at("counterfactual_l1_gas_wei");
+
+  checks.note("A.5", `fills_per_settlement ${fills}`);
+  checks.note("A.5", `netting_ratio ${at("netting_ratio")}`);
+  checks.note("A.5", `roll_rate ${at("roll_rate")}`);
+  checks.note("IX-3", `gas_per_fill_wei ${perFill} against counterfactual_l1_gas_wei ${counterfactual}`);
+  // The amortisation claim in one number, and honest when there is nothing to
+  // divide: a missing denominator is reported, never invented (IX-3).
+  checks.note(
+    "EC-5",
+    perFill === 0 || counterfactual === 0
+      ? "amortisation: not measurable — no settlement carried both a receipt and a counterfactual"
+      : `amortisation: ${(counterfactual / perFill).toFixed(2)}x the direct-L1 cost per fill`,
+  );
+}
+
 /** The whole assertion set for a run, chosen by what the harness expects. */
 export function assertRun(events: readonly SlotEvent[], readings: Readings): { lines: string[]; failures: number } {
   const checks = new Checks();
@@ -512,6 +552,8 @@ export function assertRun(events: readonly SlotEvent[], readings: Readings): { l
     checkHappyPath(checks, state, readings);
   }
   if (readings.expect.allOrdersTerminal === true) checkAllOrdersTerminal(checks, state);
+
+  reportMetrics(checks, state);
 
   const drift = state.metrics["escrow_invariant_drift_wei"] ?? 0;
   checks.equal("A.5", "escrow_invariant_drift_wei is zero across the run", drift, 0);
