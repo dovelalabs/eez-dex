@@ -23,7 +23,7 @@ import { orderPath, windowPath } from "../src/machine.ts";
 import { Q96, fillPriceX96, notionalInA, spotPriceX96 } from "../src/price.ts";
 import { loading } from "../src/protocol.ts";
 import { LiveSource } from "../src/sources/live.ts";
-import { BOOK, FakeL1, FakeL2, ORDERS, OWNERS, PRICE_X96 } from "./fakechain.ts";
+import { BOOK, FakeL1, FakeL2, ORDERS, OWNERS, POOL_ADAPTER, PRICE_X96 } from "./fakechain.ts";
 import { recordScriptedRun } from "./script.ts";
 
 function hubOf(): EventHub {
@@ -90,6 +90,51 @@ test("§7: a quiet window is empty data, not missing data", async () => {
   // And the mirror is there with its age, which every quote carries (FL-2).
   const mirror = events(hub).find((event) => event.kind === "mirror");
   assert.equal(mirror?.kind === "mirror" ? mirror.mirror.ageSlots : null, 1);
+});
+
+test("ix1: the L1 pool's live state is read beside the mirror it is copied to", async () => {
+  const hub = hubOf();
+  const l1 = new FakeL1();
+  const source = new LiveSource(
+    { l2: new FakeL2(), l1, windowBook: BOOK, settlerUrl: null, poolAdapter: POOL_ADAPTER },
+    hub,
+  );
+  await source.tick();
+
+  const status = hub.status();
+  assert.equal(status.l1Pool?.l1Block, l1.head);
+  assert.equal(status.l1Pool?.state.tick, l1.pool.tick);
+  assert.equal(status.l1Pool?.state.liquidity, l1.pool.liquidity.toString());
+
+  // FE-7, FE-8: the head has moved under the mirror, and both are served, so
+  // neither the theater nor the inspector has to derive the gap itself.
+  const mirror = events(hub).find((event) => event.kind === "mirror");
+  assert.equal(mirror?.kind === "mirror" ? mirror.mirror.state.tick : null, 76_012);
+  assert.notEqual(status.l1Pool?.state.tick, 76_012);
+});
+
+test("ix1: with no pool adapter configured the live state is null, not invented", async () => {
+  const hub = hubOf();
+  const source = new LiveSource({ l2: new FakeL2(), l1: new FakeL1(), windowBook: BOOK, settlerUrl: null }, hub);
+  await source.tick();
+
+  // Null is the answer, and it is present: never an absent field (§7 preamble).
+  assert.equal(hub.status().l1Pool, null);
+  assert.ok("l1Pool" in hub.status());
+});
+
+test("ix1: an adapter that does not answer is an L1 error, not a stale price", async () => {
+  const hub = hubOf();
+  const l1 = new FakeL1();
+  const source = new LiveSource(
+    { l2: new FakeL2(), l1, windowBook: BOOK, settlerUrl: null, poolAdapter: BOOK },
+    hub,
+  );
+  await source.tick();
+
+  const status = hub.status();
+  assert.equal(status.sources.find((entry) => entry.source === "l1")?.state, "unavailable");
+  assert.equal(status.l1Pool, null);
 });
 
 test("ix1: a re-read of the same range emits nothing twice", async () => {

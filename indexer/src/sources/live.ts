@@ -15,7 +15,14 @@
 
 import type { Sink } from "../hub.ts";
 import { readBookLogs, readBookView, readOrder, type BookLog, type BookOrder, type BookView } from "../chain/book.ts";
-import { EMPTY_GAS_SAMPLE, readGasSample, readReceipt, type GasSample, type Receipt } from "../chain/l1.ts";
+import {
+  EMPTY_GAS_SAMPLE,
+  readGasSample,
+  readPoolState,
+  readReceipt,
+  type GasSample,
+  type Receipt,
+} from "../chain/l1.ts";
 import { getBlock, type JsonRpc } from "../chain/rpc.ts";
 import { readSettlerView, type SettlerView } from "../settler.ts";
 import type { SourceHealth } from "../protocol.ts";
@@ -29,6 +36,12 @@ export interface LiveSourceOptions {
   readonly l1: JsonRpc | null;
   /** The settler's projection, served over HTTP. Null where it is not run. */
   readonly settlerUrl: string | null;
+  /**
+   * The router's pool adapter on L1, whose `quoteState()` is the pool's live
+   * state (IX-1). Null where none is configured: the mirror is then served
+   * without the head to compare it against, and the status says so.
+   */
+  readonly poolAdapter?: string | null;
   /** The L2 block to start scanning logs from. Defaults to `head - history`. */
   readonly fromBlock?: number;
   /** How far back to look on a cold start. */
@@ -220,6 +233,18 @@ export class LiveSource {
     try {
       const head = await getBlock(l1, "latest");
       if (head === null) throw new Error("the L1 has no latest block");
+
+      // The pool the mirror is a copy of, as it stands now: the gap between
+      // the two is FE-7's drift and FE-8's comparison, and it is read here so
+      // that no view has to derive it (IX-1).
+      const adapter = this.#options.poolAdapter ?? null;
+      if (adapter !== null) {
+        this.#sink.pool({
+          state: await readPoolState(l1, adapter),
+          l1Block: head.number,
+          observedAtUnix: atUnix,
+        });
+      }
 
       const receipts = new Map<string, Receipt>();
       for (const [settlementId, txHash] of this.#model.l1TxHashes) {

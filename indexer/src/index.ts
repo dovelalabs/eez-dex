@@ -139,6 +139,7 @@ export async function createIndexer(options: IndexerOptions): Promise<Indexer> {
         l1: options.l1Rpc === "" ? null : httpRpc("l1", options.l1Rpc, options.fetchImpl ?? fetch),
         windowBook: options.windowBook,
         settlerUrl: options.settlerUrl ?? null,
+        poolAdapter: options.poolAdapter ?? null,
         ...(options.fromBlock === undefined ? {} : { fromBlock: options.fromBlock }),
         ...(options.historyBlocks === undefined ? {} : { historyBlocks: options.historyBlocks }),
         ...(options.logRange === undefined ? {} : { logRange: options.logRange }),

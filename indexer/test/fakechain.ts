@@ -18,6 +18,8 @@ import { TOPICS } from "../src/chain/book.ts";
 
 export const BOOK = "0x00000000000000000000000000000000000000b0";
 export const ROUTER = "0x00000000000000000000000000000000000000c0";
+/** The router's pool adapter, whose `quoteState()` is the L1 pool's live state. */
+export const POOL_ADAPTER = "0x00000000000000000000000000000000000000e0";
 
 /** Q96, and a mirror at 2000 B per A. */
 const Q96 = 1n << 96n;
@@ -217,6 +219,8 @@ export class FakeL1 implements JsonRpc {
   timestamp = 1_800_000_000;
   receipts = new Map<string, unknown>();
   blockReceipts = new Map<number, unknown[]>();
+  /** The pool as it stands on L1 — one tick further along than the mirror. */
+  pool = { sqrtPriceX96: SQRT_PRICE, liquidity: 10n ** 24n, tick: 76_020 };
 
   /** A retail swap in a sampled block: what IX-3's median is measured from. */
   swap(block: number, from: string, gasUsed: number, gasPriceWei = 2_000_000_000): void {
@@ -257,6 +261,12 @@ export class FakeL1 implements JsonRpc {
         return this.blockReceipts.get(Number(BigInt(params[0] as string))) ?? [];
       case "eth_getTransactionReceipt":
         return this.receipts.get((params[0] as string).toLowerCase()) ?? null;
+      case "eth_call": {
+        const { to, data } = params[0] as { to: string; data: string };
+        if (to.toLowerCase() !== POOL_ADAPTER) throw new Error(`fake L1: unexpected call to ${to}`);
+        if (data.slice(0, 10) !== encodeCall("quoteState()")) throw new Error(`fake L1: unexpected view ${data}`);
+        return `0x${word(this.pool.sqrtPriceX96)}${word(this.pool.liquidity)}${word(this.pool.tick)}`;
+      }
       default:
         throw new Error(`fake L1: unexpected ${method}`);
     }

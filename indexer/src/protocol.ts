@@ -19,6 +19,7 @@ import type {
   Amortisation,
   MirrorSnapshot,
   Order,
+  PoolState,
   Settlement,
   SlotEvent,
   Window,
@@ -97,6 +98,28 @@ export interface ReplayPosition {
   readonly endsAtUnix: number | null;
 }
 
+/**
+ * The L1 pool's live state, at the head the gateway last read it at (IX-1).
+ *
+ * The third of the L1 view's two reads, beside the settlement receipt. The
+ * mirror is a copy of this pool taken at a settlement (FL-1); the gap between
+ * the two is the drift the theater draws mid-window (FE-7) and the comparison
+ * the mirror inspector states (FE-8), so the gateway reads both and neither
+ * view has to compute the other.
+ *
+ * It travels in the envelope rather than in an event because the frozen schema
+ * has no event kind for the L1 head's own state, and this branch does not edit
+ * `schema/`. Null is a first-class answer: no pool adapter configured, or a
+ * replay, where a recorded run carries the events it was recorded from and not
+ * the head they were read against.
+ */
+export interface L1PoolView {
+  readonly state: PoolState;
+  /** The L1 block the state was read at. */
+  readonly l1Block: number;
+  readonly observedAtUnix: number;
+}
+
 /** The stream's own state, sent on connect and on every change. */
 export interface StreamStatus {
   readonly schemaVersion: typeof SCHEMA_VERSION;
@@ -111,6 +134,8 @@ export interface StreamStatus {
   readonly openWindowId: string | null;
   /** Orders in the open window — zero is the honest answer to a quiet chain. */
   readonly openOrders: number;
+  /** The L1 pool as it stands now, for the mirror to be compared against. */
+  readonly l1Pool: L1PoolView | null;
   /** Null in live mode. */
   readonly replay: ReplayPosition | null;
 }

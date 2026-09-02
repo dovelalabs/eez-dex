@@ -32,8 +32,15 @@ is the frozen schema in `schema/`, which this branch does not touch.
 | Upstream | Carries | Absent means |
 |---|---|---|
 | **L2 RPC** | `WindowBook`'s five events, the views, the safe head | no stream at all |
-| **L1 RPC** | the settlement's receipt, and the sampled receipts IX-3's counterfactual is measured from | no L1 receipt and no amortisation |
+| **L1 RPC** | the settlement's receipt, the pool's live state, and the sampled receipts IX-3's counterfactual is measured from | no L1 receipt, no live pool state and no amortisation |
 | **Settler** | the price band, the selection, evictions and rollbacks | those fields stay null |
+
+The pool's live state is read from the adapter's `quoteState()` when
+`POOL_ADAPTER` is set, and served as `status.l1Pool` — the head the mirror is
+compared against for FE-7's drift and FE-8's inspector. It rides in the
+envelope rather than in an event because the frozen schema has no event kind
+for the L1 head's own state; `null` — no adapter configured, or a replay — is
+an answer, never an absent field.
 
 The third is a separate upstream because the chain cannot answer it. The leg's
 price band is built inside `settleWindow` and never emitted (A.2); an eviction
@@ -98,6 +105,7 @@ live mode.
 | `--l1` | `L1_RPC` | unset — no L1, and so no IX-3 |
 | `--book` | `WINDOW_BOOK` | — |
 | `--settler` | `SETTLER_URL` | unset |
+| `--pool` | `POOL_ADAPTER` | unset — no live L1 pool state |
 | `--port` / `--host` | `PORT` / `HOST` | `8080` / `127.0.0.1` |
 | `--profile` | `PROFILE` | `devnet` (`devnet \| testnet \| mainnet`) |
 | `--replay` | `FIXTURE` | unset — live |

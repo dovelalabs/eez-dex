@@ -17,6 +17,7 @@ import type { SlotEvent } from "../schema/index.ts";
 import { SCHEMA_VERSION } from "../schema/index.ts";
 import type {
   IndexerProfile,
+  L1PoolView,
   ReplayPosition,
   ServerFrame,
   Snapshot,
@@ -35,6 +36,8 @@ export interface Sink {
   health(health: SourceHealth): void;
   /** Report where a replay has got to, or null in live mode. */
   position(position: ReplayPosition | null): void;
+  /** Report the L1 pool's live state, or null where it is not read (IX-1). */
+  pool(pool: L1PoolView | null): void;
   /** A replay reached the end of its recording. */
   end(): void;
 }
@@ -63,6 +66,7 @@ export class EventHub implements Sink {
   #seq = 0;
   #ended = false;
   #replay: ReplayPosition | null = null;
+  #l1Pool: L1PoolView | null = null;
   #health: Map<SourceName, SourceHealth>;
   #subscribers = new Set<(frame: ServerFrame) => void>();
   #wakers = new Set<() => void>();
@@ -110,6 +114,11 @@ export class EventHub implements Sink {
     this.#publishStatusIfChanged();
   }
 
+  pool(pool: L1PoolView | null): void {
+    this.#l1Pool = pool;
+    this.#publishStatusIfChanged();
+  }
+
   end(): void {
     this.#ended = true;
     this.#publishStatusIfChanged();
@@ -135,6 +144,7 @@ export class EventHub implements Sink {
       sources: [...this.#health.values()],
       openWindowId: this.#state.openWindowId,
       openOrders: openOrderCount(this.#state),
+      l1Pool: this.#l1Pool,
       replay: this.#replay,
     };
   }
@@ -240,6 +250,9 @@ function signature(status: StreamStatus): string {
     sources: status.sources,
     openWindowId: status.openWindowId,
     openOrders: status.openOrders,
+    // The L1 pool moves under the mirror all window, and that gap is the whole
+    // of FE-7's drift picture, so a move is a change a client reacts to.
+    l1Pool: status.l1Pool,
     // A replay's position moves with every event and says nothing a client
     // cannot count for itself; a status frame is for a change it has to react
     // to. Speed, length and the recording's own bounds are those.
