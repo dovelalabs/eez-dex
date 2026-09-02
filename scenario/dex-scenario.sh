@@ -66,6 +66,23 @@ if [[ "$MODE" == "self-test" ]]; then
     exec "$DEX_SCENARIO_DIR/test/self-test.sh"
 fi
 
+# The enclave half is the full form. Profile is configuration and not a fork
+# (RD-2 §1), and the pieces that differ are already parameterised — the book is
+# constructed with the genesis ordinal, the matrix skips the [full]-only bridge
+# row, and the recorded run carries the profile. What is *not* built is the
+# genesis setup: no bridge deposit to seed the B side, an order flow that sells
+# zone ETH only because the genesis form has no crossing, and recipients holding
+# their output at an L1 address rather than in an L2 balance. Running the full
+# form's setup against a genesis book would produce a run that looks like a
+# scenario and asserts nothing true, so it stops here instead.
+if [[ "$DEX_PROFILE" != "full" ]]; then
+    echo "dex-scenario: --profile $DEX_PROFILE is not implemented for the enclave modes." >&2
+    echo "dex-scenario: WP-4 drives the full form (RD-2 §6 HX-1 … HX-5); the genesis" >&2
+    echo "dex-scenario: form needs its own setup — no bridge deposit, an ETH-only sell" >&2
+    echo "dex-scenario: side, and L1 recipient balances — which is not built yet." >&2
+    exit 2
+fi
+
 mkdir -p "$DEX_RUN_DIR"
 
 # shellcheck source=/dev/null

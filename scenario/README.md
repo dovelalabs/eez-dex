@@ -30,9 +30,18 @@ scenario/dex-scenario.sh --record             # rewrite the HX-5 fixtures
 scenario/dex-scenario.sh --self-test          # the hermetic half; no enclave
 ```
 
-`--keep` leaves the enclave up for inspection. `--profile genesis` selects the
-other build profile (RD-2 §1: profile is configuration, never a fork), which
-skips the `[full]`-only bridge row and asserts L1 balances instead of L2 ones.
+`--keep` leaves the enclave up for inspection.
+
+The enclave modes drive the **full form**, which is what WP-4 asks for and what
+the demo shows. Profile is configuration and not a fork (RD-2 §1), and the parts
+that differ are already parameterised — the book is constructed with the profile
+ordinal, the matrix skips the `[full]`-only bridge row, and the recorded run
+carries the profile it was taken on. What is not built is the genesis *setup*:
+no bridge deposit to seed the B side, an order flow that sells zone ETH only
+because the genesis form has no crossing, and recipients holding their output at
+an L1 address rather than in an L2 balance. `--profile genesis` therefore stops
+with that message rather than running the full form's setup against a genesis
+book.
 
 ### What an enclave run needs
 
