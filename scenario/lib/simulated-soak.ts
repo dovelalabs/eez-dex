@@ -31,6 +31,8 @@ export interface SoakReport {
   readonly slots: number;
   readonly orders: number;
   readonly settlements: number;
+  /** Orders that reached `filled` — the fills every limit check is over. */
+  readonly fills: number;
   /** Orders that never reached `filled`, `cancelled` or `expired`. */
   readonly stranded: number;
   /** Fills whose `amountOut` was below the order's own limit (CT-10). */
@@ -84,9 +86,11 @@ export function runSimulatedSoak(seed = DEFAULT_SOAK.seed.toString(), slots = DE
       Number(order.windowId) < lastWindow - DEFAULT_SOAK.expiresAfter,
   );
 
+  let fills = 0;
   let limitViolations = 0;
   for (const order of state.orders.values()) {
     if (order.fill === null) continue;
+    fills += 1;
     if (BigInt(order.fill.amountOut) < BigInt(order.minBuyAmount)) limitViolations += 1;
   }
 
@@ -96,6 +100,7 @@ export function runSimulatedSoak(seed = DEFAULT_SOAK.seed.toString(), slots = DE
     slots,
     orders: state.orders.size,
     settlements: state.settlements.size,
+    fills,
     stranded: stranded.length,
     limitViolations,
     metrics: state.metrics,
