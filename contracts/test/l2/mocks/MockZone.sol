@@ -195,9 +195,14 @@ contract MockZoneProxy {
 
 /// @notice The L2 side of an ERC-20 movement, as `WindowBook` uses it (CT-11).
 /// @dev Phase 2c owns the real `DexBridgeL2`; WP-2 only ever calls it through the frozen
-/// interface, so this mock implements exactly the two things the book needs: a token map
-/// and a burn that really destroys the L2 representation backing the L1 reserve.
+/// interface, so this mock implements exactly what the book needs: a token map, a burn
+/// that really destroys the L2 representation backing the L1 reserve, and the record of
+/// which L1 address the release named.
 contract MockDexBridgeL2 is IDexBridgeL2 {
+    /// @notice The L1 address the last release named — `SettlementRouter` in
+    /// the settlement frame (CT-5).
+    address public lastReleaseRecipient;
+
     mapping(address l1Token => address l2Token) private _l2Tokens;
 
     function map(address l1Token, address l2Token) external {
@@ -221,6 +226,16 @@ contract MockDexBridgeL2 is IDexBridgeL2 {
     }
 
     function burn(address l1Token, address from, uint256 amount) external {
+        MockERC20(_l2Tokens[l1Token]).burn(from, amount);
+        emit Burned(l1Token, from, amount);
+    }
+
+    /// @notice The settlement frame's sell side: the burn on L2 against a
+    /// release to the router on L1 (CT-5). Where the reserve lands is an L1
+    /// fact, so all this mock can show is the burn and the recipient it was
+    /// asked for.
+    function releaseTo(address l1Token, address from, uint256 amount, address l1Recipient) external {
+        lastReleaseRecipient = l1Recipient;
         MockERC20(_l2Tokens[l1Token]).burn(from, amount);
         emit Burned(l1Token, from, amount);
     }
