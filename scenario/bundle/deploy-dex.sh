@@ -27,7 +27,11 @@ export FOUNDRY_DISABLE_NIGHTLY_WARNING=1
 DEX_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ARTIFACTS="${DEX_ARTIFACTS:-$DEX_DIR/artifacts}"
 
-say() { echo "dex-deploy: $*"; }
+# Both to **stderr**. `deploy` and `bytecode` are read through command
+# substitution, so anything either of them says on stdout is captured into the
+# variable that was meant to hold an address — which is how every address this
+# bundle exported came to be a log line with an address stuck to the end of it.
+say() { echo "dex-deploy: $*" >&2; }
 die() { echo "dex-deploy: $*" >&2; exit 1; }
 
 for tool in cast jq; do command -v "$tool" >/dev/null || die "$tool is not in PATH"; done

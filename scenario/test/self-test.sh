@@ -333,6 +333,15 @@ else
     done <<<"$DIRECTOR_ARGV"
 fi
 
+# ── UP-1: the bundle, actually run ────────────────────────────────────────────
+
+step "UP-1 the bundle deploys"
+if "$HERE/bundle-deploy.sh"; then
+    check "UP-1" "the bundle deploys against a local chain and its bindings are usable" 0
+else
+    check "UP-1" "the bundle deploys against a local chain and its bindings are usable" 1
+fi
+
 # ── HX-1: the curve, against the contract ─────────────────────────────────────
 
 step "HX-1 MockPool parity"
