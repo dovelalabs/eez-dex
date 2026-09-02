@@ -251,8 +251,10 @@ function signature(status: StreamStatus): string {
     openWindowId: status.openWindowId,
     openOrders: status.openOrders,
     // The L1 pool moves under the mirror all window, and that gap is the whole
-    // of FE-7's drift picture, so a move is a change a client reacts to.
-    l1Pool: status.l1Pool,
+    // of FE-7's drift picture, so a move is a change a client reacts to — but
+    // the tick it was last read on is not, or a quiet pool would frame twice a
+    // block for saying nothing.
+    l1Pool: status.l1Pool === null ? null : { state: status.l1Pool.state, l1Block: status.l1Pool.l1Block },
     // A replay's position moves with every event and says nothing a client
     // cannot count for itself; a status frame is for a change it has to react
     // to. Speed, length and the recording's own bounds are those.

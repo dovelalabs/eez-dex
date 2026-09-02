@@ -113,6 +113,27 @@ test("ix1: the L1 pool's live state is read beside the mirror it is copied to", 
   assert.notEqual(status.l1Pool?.state.tick, 76_012);
 });
 
+test("ix1: a pool that has not moved does not frame a client every tick", async () => {
+  const hub = hubOf();
+  const l1 = new FakeL1();
+  const source = new LiveSource(
+    { l2: new FakeL2(), l1, windowBook: BOOK, settlerUrl: null, poolAdapter: POOL_ADAPTER },
+    hub,
+  );
+  await source.tick();
+
+  let statuses = 0;
+  hub.subscribe((frame) => {
+    if (frame.type === "status") statuses += 1;
+  });
+  await source.tick();
+  assert.equal(statuses, 0, "the same pool at the same block is not news");
+
+  l1.pool = { ...l1.pool, tick: l1.pool.tick + 3 };
+  await source.tick();
+  assert.equal(statuses, 1, "a pool that moved is");
+});
+
 test("ix1: with no pool adapter configured the live state is null, not invented", async () => {
   const hub = hubOf();
   const source = new LiveSource({ l2: new FakeL2(), l1: new FakeL1(), windowBook: BOOK, settlerUrl: null }, hub);
