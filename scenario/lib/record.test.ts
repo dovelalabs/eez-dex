@@ -23,6 +23,7 @@ import { FIXTURE_GAS, FIXTURE_PARAMS, fixtureObservations, fixturePool } from ".
 import { spotPriceX96, toBig } from "./math.ts";
 import { record, summarise } from "./record.ts";
 import { Simulation, readingsFrom } from "./simulate.ts";
+import { runSimulatedSoak } from "./simulated-soak.ts";
 import { DEFAULT_SOAK, runSoak, soakPlan } from "./soak.ts";
 import { validate } from "./validate.ts";
 
@@ -315,5 +316,22 @@ test("ct13: the soak's escrow ledger balances to the wei", () => {
     const held = ledger.escrowed + ledger.feesAccrued + ledger.dustAccrued + ledger.credited;
     const net = ledger.deposits - ledger.released - ledger.withdrawn;
     assert.equal(held, net, `${asset} drifted by ${held - net} wei`);
+  }
+});
+
+test("hx4: the simulated soak reports what §10 asks of the enclave one", () => {
+  // Phase 6's `scripts/verify.sh` runs this where no enclave is available, so
+  // what it reports has to be exactly what A.6 asks of a soak — and it has to
+  // say, in the report itself, that it is a simulation and not a run.
+  const report = runSimulatedSoak("1", 30);
+
+  assert.equal(report.tier, "simulated", "a simulated run must never claim to be an enclave one");
+  assert.ok(report.orders > 0 && report.settlements > 0, "the soak placed and settled something");
+  assert.equal(report.stranded, 0, "HX-4: no order older than its expiry was left open");
+  assert.equal(report.limitViolations, 0, "§10: nobody is filled outside their limit");
+  assert.equal(report.metrics["escrow_invariant_drift_wei"], 0, "CT-13, to the wei");
+  assert.equal(report.metrics["selection_omitted_total"], 0, "EC-4: the audit found no omitted order");
+  for (const metric of ["fills_per_settlement", "netting_ratio", "roll_rate", "gas_per_fill_wei"]) {
+    assert.ok(report.metrics[metric] !== undefined, `${metric} was not reported`);
   }
 });
