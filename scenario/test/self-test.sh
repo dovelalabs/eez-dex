@@ -268,6 +268,37 @@ for metric in fills_per_settlement escrow_invariant_drift_wei selection_omitted_
     fi
 done
 
+# ── FE-9: the seam the demo director drives ───────────────────────────────────
+#
+# `indexer/src/server/director.ts` builds an argv and spawns this scenario with
+# it. Neither package can check the other alone, which is how the two came to
+# disagree — the director sent `--op place --count 8` at a script with no
+# `--op`. This asserts the argv the *indexer itself* produces is one this
+# script accepts, for all three controls.
+
+step "FE-9 director seam"
+DIRECTOR_ARGV="$(node --input-type=module -e "
+  import {DIRECTOR_CONTROLS, directorArgv} from '$ROOT/indexer/src/server/director.ts';
+  for (const control of DIRECTOR_CONTROLS) process.stdout.write(directorArgv(control, {}).join(' ') + '\n');
+" 2>/dev/null)" || DIRECTOR_ARGV=""
+
+if [[ -z "$DIRECTOR_ARGV" ]]; then
+    check "FE-9" "the director's argv could be read from the indexer" 1
+else
+    while read -r argv; do
+        [[ -n "$argv" ]] || continue
+        # No enclave here, so the run dies later — at the endpoints. What is
+        # asserted is that it got past the option parser and the dispatch.
+        OUT="$( (cd "$ROOT" && eval "scenario/dex-scenario.sh $argv") 2>&1 || true)"
+        if grep -qE "unknown option|unknown op '" <<<"$OUT"; then
+            check "FE-9" "the scenario accepts the director's argv: $argv" 1
+            printf '%s\n' "$OUT" | tail -3
+        else
+            check "FE-9" "the scenario accepts the director's argv: $argv" 0
+        fi
+    done <<<"$DIRECTOR_ARGV"
+fi
+
 # ── HX-1: the curve, against the contract ─────────────────────────────────────
 
 step "HX-1 MockPool parity"
