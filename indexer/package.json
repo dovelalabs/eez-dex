@@ -10,8 +10,9 @@
     "./schema": "./schema/index.ts"
   },
   "scripts": {
+    "start": "node src/cli.ts",
     "lint": "tsc --noEmit",
-    "test": "node --test \"test/**/*.test.ts\"",
+    "test": "node --test --test-timeout=60000 \"test/**/*.test.ts\"",
     "ci": "npm run lint && npm test"
   },
   "engines": {
@@ -20,5 +21,8 @@
   "devDependencies": {
     "@types/node": "^24.10.1",
     "typescript": "^5.9.3"
+  },
+  "bin": {
+    "eez-dex-indexer": "./src/cli.ts"
   }
 }
