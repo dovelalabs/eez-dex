@@ -230,3 +230,25 @@ test("ts5: the swap panel's quote is the indexer's mirror, to the wei", async ()
     "and the fee on the cost line",
   );
 });
+
+test("fe10: the scrubber offers only the controls it can honour", async () => {
+  const render = await renderer();
+  const events = recording("run.json");
+  const position = { position: events.length, total: events.length, startedAtUnix: null, endsAtUnix: null, ended: true };
+
+  // Replay reads the recording itself, so the clock is this app's to change —
+  // this is the shape `ReplaySource` publishes as it plays.
+  const local = render(reduce(play("run.json"), { type: "replay", replay: { speed: 1, ...position } }));
+  assert.match(local, /scrub the recorded run/);
+  assert.match(local, /8×/, "the speeds are offered where the source owns the tape");
+
+  // A gateway replaying the same run (IX-1) owns its own clock. The scrubber
+  // still parks the fold over what arrived — but the speed is stated, not
+  // offered as a button that could not do what it says.
+  const remote = render(
+    reduce(play("run.json", "?mode=observe"), { type: "replay", replay: { speed: 4, ...position } }),
+  );
+  assert.match(remote, /scrub the recorded run/, "the scrubber is still there to park the view");
+  assert.match(remote, /the gateway&#x27;s clock/, "the gateway's speed is stated as a fact");
+  assert.doesNotMatch(remote, /8×/, "and no speed button pretends to change a clock this app does not hold");
+});

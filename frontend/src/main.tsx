@@ -183,7 +183,15 @@ function Root({ config }: { readonly config: AppConfig }): React.JSX.Element {
       connectWallet,
       placeOrder,
       cancelOrder,
-      seek: (position: number | null) => source.current?.seek?.(position),
+      // A source that owns the tape seeks it; against a gateway that is itself
+      // replaying (IX-1) there is no tape to move, so the scrubber parks the
+      // fold over the events already received. Either way seeking is folding a
+      // prefix, which is why one reducer covers both (FE-10, FE-11).
+      seek: (position: number | null) => {
+        const running = source.current;
+        if (running?.seek === undefined) dispatch({ type: "seek", position });
+        else running.seek(position);
+      },
       setSpeed: (speed: number) => source.current?.setSpeed?.(speed),
       runControl: async (control: DemoControl, value: number) => {
         const detail = await runDemoControl(config.indexerUrl, control, value);

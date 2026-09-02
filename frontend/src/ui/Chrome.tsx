@@ -88,6 +88,11 @@ export function Scrubber({ state, api }: { readonly state: AppState; readonly ap
   const received = state.log.length;
   const parked = state.scrubbedTo;
   const position = parked ?? received;
+  // Only a local recording's clock is this app's to change. When the gateway
+  // is the one replaying (IX-1) its speed is a fact to state, not a control to
+  // offer — a button that cannot do what it says is the dishonesty the §7
+  // preamble is written against.
+  const ownsClock = state.config.mode === "replay";
 
   return (
     <section className="panel">
@@ -111,15 +116,21 @@ export function Scrubber({ state, api }: { readonly state: AppState; readonly ap
         <button onClick={() => api.seek(parked === null ? Math.max(0, received - 1) : null)}>
           {parked === null ? "pause" : "follow"}
         </button>
-        {SPEEDS.map((speed) => (
-          <button
-            key={speed}
-            className={replay.speed === speed ? "primary" : ""}
-            onClick={() => api.setSpeed(speed)}
-          >
-            {speed === 0 ? "max" : `${speed}×`}
-          </button>
-        ))}
+        {ownsClock ? (
+          SPEEDS.map((speed) => (
+            <button
+              key={speed}
+              className={replay.speed === speed ? "primary" : ""}
+              onClick={() => api.setSpeed(speed)}
+            >
+              {speed === 0 ? "max" : `${speed}×`}
+            </button>
+          ))
+        ) : (
+          <span className="small muted num">
+            {replay.speed === 0 ? "max" : `${replay.speed}×`} — the gateway's clock
+          </span>
+        )}
         <span className="spacer" />
         <span className="small faint">
           {replay.startedAtUnix === null ? "" : `recorded ${formatClock(replay.startedAtUnix)}`}
