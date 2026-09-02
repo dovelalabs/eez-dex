@@ -17,6 +17,7 @@
  *   node lib/cli.ts assert <run.json> <readings.json>
  *   node lib/cli.ts soak-plan '<json>'        HX-4's seeded order flow
  *   node lib/cli.ts fixtures <directory>      regenerate the HX-5 fixtures
+ *   node lib/cli.ts observe <config.json> <outdir>   watch a run, live
  */
 
 import { readFileSync, writeFileSync } from "node:fs";
@@ -33,6 +34,8 @@ import { assertRun } from "./assert.ts";
 import type { Readings } from "./assert.ts";
 import { soakPlan } from "./soak.ts";
 import { fixtureObservations, writeFixtures } from "./fixture.ts";
+import { observerFor, writeObserved } from "./observe.ts";
+import type { ObserveConfig } from "./observe.ts";
 
 function readJson(argument: string | undefined): unknown {
   if (argument === undefined) throw new Error("expected a JSON argument");
@@ -173,9 +176,61 @@ function main(argv: readonly string[]): number {
       return 0;
     }
 
+    case "observe": {
+      const [configPath, directory] = rest;
+      if (configPath === undefined || directory === undefined) throw new Error("observe: <config.json> <outdir>");
+      void watch(configPath, directory);
+      return 0;
+    }
+
     default:
       process.stderr.write(`unknown command '${String(command)}'; see the header of lib/cli.ts\n`);
       return 2;
+  }
+}
+
+/**
+ * Watches a run until the harness stops it, then writes the observation log
+ * and the readings.
+ *
+ * The loop is here rather than in the observer so the observer stays a pure
+ * `step()` a test can drive block by block. SIGTERM is the normal end: the
+ * shell starts this alongside the enclave and stops it when the scenario is
+ * done, and everything seen so far is written on the way out.
+ */
+async function watch(configPath: string, directory: string): Promise<void> {
+  const config = JSON.parse(readFileSync(configPath, "utf8")) as ObserveConfig & {
+    expect?: Record<string, unknown>;
+    pollMs?: number;
+  };
+  const observer = observerFor(config);
+  const expect = config.expect ?? { mode: "matrix" };
+  let running = true;
+
+  const finish = async (): Promise<void> => {
+    running = false;
+    try {
+      await writeObserved(directory, observer, expect);
+      process.stdout.write(`observed ${observer.observations.length} facts into ${directory}\n`);
+    } catch (error) {
+      process.stderr.write(`observe: ${(error as Error).message}\n`);
+      process.exitCode = 1;
+    }
+  };
+  process.on("SIGTERM", () => void finish().then(() => process.exit(process.exitCode ?? 0)));
+  process.on("SIGINT", () => void finish().then(() => process.exit(process.exitCode ?? 0)));
+
+  await observer.start();
+  while (running) {
+    try {
+      await observer.step();
+    } catch (error) {
+      // A devnet that hiccuped is not a failed scenario; a devnet that stays
+      // down shows up as an empty observation log, which the assertions fail
+      // on loudly.
+      process.stderr.write(`observe: ${(error as Error).message}\n`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, config.pollMs ?? 1000));
   }
 }
 
