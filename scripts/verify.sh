@@ -110,9 +110,11 @@ else
 fi
 
 if (cd contracts && forge test --match-path 'test/integration/**' >/tmp/verify-frame.log 2>&1); then
+    FRAME_OK=1
     row PASS frame "CT-5" "the composed frame settles both profiles against the real router and bridge"
     evidence "$(grep -E '^Ran [0-9]+ test suites' /tmp/verify-frame.log | tail -1)"
 else
+    FRAME_OK=0
     row FAIL frame "CT-5" "the composed frame settles both profiles against the real router and bridge"
     evidence "$(grep -E '^\[FAIL' /tmp/verify-frame.log | head -5)"
 fi
@@ -175,8 +177,18 @@ if [[ -z "${ETH_RPC:-}" ]]; then
     evidence "ETH_RPC is not set. Run: cp .env.example .env && make contracts-fork"
 elif make contracts-fork >/tmp/verify-fork.log 2>&1; then
     row PASS fork "§10.6" "real pools: both profiles' leg shapes against Uniswap v3 at a pinned block"
+    # `make contracts-fork` is the gate and prints no console output, so TS-2's
+    # gas recorder is re-run verbosely here: EC-1's fee ceiling is derived from
+    # these numbers, and an evidence line that only says they exist is not
+    # evidence. The fork is cached by the run above, so this costs seconds.
+    (cd contracts && FOUNDRY_PROFILE=fork forge test \
+        --match-test test_ts2_records_gas_per_residual_size -vv >/tmp/verify-gas.log 2>&1) || true
     evidence "$(grep -E '^Ran [0-9]+ test suites' /tmp/verify-fork.log | tail -1)" \
-             "gas per residual size was recorded; it is in the pull request that shipped this build"
+             "gas per residual size, at the pinned block, feeding EC-1's fee ceiling (TS-2):"
+    while IFS= read -r line; do evidence "$line"; done < <(
+        sed -n 's/^  \(SettlementRouter\.settle gas.*\)/  \1/p;s/^    \(residual (wei):.*\)/    \1/p' \
+            /tmp/verify-gas.log
+    )
 else
     row FAIL fork "§10.6" "real pools: both profiles' leg shapes against Uniswap v3 at a pinned block"
     evidence "$(tail -5 /tmp/verify-fork.log)"
@@ -201,17 +213,32 @@ evidence "needs a browser and a wallet against a running enclave: scripts/demo.s
          "what is asserted here instead: the order calldata the wallet would sign (frontend/test/" \
          "  calldata.test.ts, CT-7) and the pending → filled-at-P0 transitions (test/reduce.test.ts)"
 
-if (cd frontend && npm run --silent test:e2e >/tmp/verify-e2e.log 2>&1); then
+# Each of the two rows below is decided by the suite its own evidence names,
+# and not by `npm run test:e2e`, which runs both: the replay row must be able
+# to fail on its own when the fixture-fed suite breaks, and the observe row
+# on its own when the live-gateway one does. One command deciding two claims
+# would let either row pass on the other's tests.
+tally() { grep -E '^. (tests|pass|fail) [0-9]+' "$1" | tr -d '\342\204\271' | tr -s ' \n' ' '; }
+
+if (cd frontend && node --test e2e/theater.test.ts >/tmp/verify-e2e-replay.log 2>&1); then
     row PASS unit "§10.9" "replay stands alone: the recorded run plays back with no infrastructure"
-    evidence "frontend e2e over scenario/fixtures/*.json, read from disk, no gateway and no chain" \
-             "$(grep -E 'tests [0-9]+|pass [0-9]+|fail [0-9]+' /tmp/verify-e2e.log | tr -d '\342\204\271' | tr '\n' ' ')"
-    row PASS unit "§10.10" "observe mode is honest: no demo affordances, no invented activity"
-    evidence "the live-gateway e2e renders observe mode against a real gateway and asserts the" \
-             "  director's controls are absent (FE-9) and nothing claims to be a replay (IX-1)"
+    evidence "frontend/e2e/theater.test.ts over scenario/fixtures/*.json, read from disk:" \
+             "  no gateway, no chain, and the app's own component tree" \
+             "$(tally /tmp/verify-e2e-replay.log)"
 else
     row FAIL unit "§10.9" "replay stands alone: the recorded run plays back with no infrastructure"
-    evidence "$(tail -5 /tmp/verify-e2e.log)"
+    evidence "$(tail -5 /tmp/verify-e2e-replay.log)"
+fi
+
+if (cd frontend && node --test e2e/live-gateway.test.ts >/tmp/verify-e2e-live.log 2>&1); then
+    row PASS unit "§10.10" "observe mode is honest: no demo affordances, no invented activity"
+    evidence "frontend/e2e/live-gateway.test.ts renders observe mode against a real gateway on a" \
+             "  real socket and asserts the director's controls are absent (FE-9) and that" \
+             "  nothing claims to be a replay (IX-1)" \
+             "$(tally /tmp/verify-e2e-live.log)"
+else
     row FAIL unit "§10.10" "observe mode is honest: no demo affordances, no invented activity"
+    evidence "$(tail -5 /tmp/verify-e2e-live.log)"
 fi
 
 # --- the soak's own report ---------------------------------------------------
@@ -312,12 +339,18 @@ row "$V" unit "§11" "no mainnet deployment in any script or configuration"
 evidence "the only mainnet endpoint in the tree is the fork suite's read-only ETH_RPC"
 [[ -n "$MAINNET" ]] && evidence "$MAINNET"
 
+# A `frame` row has to be decided by the frame, not by a grep over the source:
+# the claim is that the *same contracts* settle both profiles, and only running
+# both integration suites shows that. The grep is kept beside it because it is
+# the other half of the claim — the selection is a constructor argument rather
+# than a second contract — but neither half passes this row alone.
 FORKED="$(grep -rn 'GENESIS' contracts/src --include='*.sol' | grep -cE 'Profile.GENESIS' || true)"
-V="$(held [ "$FORKED" -gt 0 ])"
+if (( FRAME_OK )) && [ "$FORKED" -gt 0 ]; then V=PASS; else V=FAIL; fi
 row "$V" frame "§1" "profile is configuration, never a fork: one codebase builds both"
 evidence "one bytecode, selected by a constructor argument and a zero address:" \
          "  test/integration/GenesisFrame.t.sol settles the genesis shape and" \
-         "  test/integration/FullFrame.t.sol the full one, from the same contracts"
+         "  test/integration/FullFrame.t.sol the full one, from the same contracts" \
+         "both ran above (CT-5); $FORKED source lines select the profile at construction"
 
 STUBS="$(grep -rn 'not implemented: Phase' . --exclude=verify.sh \
     --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=out --exclude-dir=target --exclude-dir=lib \
