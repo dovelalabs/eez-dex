@@ -1,0 +1,136 @@
+# RL-4, first clause: the unit and fork suites run on every PR.
+#
+# Two jobs, matching the two commands a developer runs locally:
+#
+#   check  `make check`         lint plus every package's tests
+#   fork   `make contracts-fork` the mainnet-fork suites, TS-2 and TS-B
+#
+# Toolchains are pinned rather than floated: recorded gas per residual size
+# feeds EC-1's fee ceiling, and it is only comparable across runs when the
+# compiler and the pinned block are both fixed.
+#
+# RL-4's scenario half is NOT wired here — it belongs to Phase 4a (WP-4).
+# `scenario/dex-scenario.sh` is still a stub that exits 1 and would fail every
+# PR. What Phase 4a adds to this file: a `scenario` job running the happy path
+# and the first failure rows on every PR through the framework's Kurtosis
+# entry point (UP-3), and a nightly schedule running the full failure matrix
+# (HX-3) plus the 200-slot window soak (HX-4).
+
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FOUNDRY_VERSION: v1.7.1
+  RUST_VERSION: 1.96.0
+  NODE_VERSION: 24.10.0
+
+jobs:
+  # Lint plus every package's tests — the same hard gate as before a commit.
+  check:
+    name: make check
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # contracts/lib holds forge-std, openzeppelin-contracts and the
+          # pinned eez-core-protocol; `make deps` is then a no-op.
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: ${{ env.FOUNDRY_VERSION }}
+
+      - name: Install Rust
+        run: |
+          rustup toolchain install "$RUST_VERSION" --profile minimal --component rustfmt --component clippy
+          rustup default "$RUST_VERSION"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: |
+            indexer/package-lock.json
+            frontend/package-lock.json
+
+      # `make lint-scenario` soft-skips when shellcheck is absent, which is
+      # right for a developer and wrong for a gate. CI installs it and proves
+      # it is there, so the shell lint actually runs.
+      - name: Install shellcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          command -v shellcheck || { echo "shellcheck missing: make lint-scenario would silently skip"; exit 1; }
+          shellcheck --version
+
+      - name: Cache Foundry build output
+        uses: actions/cache@v4
+        with:
+          path: |
+            contracts/out
+            contracts/cache
+          key: foundry-${{ env.FOUNDRY_VERSION }}-${{ hashFiles('contracts/foundry.toml', 'contracts/remappings.txt', 'contracts/src/**/*.sol', 'contracts/test/**/*.sol') }}
+          restore-keys: foundry-${{ env.FOUNDRY_VERSION }}-
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            settler/target
+          key: cargo-${{ env.RUST_VERSION }}-${{ hashFiles('settler/Cargo.lock', 'settler/framework-deps.toml') }}
+          restore-keys: cargo-${{ env.RUST_VERSION }}-
+
+      - run: make check
+
+  # TS-2 and TS-B against real Uniswap v3 pools at their pinned blocks. The
+  # target fails on zero discovery, on a missing ETH_RPC and on any [SKIP],
+  # so a green run here means nine tests actually executed.
+  fork:
+    name: make contracts-fork
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: ${{ env.FOUNDRY_VERSION }}
+
+      - name: Cache Foundry build output
+        uses: actions/cache@v4
+        with:
+          path: |
+            contracts/out
+            contracts/cache
+          key: foundry-${{ env.FOUNDRY_VERSION }}-${{ hashFiles('contracts/foundry.toml', 'contracts/remappings.txt', 'contracts/src/**/*.sol', 'contracts/test/**/*.sol') }}
+          restore-keys: foundry-${{ env.FOUNDRY_VERSION }}-
+
+      # Both blocks are pinned, so the fetched storage is immutable and safe to
+      # keep between runs. It also keeps the keyless fallback endpoint viable:
+      # a warm cache re-reads from disk instead of re-fetching every slot.
+      - name: Cache Foundry's RPC data for the pinned blocks
+        uses: actions/cache@v4
+        with:
+          path: ~/.foundry/cache/rpc
+          key: foundry-rpc-${{ hashFiles('contracts/test/fork/**/*.sol') }}
+          restore-keys: foundry-rpc-
+
+      - name: Run the mainnet-fork suites
+        # The keyless fallback keeps the job running on a fork of the
+        # repository, where the secret is not available.
+        env:
+          ETH_RPC: ${{ secrets.ETH_RPC || 'https://eth.drpc.org' }}
+        run: make contracts-fork
