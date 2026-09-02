@@ -1,0 +1,7 @@
+# Everything a run leaves behind. The recorded run it produces is committed
+# under fixtures/ deliberately; nothing else here is.
+.run/
+.plan/
+.framework/
+bundle/artifacts/
+bundle/accounts.env
