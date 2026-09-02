@@ -1,0 +1,495 @@
+/*
+ * One token set, two themes — RD-2 FE-11, FE-12.
+ *
+ * Light and dark are the same tokens with different values; no component names
+ * a colour. Digits are tabular everywhere they align, which in a trading
+ * surface is everywhere: a price that shifts sideways as it updates is a price
+ * that is hard to read and easy to misread.
+ *
+ * Motion is one variable. `prefers-reduced-motion` sets it to zero, which
+ * turns every transition here into the stepped state change FE-12 asks for —
+ * the state still changes, it simply stops moving on the way.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  --ink: #10141c;
+  --ink-soft: #4a5568;
+  --ink-faint: #7b8494;
+  --paper: #f7f8fa;
+  --panel: #ffffff;
+  --line: #dfe3ea;
+  --line-strong: #c2c9d4;
+
+  /* The two sides of the pair, and the residual that leaves the zone. */
+  --side-a: #2f6f4f;
+  --side-b: #7a4bbf;
+  --residual: #b06a1c;
+  --crossed: #2f6f9f;
+
+  /* Outcomes. Free failure is deliberately not an error colour (FE-7). */
+  --ok: #2f6f4f;
+  --warn: #b06a1c;
+  --bad: #b03a3a;
+  --free: #4a6fa5;
+  --repair: #7a4bbf;
+
+  --radius: 8px;
+  --gap: 12px;
+  --motion: 220ms;
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e8ecf3;
+    --ink-soft: #a7b0c0;
+    --ink-faint: #737d8f;
+    --paper: #0e1116;
+    --panel: #161b22;
+    --line: #262d38;
+    --line-strong: #3a4350;
+
+    --side-a: #6fc79a;
+    --side-b: #b492ea;
+    --residual: #e0a35c;
+    --crossed: #74b3e0;
+    --ok: #6fc79a;
+    --warn: #e0a35c;
+    --bad: #e07a7a;
+    --free: #8fb2e0;
+    --repair: #b492ea;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion: 0ms;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 15px;
+  letter-spacing: 0.02em;
+}
+
+h2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+h3 {
+  font-size: 13px;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  color: inherit;
+}
+
+button {
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background var(--motion) ease;
+}
+
+button:hover:not(:disabled) {
+  background: var(--paper);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  color: var(--ink-faint);
+  border-color: var(--line);
+}
+
+button.primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  font-weight: 600;
+}
+
+input,
+select {
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 6px 8px;
+  width: 100%;
+}
+
+/* ------------------------------------------------------------- layout ---- */
+
+.app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--gap);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(320px, 380px) 1fr;
+  gap: var(--gap);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--gap);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.row-tight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--mono);
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+.faint {
+  color: var(--ink-faint);
+}
+
+.small {
+  font-size: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field > label {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+/* --------------------------------------------------------------- chips ---- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.chip.ok {
+  color: var(--ok);
+  border-color: var(--ok);
+}
+.chip.warn {
+  color: var(--warn);
+  border-color: var(--warn);
+}
+.chip.bad {
+  color: var(--bad);
+  border-color: var(--bad);
+}
+.chip.free {
+  color: var(--free);
+  border-color: var(--free);
+}
+.chip.repair {
+  color: var(--repair);
+  border-color: var(--repair);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* -------------------------------------------------------------- header ---- */
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 10px var(--gap);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.header .spacer {
+  flex: 1;
+}
+
+/* ------------------------------------------------------------- theater ---- */
+
+.slotbar {
+  position: relative;
+  height: 10px;
+  background: var(--paper);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.slotbar > .fill {
+  height: 100%;
+  background: var(--crossed);
+  transition: width var(--motion) linear;
+}
+
+.slotbar.stalled > .fill {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--warn),
+    var(--warn) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+}
+
+.blocks {
+  display: flex;
+  gap: 4px;
+}
+
+.blocks > .block {
+  flex: 1;
+  height: 22px;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: var(--paper);
+  transition: background var(--motion) ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+
+.blocks > .block.done {
+  background: var(--panel);
+  border-color: var(--crossed);
+  color: var(--ink-soft);
+}
+
+.blocks > .block.sync {
+  border-color: var(--residual);
+  color: var(--residual);
+  font-weight: 600;
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bar {
+  display: flex;
+  height: 18px;
+  background: var(--paper);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.bar > span {
+  display: block;
+  height: 100%;
+  transition: width var(--motion) ease;
+}
+
+.bar > span.a {
+  background: var(--side-a);
+}
+.bar > span.b {
+  background: var(--side-b);
+}
+.bar > span.crossed {
+  background: var(--crossed);
+}
+.bar > span.residual {
+  background: var(--residual);
+}
+
+.lane {
+  border-top: 1px dashed var(--line-strong);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+
+.orders-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.order-chip {
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-family: var(--mono);
+}
+
+.order-chip.a {
+  border-color: var(--side-a);
+  color: var(--side-a);
+}
+.order-chip.b {
+  border-color: var(--side-b);
+  color: var(--side-b);
+}
+.order-chip.rolled {
+  border-style: dashed;
+  color: var(--warn);
+  border-color: var(--warn);
+}
+.order-chip.filled {
+  background: color-mix(in srgb, var(--ok) 12%, transparent);
+}
+
+/* --------------------------------------------------------------- table ---- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+th {
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+  font-weight: 500;
+  padding: 4px 6px 4px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+td {
+  padding: 5px 6px 5px 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: baseline;
+}
+
+td.n,
+th.n {
+  text-align: right;
+  padding-right: 0;
+  font-family: var(--mono);
+}
+
+/* --------------------------------------------------------------- empty ---- */
+
+.empty {
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  padding: 14px;
+  color: var(--ink-soft);
+  text-align: center;
+  font-size: 13px;
+}
+
+.notice {
+  border-left: 3px solid var(--line-strong);
+  padding: 6px 10px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.notice.free {
+  border-color: var(--free);
+}
+.notice.repair {
+  border-color: var(--repair);
+}
+.notice.bad {
+  border-color: var(--bad);
+}
+.notice.warn {
+  border-color: var(--warn);
+}
+
+/* The rollback treatment: the block un-happens rather than erroring (FE-7). */
+.unhappened {
+  text-decoration: line-through;
+  color: var(--ink-faint);
+  opacity: 0.75;
+  transition: opacity var(--motion) ease;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 2px;
+}

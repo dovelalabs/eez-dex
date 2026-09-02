@@ -8,9 +8,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
     "lint": "tsc --noEmit",
     "test": "node --test \"test/**/*.test.ts\"",
-    "ci": "npm run lint && npm test && npm run build"
+    "test:e2e": "node --test \"e2e/**/*.test.ts\"",
+    "ci": "npm run lint && npm test && npm run test:e2e && npm run build"
   },
   "engines": {
     "node": ">=22.18"
