@@ -25,8 +25,13 @@ pushes frames at it and does nothing else:
 
 Everything downstream of the source is identical, which is what makes the three
 modes cheap rather than triplicated — and why a bug cannot live on one of them.
-Pointing `observe` at a gateway that is itself replaying is IX-1's other half:
-the app cannot tell the difference, because there is nothing in it that could.
+
+Pointing `observe` at a gateway that is itself replaying is IX-1's other half,
+and every view renders it as a live chain, because nothing downstream of the
+source can tell the difference. The one place the app does distinguish them is
+the scrubber's speed: a local recording's clock is this app's to change, and a
+gateway's is not, so there the speed is stated rather than offered as a button
+that could not do what it says.
 
 ```
 source ──► Action ──► reduce ──► AppState ──► App
