@@ -723,10 +723,13 @@ contract WindowBook is IWindowBook, Ownable {
         address buyAsset = built.residualIsA ? ASSET_B : ASSET_A;
         uint256 residualIn = built.leg.residualIn;
 
-        // [full] the L1 frame releases the sell side from `DexBridge`'s reserve, so the
-        // L2 representation must burn against it in the same frame.
+        // [full] the L1 frame releases the sell side from `DexBridge`'s reserve **to the
+        // router**, which is where the swap that follows it in the same frame takes its
+        // input from (CT-5); the L2 representation burns against it here. Releasing to
+        // the burner instead would send the reserve to this contract's address on L1,
+        // where nothing is deployed, and the router would revert with it stranded.
         if (PROFILE == Profile.FULL && sellAsset != address(0) && residualIn != 0) {
-            BRIDGE_L2.burn(built.residualIsA ? L1_ASSET_A : L1_ASSET_B, address(this), residualIn);
+            BRIDGE_L2.releaseTo(built.residualIsA ? L1_ASSET_A : L1_ASSET_B, address(this), residualIn, ROUTER);
         }
 
         uint256 value = sellAsset == address(0) ? residualIn : 0;

@@ -395,6 +395,20 @@ contract WindowBookSettlementTest is WindowBookFixture {
         _assertHoldingsCover(address(tokenB));
     }
 
+    /// @dev **[full]** CT-5's sell side: the burn on L2 releases the L1 reserve **to
+    /// the router**, which is where the swap that follows it in the same frame takes
+    /// its input from. Regression (Phase 6): releasing to the burner sent the reserve
+    /// to this contract's address on L1, where nothing is deployed, and the router
+    /// reverted with the reserve stranded — a defect no unit suite could see, because
+    /// where the reserve lands is an L1 fact.
+    function test_ct5_the_sell_side_reserve_is_released_to_the_router() public {
+        bytes32 a = _place(alice, Side.SELL_A_FOR_B, SELL_A, 0);
+
+        _settle(_ids(a));
+
+        assertEq(bridgeL2.lastReleaseRecipient(), ROUTER_L1, "CT-5: the reserve is released to the router");
+    }
+
     /// @dev **[genesis]** every order sells zone ETH, there is no crossing, the sell
     /// side leaves as the call's `value`, and delivery is the L1 distribution the leg
     /// carries (CT-4, CT-11).
