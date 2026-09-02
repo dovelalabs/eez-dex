@@ -245,6 +245,44 @@ test("fe6: cumulative amortisation sums the stream's own figures", () => {
   assert.equal(total.fillsPerSettlement, 5);
 });
 
+test("fe6: a rolled-back settlement contributes its gas and not its fills", () => {
+  resetSeq();
+  const base: Amortisation = {
+    schemaVersion: SCHEMA_VERSION,
+    settlementId: "0xs1",
+    windowId: "0",
+    fills: 8,
+    l1GasUsed: "282000",
+    l1GasCostWei: "282000000000000",
+    gasPerFillWei: "35250000000000",
+    counterfactualGasCostWei: "3200000000000000",
+    savingsWei: "2918000000000000",
+    perOrder: [],
+  };
+  const undone: Amortisation = { ...base, settlementId: "0xs2", windowId: "1", fills: 3 };
+
+  const state = feed([
+    settlementEvent(settlement("0xs1", { outcome: "settled", amortisation: base })),
+    settlementEvent(
+      settlement("0xs2", {
+        windowId: "1",
+        outcome: "rolled_back",
+        rollbackCause: "postbatch_skip",
+        l1GasSpent: true,
+        amortisation: undone,
+      }),
+    ),
+  ]);
+
+  // SV-4: the rollback un-happened its fills, so the counter must not claim
+  // them — and the gas it spent is real, so it must still be paid for.
+  const total = cumulativeAmortisation(state);
+  assert.equal(total.fills, 8, "only the fills that stand");
+  assert.equal(total.l1GasCostWei, 564_000_000_000_000n, "both settlements' gas");
+  assert.equal(total.counterfactualGasCostWei, 3_200_000_000_000_000n, "nothing to compare an undone fill against");
+  assert.equal(total.gasPerFillWei, 70_500_000_000_000n, "the true cost per fill delivered");
+});
+
 test("fe3: the counterfactual is only 'your own' when it is the user's own order", () => {
   resetSeq();
   const mine = "0x00000000000000000000000000000000000000a1";

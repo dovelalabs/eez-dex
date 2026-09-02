@@ -303,10 +303,18 @@ export function cumulativeAmortisation(state: AppState): Cumulative {
   let counterfactual = 0n;
   let settlements = 0;
 
-  for (const entry of amortisations(state)) {
+  // A rolled-back settlement contributes its gas and not its fills: the
+  // `postBatch` skip is the one rollback that is not free, and the fills it
+  // claimed were undone (SV-4, A.4) — this reducer has already put those
+  // orders back to pending. The gateway sums it the same way (IX-3).
+  for (const id of state.chain.settlementIds) {
+    const settlement = state.chain.settlements.get(id);
+    const entry = settlement?.amortisation;
+    if (settlement === undefined || entry === null || entry === undefined) continue;
     settlements += 1;
-    fills += entry.fills;
     l1 += BigInt(entry.l1GasCostWei);
+    if (settlement.outcome === "rolled_back") continue;
+    fills += entry.fills;
     counterfactual += BigInt(entry.counterfactualGasCostWei);
   }
 
