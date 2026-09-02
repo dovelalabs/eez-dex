@@ -182,15 +182,17 @@ else
 fi
 
 if (( ENCLAVE )); then
-    if scenario/dex-scenario.sh >/tmp/verify-demo.log 2>&1; then
+    if scripts/demo.sh --smoke >/tmp/verify-demo.log 2>&1; then
         row PASS enclave "§10.7" "the window is one demo: enclave, settler, indexer and frontend together"
+        evidence "$(grep -E '^  ok ' /tmp/verify-demo.log | tail -2)"
     else
         row FAIL enclave "§10.7" "the window is one demo: enclave, settler, indexer and frontend together"
         evidence "$(tail -5 /tmp/verify-demo.log)"
     fi
 else
     row SKIP enclave "§10.7" "the window is one demo [full]: one command brings the whole stack up"
-    evidence "needs Kurtosis and Docker. Run: scripts/demo.sh   (or verify.sh --enclave)"
+    evidence "needs Kurtosis, Docker and the framework's images." \
+             "Run: scripts/demo.sh --smoke   (or verify.sh --enclave, which runs exactly that)"
 fi
 
 row SKIP enclave "§10.8" "a user can trade: a connected wallet places an order and sees it fill"

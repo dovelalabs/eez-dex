@@ -4,6 +4,7 @@
 #   scripts/demo.sh                 bring the whole stack up and open the UI
 #   scripts/demo.sh --no-open       same, without launching a browser
 #   scripts/demo.sh --burst 8       place a burst as soon as the book is live
+#   scripts/demo.sh --smoke         bring it up, prove it works, tear it down
 #
 # One command, four processes, in the order each needs the one before it:
 #
@@ -30,6 +31,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT" || exit 1
 
 OPEN=1
+SMOKE=0
 BURST=0
 INDEXER_PORT="${DEX_INDEXER_PORT:-8080}"
 FRONTEND_PORT="${DEX_FRONTEND_PORT:-5173}"
@@ -37,6 +39,7 @@ FRONTEND_PORT="${DEX_FRONTEND_PORT:-5173}"
 while (( $# )); do
     case "$1" in
         --no-open) OPEN=0 ;;
+        --smoke)   SMOKE=1; OPEN=0; (( BURST )) || BURST=8 ;;
         --burst)   BURST="$2"; shift ;;
         --keep)    export DEX_KEEP=1 ;;
         -h|--help) sed -n '2,27p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
@@ -138,6 +141,44 @@ kill -0 "$FRONTEND_PID" 2>/dev/null || {
 if (( BURST > 0 )); then
     step "placing an opening burst of $BURST orders"
     "$DEX_SCENARIO_DIR/dex-scenario.sh" --op place --count "$BURST" || say_bad "the burst did not land"
+fi
+
+# --- the smoke test ----------------------------------------------------------
+#
+# §10's demo criterion, asserted rather than described: the four processes came
+# up together, the burst reached the book through the director's own seam, and
+# the window settled — as the *gateway* reports it, not as the harness assumes.
+
+if (( SMOKE )); then
+    step "waiting for the window to settle, as the gateway reports it"
+    SNAPSHOT="http://127.0.0.1:$INDEXER_PORT/snapshot"
+    deadline=$((SECONDS + ${DEX_SMOKE_TIMEOUT:-180}))
+    fills=0
+    while (( SECONDS < deadline )); do
+        fills="$(curl -fsS "$SNAPSHOT" 2>/dev/null \
+            | node -e '
+              let raw = "";
+              process.stdin.on("data", (c) => { raw += c; }).on("end", () => {
+                try {
+                  const snapshot = JSON.parse(raw);
+                  const settled = snapshot.settlements.filter((s) => s.outcome === "settled");
+                  process.stdout.write(String(settled.reduce((n, s) => n + s.filledOrderIds.length, 0)));
+                } catch { process.stdout.write("0"); }
+              });
+            ' || echo 0)"
+        (( fills > 0 )) && break
+        sleep 4
+    done
+
+    (( fills > 0 )) || die "no settled fills reached the gateway in time; see $DEX_RUN_DIR/*.log"
+    say_ok "the gateway reports $fills fills settled by the window"
+
+    curl -fsS "http://127.0.0.1:$FRONTEND_PORT/" >/dev/null \
+        || die "the frontend is not serving on :$FRONTEND_PORT"
+    say_ok "the trading UI is serving on :$FRONTEND_PORT"
+
+    step "demo smoke: enclave, settler, indexer and frontend came up together"
+    exit 0
 fi
 
 step "the window is up"

@@ -624,6 +624,18 @@ contract WindowBook is IWindowBook, Ownable {
     /// and taking the opposite side still captures nothing, EC-3) and the residual side
     /// — which caused the swap — carries it. Any other split either leaves the protocol
     /// long or short an asset (EC-2) or reverts on every drift.
+    ///
+    /// **Known divergence from CT-9/FL-5, escalated in phase 6.** CT-9 reads "fills every
+    /// crossed order at `P0`", and that is exactly true only where the mirror and `P0`
+    /// agree — the steady state. Under drift the crossed side clears at the *mirror*
+    /// price and the difference lands on the residual side, whichever way it falls: a
+    /// residual-side order can clear a few basis points better than `P0`, which is what
+    /// the harness's FL-5 check reports on roughly 1–2% of windows in a 200-slot soak. It
+    /// cannot be split any other way from here — `residualIn` is fixed before the leg
+    /// returns `P0`, and paying the crossed side at `P0` afterwards would need an asset
+    /// the book no longer holds. Nobody is filled below their limit either way: CT-10
+    /// checks the amount actually paid. Resolving it is a question for RD-2, not a change
+    /// to make under it.
     function _buildLeg(Selection memory sel, uint64 deadline) private view returns (BuiltLeg memory built) {
         uint256 priceX96 = Mirror.spotPriceX96(mirror);
         uint256 residualIn;
