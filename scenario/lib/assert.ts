@@ -198,6 +198,15 @@ function paramsOf(readings: Readings): BookParams {
  * the first and fail the second.
  */
 export function checkEscrowInvariant(checks: Checks, readings: Readings): void {
+  // A run that read no ledger has not proved the invariant, and reporting that
+  // as a pass would be the worst of both: the metric A.5 says must be zero,
+  // asserted against nothing.
+  checks.that(
+    "CT-13",
+    "the run read an escrow ledger to assert the invariant against",
+    readings.escrow.length > 0,
+    "no asset ledger was read off the book",
+  );
   for (const ledger of readings.escrow) {
     const held =
       toBig(ledger.escrowed) + toBig(ledger.feesAccrued) + toBig(ledger.dustAccrued) + toBig(ledger.credited);
@@ -554,9 +563,6 @@ export function assertRun(events: readonly SlotEvent[], readings: Readings): { l
   if (readings.expect.allOrdersTerminal === true) checkAllOrdersTerminal(checks, state);
 
   reportMetrics(checks, state);
-
-  const drift = state.metrics["escrow_invariant_drift_wei"] ?? 0;
-  checks.equal("A.5", "escrow_invariant_drift_wei is zero across the run", drift, 0);
 
   return checks.summary(`A.6 ${readings.expect.mode}`);
 }
