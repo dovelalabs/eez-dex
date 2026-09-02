@@ -175,7 +175,8 @@ if [[ -z "${ETH_RPC:-}" ]]; then
     evidence "ETH_RPC is not set. Run: cp .env.example .env && make contracts-fork"
 elif make contracts-fork >/tmp/verify-fork.log 2>&1; then
     row PASS fork "§10.6" "real pools: both profiles' leg shapes against Uniswap v3 at a pinned block"
-    evidence "$(grep -E '^Ran [0-9]+ tests? for|tests passed' /tmp/verify-fork.log | tail -2)"
+    evidence "$(grep -E '^Ran [0-9]+ test suites' /tmp/verify-fork.log | tail -1)" \
+             "gas per residual size was recorded; it is in the pull request that shipped this build"
 else
     row FAIL fork "§10.6" "real pools: both profiles' leg shapes against Uniswap v3 at a pinned block"
     evidence "$(tail -5 /tmp/verify-fork.log)"
@@ -335,7 +336,16 @@ if (( FAILED || SKIPPED )); then
 fi
 
 if (( FAILED )); then
-    printf '\n%sverify: %d row(s) FAILED — RD-2 §10 is not satisfied%s\n' "$C_FAIL" "$FAILED" "$C_OFF"
+    # Which rows failed decides what the failure means: an acceptance criterion
+    # is §10 unmet, anything else is a supporting check that did not hold.
+    CRITERIA_FAILED="$(printf '%s\n' "${NOT_PASSED[@]}" | grep -c '^FAIL  §10' || true)"
+    if [[ "$CRITERIA_FAILED" -gt 0 ]]; then
+        printf '\n%sverify: %d row(s) FAILED, %d of them an RD-2 §10 criterion%s\n' \
+            "$C_FAIL" "$FAILED" "$CRITERIA_FAILED" "$C_OFF"
+    else
+        printf '\n%sverify: %d row(s) FAILED — no §10 criterion among them, and not green either%s\n' \
+            "$C_FAIL" "$FAILED" "$C_OFF"
+    fi
     exit 1
 fi
 if (( SKIPPED )); then
