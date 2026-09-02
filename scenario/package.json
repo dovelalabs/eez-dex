@@ -1,0 +1,20 @@
+{
+  "name": "@eez-dex/scenario",
+  "version": "0.1.0",
+  "private": true,
+  "description": "eez-dex enclave scenario: the A.6 assertions, the failure matrix and the HX-5 recorded run.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "test": "node --test \"lib/**/*.test.ts\"",
+    "ci": "npm run lint && npm test"
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3"
+  }
+}
