@@ -95,8 +95,8 @@ should have happened (the oracle).
 That split is the point. "Every crossed order filled at `referencePriceX96`",
 checked by reading the number back out of the event it was emitted in, would
 pass against a contract that had quietly changed its mind. And because the
-oracle is pure, most of this work package is exercised on every `make check`
-rather than only on the nights the enclave runs.
+oracle is pure, most of this work package is exercised by `--self-test`, which
+CI runs on every pull request, rather than only on the nights the enclave runs.
 
 ### The seams it consumes
 

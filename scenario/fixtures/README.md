@@ -36,8 +36,8 @@ node scenario/lib/cli.ts fixtures scenario/fixtures
 ```
 
 `scenario/lib/record.test.ts` fails if the committed `run.json` and a fresh
-fold of the observation log disagree, so a stale fixture cannot survive a
-`make check`.
+fold of the observation log disagree, so a stale fixture cannot survive
+`scenario/dex-scenario.sh --self-test`, which CI runs on every pull request.
 
 ## Validating one
 

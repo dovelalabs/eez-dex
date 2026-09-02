@@ -22,7 +22,8 @@
 # **Nothing here decides whether an assertion passed.** The shell induces and
 # observes; the assertions are `scenario/lib/assert.ts`, recomputing every
 # settlement from its inputs. That split is why most of this work package is
-# tested on every `make check` and not only on the nights the enclave runs.
+# tested by `--self-test`, which CI runs on every pull request, and not only on
+# the nights the enclave runs (RL-4).
 set -euo pipefail
 export FOUNDRY_DISABLE_NIGHTLY_WARNING=1
 
@@ -52,7 +53,7 @@ while (( $# )); do
         --seed)       SEED="$2"; shift ;;
         --keep)       DEX_KEEP=1 ;;
         --profile)    DEX_PROFILE="$2"; shift ;;
-        -h|--help)    sed -n '2,25p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+        -h|--help)    sed -n '2,26p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
         *)            echo "dex-scenario: unknown option '$1'" >&2; exit 2 ;;
     esac
     shift

@@ -8,8 +8,8 @@
  *   * the recorded run (HX-5) can be regenerated and checked without an
  *     enclave, which is what lets Phase 5 be built in parallel, and
  *   * the recorder and the assertions are exercised over every A.4 outcome —
- *     settled, rolled, evicted, rolled back — on every `make check`, not only
- *     on the nights the full matrix runs.
+ *     settled, rolled, evicted, rolled back — by `dex-scenario.sh --self-test`
+ *     on every pull request, not only on the nights the full matrix runs.
  *
  * It is not a second settler. It computes nothing the chain would not: the
  * fills come from {@link ./book.ts}, the swap from {@link ./pool.ts}, and the
