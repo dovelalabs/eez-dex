@@ -185,7 +185,12 @@ export interface SlotClock {
   readonly total: number;
   /** `elapsed / total`, clamped: the progress bar's own figure. */
   readonly ratio: number;
-  /** L2 blocks produced in this window, and how many the window holds. */
+  /**
+   * L2 blocks this window has actually been *told* about, and how many it
+   * holds. Zero until an `l2_block` event arrives for this window: a block the
+   * stream has not reported is a block that has not been produced, and
+   * inferring one from elapsed time would be the synthetic tick FE-12 forbids.
+   */
   readonly blocks: number;
   readonly blocksTotal: number;
   /**
@@ -214,7 +219,7 @@ export function slotClock(state: AppState, window: Window | null): SlotClock | n
     elapsed,
     total,
     ratio: total === 0 ? 0 : Math.min(1, elapsed / total),
-    blocks: remaining === null ? Math.min(blocksTotal, Math.floor(elapsed / L2_BLOCK_SECONDS)) : blocksTotal - remaining,
+    blocks: remaining === null ? 0 : Math.max(0, Math.min(blocksTotal, blocksTotal - remaining)),
     blocksTotal,
     stalled: window.state === "open" && sinceLastEvent > STALL_SECONDS,
     sinceLastEvent,

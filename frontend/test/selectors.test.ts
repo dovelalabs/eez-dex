@@ -139,6 +139,22 @@ test("fe12: a window with nothing arriving is stalled, not animated on", () => {
   assert.equal(stalled?.sinceLastEvent, 28);
 });
 
+test("fe12: an L2 block the stream never reported is never drawn as produced", () => {
+  resetSeq();
+  // A window that opened and then said nothing: the wall clock has run past
+  // three L2 block times, and not one of those blocks exists.
+  const state = at(feed([windowEvent(window("0", "open"))]), START_UNIX + 7);
+  const clock = slotClock(state, theaterWindow(state));
+
+  assert.equal(clock?.blocks, 0, "no l2_block event means no L2 block — never a synthetic tick");
+  assert.equal(clock?.stalled, true, "and the window says it is stalled rather than animating on");
+  assert.ok((clock?.ratio ?? 0) > 0, "the slot bar still runs on real time (FE-5)");
+
+  // One reported block, and exactly one is drawn.
+  const ticked = at(feed([blockEvent(1, "0", 5, START_UNIX + 2)], state), START_UNIX + 7);
+  assert.equal(slotClock(ticked, theaterWindow(ticked))?.blocks, 1);
+});
+
 test("fe12: a two-slot window is twice as long and holds twice the blocks (EC-6)", () => {
   resetSeq();
   const state = at(feed([windowEvent(window("0", "open", { slots: 2 }))]), START_UNIX + 12);
