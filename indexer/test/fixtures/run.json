@@ -1,0 +1,1272 @@
+{
+  "schemaVersion": 1,
+  "events": [
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "1",
+        "state": "open",
+        "slots": 2,
+        "openedAtL2Block": 1,
+        "openedAtUnix": 1800000000,
+        "syncL2Block": null,
+        "orderIds": [],
+        "selectedOrderIds": [],
+        "settlementId": null,
+        "grossIn": "0",
+        "residualIn": "0",
+        "residualSide": null,
+        "nettingRatio": null
+      },
+      "schemaVersion": 1,
+      "seq": 1,
+      "atUnix": 1800000000
+    },
+    {
+      "kind": "slot",
+      "l1Block": 21000000,
+      "windowId": "1",
+      "schemaVersion": 1,
+      "seq": 2,
+      "atUnix": 1800000000
+    },
+    {
+      "kind": "l2_block",
+      "l2Block": 1,
+      "windowId": "1",
+      "blocksRemaining": 5,
+      "schemaVersion": 1,
+      "seq": 3,
+      "atUnix": 1800000000
+    },
+    {
+      "kind": "mirror",
+      "mirror": {
+        "schemaVersion": 1,
+        "windowId": "1",
+        "state": {
+          "sqrtPriceX96": "3543191142285914205922034323214",
+          "liquidity": "1000000000000000000000000",
+          "tick": 76012
+        },
+        "referencePriceX96": "158456325028528675187087900672000",
+        "l1Block": 21000000,
+        "mirrorTimestamp": 1799999988,
+        "ageSlots": 1,
+        "source": "genesis",
+        "observedAtUnix": 1800000000
+      },
+      "schemaVersion": 1,
+      "seq": 4,
+      "atUnix": 1800000000
+    },
+    {
+      "kind": "l2_block",
+      "l2Block": 2,
+      "windowId": "1",
+      "blocksRemaining": 4,
+      "schemaVersion": 1,
+      "seq": 5,
+      "atUnix": 1800000004
+    },
+    {
+      "kind": "l2_block",
+      "l2Block": 3,
+      "windowId": "1",
+      "blocksRemaining": 3,
+      "schemaVersion": 1,
+      "seq": 6,
+      "atUnix": 1800000004
+    },
+    {
+      "kind": "order",
+      "order": {
+        "schemaVersion": 1,
+        "id": "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+        "owner": "0x00000000000000000000000000000000000000a1",
+        "side": "SELL_A_FOR_B",
+        "sellAmount": "1000000000000000000",
+        "minBuyAmount": "1900000000000000000000",
+        "recipient": "0x00000000000000000000000000000000000000a1",
+        "expiresAfter": 4,
+        "state": "open",
+        "placedAtL2Block": 3,
+        "placedAtUnix": 1800000004,
+        "windowId": "1",
+        "rolledCount": 0,
+        "fill": null
+      },
+      "schemaVersion": 1,
+      "seq": 7,
+      "atUnix": 1800000004
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "1",
+        "state": "open",
+        "slots": 2,
+        "openedAtL2Block": 1,
+        "openedAtUnix": 1800000000,
+        "syncL2Block": null,
+        "orderIds": [
+          "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1"
+        ],
+        "selectedOrderIds": [],
+        "settlementId": null,
+        "grossIn": "1000000000000000000",
+        "residualIn": "0",
+        "residualSide": null,
+        "nettingRatio": null
+      },
+      "schemaVersion": 1,
+      "seq": 8,
+      "atUnix": 1800000004
+    },
+    {
+      "kind": "order",
+      "order": {
+        "schemaVersion": 1,
+        "id": "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2",
+        "owner": "0x00000000000000000000000000000000000000b2",
+        "side": "SELL_B_FOR_A",
+        "sellAmount": "1000000000000000000000",
+        "minBuyAmount": "490000000000000000",
+        "recipient": "0x00000000000000000000000000000000000000b2",
+        "expiresAfter": 4,
+        "state": "open",
+        "placedAtL2Block": 3,
+        "placedAtUnix": 1800000004,
+        "windowId": "1",
+        "rolledCount": 0,
+        "fill": null
+      },
+      "schemaVersion": 1,
+      "seq": 9,
+      "atUnix": 1800000004
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "1",
+        "state": "open",
+        "slots": 2,
+        "openedAtL2Block": 1,
+        "openedAtUnix": 1800000000,
+        "syncL2Block": null,
+        "orderIds": [
+          "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+          "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2"
+        ],
+        "selectedOrderIds": [],
+        "settlementId": null,
+        "grossIn": "1500000000000000000",
+        "residualIn": "0",
+        "residualSide": null,
+        "nettingRatio": null
+      },
+      "schemaVersion": 1,
+      "seq": 10,
+      "atUnix": 1800000004
+    },
+    {
+      "kind": "order",
+      "order": {
+        "schemaVersion": 1,
+        "id": "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+        "owner": "0x00000000000000000000000000000000000000c3",
+        "side": "SELL_A_FOR_B",
+        "sellAmount": "500000000000000000",
+        "minBuyAmount": "1990000000000000000000",
+        "recipient": "0x00000000000000000000000000000000000000c3",
+        "expiresAfter": 4,
+        "state": "open",
+        "placedAtL2Block": 3,
+        "placedAtUnix": 1800000004,
+        "windowId": "1",
+        "rolledCount": 0,
+        "fill": null
+      },
+      "schemaVersion": 1,
+      "seq": 11,
+      "atUnix": 1800000004
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "1",
+        "state": "open",
+        "slots": 2,
+        "openedAtL2Block": 1,
+        "openedAtUnix": 1800000000,
+        "syncL2Block": null,
+        "orderIds": [
+          "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+          "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2",
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3"
+        ],
+        "selectedOrderIds": [],
+        "settlementId": null,
+        "grossIn": "2000000000000000000",
+        "residualIn": "0",
+        "residualSide": null,
+        "nettingRatio": null
+      },
+      "schemaVersion": 1,
+      "seq": 12,
+      "atUnix": 1800000004
+    },
+    {
+      "kind": "metrics",
+      "metrics": {
+        "windows_total{outcome=\"settled\"}": 0,
+        "fills_per_settlement": 0,
+        "netting_ratio": 0,
+        "impact_bps": 5,
+        "roll_rate": 0.25,
+        "mirror_age_slots": 1,
+        "window_slots": 2,
+        "escrow_invariant_drift_wei": 0,
+        "selection_omitted_total": 0,
+        "unposted_window": 0
+      },
+      "schemaVersion": 1,
+      "seq": 13,
+      "atUnix": 1800000008
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "1",
+        "state": "open",
+        "slots": 2,
+        "openedAtL2Block": 1,
+        "openedAtUnix": 1800000000,
+        "syncL2Block": null,
+        "orderIds": [
+          "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+          "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2",
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3"
+        ],
+        "selectedOrderIds": [
+          "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+          "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2"
+        ],
+        "settlementId": null,
+        "grossIn": "2000000000000000000",
+        "residualIn": "0",
+        "residualSide": null,
+        "nettingRatio": null
+      },
+      "schemaVersion": 1,
+      "seq": 14,
+      "atUnix": 1800000008
+    },
+    {
+      "kind": "order",
+      "order": {
+        "schemaVersion": 1,
+        "id": "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+        "owner": "0x00000000000000000000000000000000000000a1",
+        "side": "SELL_A_FOR_B",
+        "sellAmount": "1000000000000000000",
+        "minBuyAmount": "1900000000000000000000",
+        "recipient": "0x00000000000000000000000000000000000000a1",
+        "expiresAfter": 4,
+        "state": "selected",
+        "placedAtL2Block": 3,
+        "placedAtUnix": 1800000004,
+        "windowId": "1",
+        "rolledCount": 0,
+        "fill": null
+      },
+      "schemaVersion": 1,
+      "seq": 15,
+      "atUnix": 1800000008
+    },
+    {
+      "kind": "order",
+      "order": {
+        "schemaVersion": 1,
+        "id": "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2",
+        "owner": "0x00000000000000000000000000000000000000b2",
+        "side": "SELL_B_FOR_A",
+        "sellAmount": "1000000000000000000000",
+        "minBuyAmount": "490000000000000000",
+        "recipient": "0x00000000000000000000000000000000000000b2",
+        "expiresAfter": 4,
+        "state": "selected",
+        "placedAtL2Block": 3,
+        "placedAtUnix": 1800000004,
+        "windowId": "1",
+        "rolledCount": 0,
+        "fill": null
+      },
+      "schemaVersion": 1,
+      "seq": 16,
+      "atUnix": 1800000008
+    },
+    {
+      "kind": "settlement",
+      "settlement": {
+        "schemaVersion": 1,
+        "id": "0x5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e",
+        "windowId": "1",
+        "outcome": "submitted",
+        "leg": {
+          "windowId": "1",
+          "residualSide": "SELL_A_FOR_B",
+          "residualIn": "499950000000000000",
+          "minPriceX96": "156871761778243388435217021665280",
+          "maxPriceX96": "160040888278813961938958779678720",
+          "deadline": 1800000024
+        },
+        "result": null,
+        "l1Receipt": null,
+        "rollbackCause": null,
+        "l1GasSpent": false,
+        "filledOrderIds": [],
+        "droppedOrderIds": [],
+        "submittedAtUnix": 1800000008,
+        "settledAtUnix": null,
+        "amortisation": null
+      },
+      "schemaVersion": 1,
+      "seq": 17,
+      "atUnix": 1800000008
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "1",
+        "state": "settling",
+        "slots": 2,
+        "openedAtL2Block": 1,
+        "openedAtUnix": 1800000000,
+        "syncL2Block": null,
+        "orderIds": [
+          "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+          "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2",
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3"
+        ],
+        "selectedOrderIds": [
+          "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+          "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2"
+        ],
+        "settlementId": "0x5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e",
+        "grossIn": "2000000000000000000",
+        "residualIn": "0",
+        "residualSide": null,
+        "nettingRatio": null
+      },
+      "schemaVersion": 1,
+      "seq": 18,
+      "atUnix": 1800000008
+    },
+    {
+      "kind": "slot",
+      "l1Block": 21000001,
+      "windowId": "1",
+      "schemaVersion": 1,
+      "seq": 19,
+      "atUnix": 1800000012
+    },
+    {
+      "kind": "l2_block",
+      "l2Block": 4,
+      "windowId": "1",
+      "blocksRemaining": 6,
+      "schemaVersion": 1,
+      "seq": 20,
+      "atUnix": 1800000012
+    },
+    {
+      "kind": "l2_block",
+      "l2Block": 5,
+      "windowId": "1",
+      "blocksRemaining": 5,
+      "schemaVersion": 1,
+      "seq": 21,
+      "atUnix": 1800000012
+    },
+    {
+      "kind": "order",
+      "order": {
+        "schemaVersion": 1,
+        "id": "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+        "owner": "0x00000000000000000000000000000000000000a1",
+        "side": "SELL_A_FOR_B",
+        "sellAmount": "1000000000000000000",
+        "minBuyAmount": "1900000000000000000000",
+        "recipient": "0x00000000000000000000000000000000000000a1",
+        "expiresAfter": 4,
+        "state": "filled",
+        "placedAtL2Block": 3,
+        "placedAtUnix": 1800000004,
+        "windowId": "1",
+        "rolledCount": 0,
+        "fill": {
+          "windowId": "1",
+          "amountOut": "1998500000000000000000",
+          "feeAmount": "100000000000000",
+          "routeFeeAmount": "0",
+          "impactAmount": "500000000000000",
+          "priceX96": "158353318116568935574255010247520",
+          "crossed": false,
+          "settlementId": "0x5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        }
+      },
+      "schemaVersion": 1,
+      "seq": 22,
+      "atUnix": 1800000012
+    },
+    {
+      "kind": "order",
+      "order": {
+        "schemaVersion": 1,
+        "id": "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2",
+        "owner": "0x00000000000000000000000000000000000000b2",
+        "side": "SELL_B_FOR_A",
+        "sellAmount": "1000000000000000000000",
+        "minBuyAmount": "490000000000000000",
+        "recipient": "0x00000000000000000000000000000000000000b2",
+        "expiresAfter": 4,
+        "state": "filled",
+        "placedAtL2Block": 3,
+        "placedAtUnix": 1800000004,
+        "windowId": "1",
+        "rolledCount": 0,
+        "fill": {
+          "windowId": "1",
+          "amountOut": "499950000000000000",
+          "feeAmount": "100000000000000000",
+          "routeFeeAmount": "0",
+          "impactAmount": "0",
+          "priceX96": "158456325028528675187087900672000",
+          "crossed": true,
+          "settlementId": "0x5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        }
+      },
+      "schemaVersion": 1,
+      "seq": 23,
+      "atUnix": 1800000012
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "1",
+        "state": "settled",
+        "slots": 2,
+        "openedAtL2Block": 1,
+        "openedAtUnix": 1800000000,
+        "syncL2Block": 5,
+        "orderIds": [
+          "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+          "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2",
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3"
+        ],
+        "selectedOrderIds": [
+          "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+          "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2"
+        ],
+        "settlementId": "0x5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e",
+        "grossIn": "2000000000000000000",
+        "residualIn": "499950000000000000",
+        "residualSide": "SELL_A_FOR_B",
+        "nettingRatio": 0.7500249999999999
+      },
+      "schemaVersion": 1,
+      "seq": 24,
+      "atUnix": 1800000012
+    },
+    {
+      "kind": "settlement",
+      "settlement": {
+        "schemaVersion": 1,
+        "id": "0x5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e",
+        "windowId": "1",
+        "outcome": "settled",
+        "leg": {
+          "windowId": "1",
+          "residualSide": "SELL_A_FOR_B",
+          "residualIn": "499950000000000000",
+          "minPriceX96": "156871761778243388435217021665280",
+          "maxPriceX96": "160040888278813961938958779678720",
+          "deadline": 1800000024
+        },
+        "result": {
+          "amountIn": "499950000000000000",
+          "amountOut": "999400000000000000000",
+          "referencePriceX96": "158456325028528675187087900672000",
+          "executionPriceX96": "158377096866014410849494356721664",
+          "post": {
+            "sqrtPriceX96": "3543191142285914205922034323214",
+            "liquidity": "1000000000000000000000000",
+            "tick": 76014
+          },
+          "l1Block": 21000001
+        },
+        "l1Receipt": null,
+        "rollbackCause": null,
+        "l1GasSpent": false,
+        "filledOrderIds": [
+          "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+          "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2"
+        ],
+        "droppedOrderIds": [],
+        "submittedAtUnix": 1800000008,
+        "settledAtUnix": 1800000008,
+        "amortisation": null
+      },
+      "schemaVersion": 1,
+      "seq": 25,
+      "atUnix": 1800000012
+    },
+    {
+      "kind": "mirror",
+      "mirror": {
+        "schemaVersion": 1,
+        "windowId": "1",
+        "state": {
+          "sqrtPriceX96": "3543191142285914205922034323214",
+          "liquidity": "1000000000000000000000000",
+          "tick": 76014
+        },
+        "referencePriceX96": "158456325028528675187087900672000",
+        "l1Block": 21000001,
+        "mirrorTimestamp": 1800000008,
+        "ageSlots": 0,
+        "source": "settlement",
+        "observedAtUnix": 1800000012
+      },
+      "schemaVersion": 1,
+      "seq": 26,
+      "atUnix": 1800000012
+    },
+    {
+      "kind": "order",
+      "order": {
+        "schemaVersion": 1,
+        "id": "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+        "owner": "0x00000000000000000000000000000000000000c3",
+        "side": "SELL_A_FOR_B",
+        "sellAmount": "500000000000000000",
+        "minBuyAmount": "1990000000000000000000",
+        "recipient": "0x00000000000000000000000000000000000000c3",
+        "expiresAfter": 4,
+        "state": "rolled",
+        "placedAtL2Block": 3,
+        "placedAtUnix": 1800000004,
+        "windowId": "2",
+        "rolledCount": 1,
+        "fill": null
+      },
+      "schemaVersion": 1,
+      "seq": 27,
+      "atUnix": 1800000012
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "2",
+        "state": "open",
+        "slots": 2,
+        "openedAtL2Block": 5,
+        "openedAtUnix": 1800000012,
+        "syncL2Block": null,
+        "orderIds": [
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3"
+        ],
+        "selectedOrderIds": [],
+        "settlementId": null,
+        "grossIn": "500000000000000000",
+        "residualIn": "0",
+        "residualSide": null,
+        "nettingRatio": null
+      },
+      "schemaVersion": 1,
+      "seq": 28,
+      "atUnix": 1800000012
+    },
+    {
+      "kind": "metrics",
+      "metrics": {
+        "windows_total{outcome=\"settled\"}": 1,
+        "fills_per_settlement": 2,
+        "netting_ratio": 0.5,
+        "impact_bps": 5,
+        "roll_rate": 0.25,
+        "mirror_age_slots": 1,
+        "window_slots": 2,
+        "escrow_invariant_drift_wei": 0,
+        "selection_omitted_total": 0,
+        "unposted_window": 0
+      },
+      "schemaVersion": 1,
+      "seq": 29,
+      "atUnix": 1800000012
+    },
+    {
+      "kind": "settlement",
+      "settlement": {
+        "schemaVersion": 1,
+        "id": "0x5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e",
+        "windowId": "1",
+        "outcome": "settled",
+        "leg": {
+          "windowId": "1",
+          "residualSide": "SELL_A_FOR_B",
+          "residualIn": "499950000000000000",
+          "minPriceX96": "156871761778243388435217021665280",
+          "maxPriceX96": "160040888278813961938958779678720",
+          "deadline": 1800000024
+        },
+        "result": {
+          "amountIn": "499950000000000000",
+          "amountOut": "999400000000000000000",
+          "referencePriceX96": "158456325028528675187087900672000",
+          "executionPriceX96": "158377096866014410849494356721664",
+          "post": {
+            "sqrtPriceX96": "3543191142285914205922034323214",
+            "liquidity": "1000000000000000000000000",
+            "tick": 76014
+          },
+          "l1Block": 21000001
+        },
+        "l1Receipt": null,
+        "rollbackCause": null,
+        "l1GasSpent": false,
+        "filledOrderIds": [
+          "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+          "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2"
+        ],
+        "droppedOrderIds": [],
+        "submittedAtUnix": 1800000008,
+        "settledAtUnix": 1800000012,
+        "amortisation": null
+      },
+      "schemaVersion": 1,
+      "seq": 30,
+      "atUnix": 1800000012
+    },
+    {
+      "kind": "settlement",
+      "settlement": {
+        "schemaVersion": 1,
+        "id": "0x5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e",
+        "windowId": "1",
+        "outcome": "settled",
+        "leg": {
+          "windowId": "1",
+          "residualSide": "SELL_A_FOR_B",
+          "residualIn": "499950000000000000",
+          "minPriceX96": "156871761778243388435217021665280",
+          "maxPriceX96": "160040888278813961938958779678720",
+          "deadline": 1800000024
+        },
+        "result": {
+          "amountIn": "499950000000000000",
+          "amountOut": "999400000000000000000",
+          "referencePriceX96": "158456325028528675187087900672000",
+          "executionPriceX96": "158377096866014410849494356721664",
+          "post": {
+            "sqrtPriceX96": "3543191142285914205922034323214",
+            "liquidity": "1000000000000000000000000",
+            "tick": 76014
+          },
+          "l1Block": 21000001
+        },
+        "l1Receipt": {
+          "txHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+          "blockNumber": 21000001,
+          "gasUsed": "214000",
+          "effectiveGasPriceWei": "2000000000",
+          "gasCostWei": "428000000000000",
+          "status": "success"
+        },
+        "rollbackCause": null,
+        "l1GasSpent": false,
+        "filledOrderIds": [
+          "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+          "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2"
+        ],
+        "droppedOrderIds": [],
+        "submittedAtUnix": 1800000008,
+        "settledAtUnix": 1800000012,
+        "amortisation": {
+          "schemaVersion": 1,
+          "settlementId": "0x5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e",
+          "windowId": "1",
+          "fills": 2,
+          "l1GasUsed": "214000",
+          "l1GasCostWei": "428000000000000",
+          "gasPerFillWei": "214000000000000",
+          "counterfactualGasCostWei": "1490000000000000",
+          "savingsWei": "1062000000000000",
+          "perOrder": [
+            {
+              "orderId": "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+              "gasUsed": "355000",
+              "gasCostWei": "710000000000000",
+              "source": "user_last_l1_swap"
+            },
+            {
+              "orderId": "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2",
+              "gasUsed": "390000",
+              "gasCostWei": "780000000000000",
+              "source": "median_retail_swap"
+            }
+          ]
+        }
+      },
+      "schemaVersion": 1,
+      "seq": 31,
+      "atUnix": 1800000014
+    },
+    {
+      "kind": "l2_block",
+      "l2Block": 6,
+      "windowId": "2",
+      "blocksRemaining": 4,
+      "schemaVersion": 1,
+      "seq": 32,
+      "atUnix": 1800000018
+    },
+    {
+      "kind": "l2_block",
+      "l2Block": 7,
+      "windowId": "2",
+      "blocksRemaining": 3,
+      "schemaVersion": 1,
+      "seq": 33,
+      "atUnix": 1800000018
+    },
+    {
+      "kind": "order",
+      "order": {
+        "schemaVersion": 1,
+        "id": "0xd4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4",
+        "owner": "0x00000000000000000000000000000000000000d4",
+        "side": "SELL_B_FOR_A",
+        "sellAmount": "500000000000000000000",
+        "minBuyAmount": "200000000000000000",
+        "recipient": "0x00000000000000000000000000000000000000d4",
+        "expiresAfter": 4,
+        "state": "open",
+        "placedAtL2Block": 7,
+        "placedAtUnix": 1800000012,
+        "windowId": "2",
+        "rolledCount": 0,
+        "fill": null
+      },
+      "schemaVersion": 1,
+      "seq": 34,
+      "atUnix": 1800000018
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "2",
+        "state": "open",
+        "slots": 2,
+        "openedAtL2Block": 5,
+        "openedAtUnix": 1800000012,
+        "syncL2Block": null,
+        "orderIds": [
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+          "0xd4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4"
+        ],
+        "selectedOrderIds": [],
+        "settlementId": null,
+        "grossIn": "750000000000000000",
+        "residualIn": "0",
+        "residualSide": null,
+        "nettingRatio": null
+      },
+      "schemaVersion": 1,
+      "seq": 35,
+      "atUnix": 1800000018
+    },
+    {
+      "kind": "settlement",
+      "settlement": {
+        "schemaVersion": 1,
+        "id": "0xe0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0",
+        "windowId": "2",
+        "outcome": "evicted",
+        "leg": {
+          "windowId": "2",
+          "residualSide": "SELL_A_FOR_B",
+          "residualIn": "200000000000000000",
+          "minPriceX96": "156871761778243388435217021665280",
+          "maxPriceX96": "160040888278813961938958779678720",
+          "deadline": 1800000024
+        },
+        "result": null,
+        "l1Receipt": null,
+        "rollbackCause": null,
+        "l1GasSpent": false,
+        "filledOrderIds": [],
+        "droppedOrderIds": [
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3"
+        ],
+        "submittedAtUnix": 1800000020,
+        "settledAtUnix": null,
+        "amortisation": null
+      },
+      "schemaVersion": 1,
+      "seq": 36,
+      "atUnix": 1800000022
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "2",
+        "state": "settling",
+        "slots": 2,
+        "openedAtL2Block": 5,
+        "openedAtUnix": 1800000012,
+        "syncL2Block": null,
+        "orderIds": [
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+          "0xd4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4"
+        ],
+        "selectedOrderIds": [],
+        "settlementId": null,
+        "grossIn": "750000000000000000",
+        "residualIn": "0",
+        "residualSide": null,
+        "nettingRatio": null
+      },
+      "schemaVersion": 1,
+      "seq": 37,
+      "atUnix": 1800000022
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "2",
+        "state": "evicted",
+        "slots": 2,
+        "openedAtL2Block": 5,
+        "openedAtUnix": 1800000012,
+        "syncL2Block": null,
+        "orderIds": [
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+          "0xd4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4"
+        ],
+        "selectedOrderIds": [],
+        "settlementId": null,
+        "grossIn": "750000000000000000",
+        "residualIn": "0",
+        "residualSide": null,
+        "nettingRatio": null
+      },
+      "schemaVersion": 1,
+      "seq": 38,
+      "atUnix": 1800000022
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "2",
+        "state": "open",
+        "slots": 2,
+        "openedAtL2Block": 5,
+        "openedAtUnix": 1800000012,
+        "syncL2Block": null,
+        "orderIds": [
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+          "0xd4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4"
+        ],
+        "selectedOrderIds": [],
+        "settlementId": null,
+        "grossIn": "750000000000000000",
+        "residualIn": "0",
+        "residualSide": null,
+        "nettingRatio": null
+      },
+      "schemaVersion": 1,
+      "seq": 39,
+      "atUnix": 1800000022
+    },
+    {
+      "kind": "l2_block",
+      "l2Block": 8,
+      "windowId": "2",
+      "blocksRemaining": 6,
+      "schemaVersion": 1,
+      "seq": 40,
+      "atUnix": 1800000026
+    },
+    {
+      "kind": "l2_block",
+      "l2Block": 9,
+      "windowId": "2",
+      "blocksRemaining": 5,
+      "schemaVersion": 1,
+      "seq": 41,
+      "atUnix": 1800000026
+    },
+    {
+      "kind": "order",
+      "order": {
+        "schemaVersion": 1,
+        "id": "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+        "owner": "0x00000000000000000000000000000000000000c3",
+        "side": "SELL_A_FOR_B",
+        "sellAmount": "500000000000000000",
+        "minBuyAmount": "1990000000000000000000",
+        "recipient": "0x00000000000000000000000000000000000000c3",
+        "expiresAfter": 4,
+        "state": "open",
+        "placedAtL2Block": 3,
+        "placedAtUnix": 1800000004,
+        "windowId": "2",
+        "rolledCount": 1,
+        "fill": null
+      },
+      "schemaVersion": 1,
+      "seq": 42,
+      "atUnix": 1800000026
+    },
+    {
+      "kind": "order",
+      "order": {
+        "schemaVersion": 1,
+        "id": "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+        "owner": "0x00000000000000000000000000000000000000c3",
+        "side": "SELL_A_FOR_B",
+        "sellAmount": "500000000000000000",
+        "minBuyAmount": "1990000000000000000000",
+        "recipient": "0x00000000000000000000000000000000000000c3",
+        "expiresAfter": 4,
+        "state": "selected",
+        "placedAtL2Block": 3,
+        "placedAtUnix": 1800000004,
+        "windowId": "2",
+        "rolledCount": 1,
+        "fill": null
+      },
+      "schemaVersion": 1,
+      "seq": 43,
+      "atUnix": 1800000026
+    },
+    {
+      "kind": "order",
+      "order": {
+        "schemaVersion": 1,
+        "id": "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+        "owner": "0x00000000000000000000000000000000000000c3",
+        "side": "SELL_A_FOR_B",
+        "sellAmount": "500000000000000000",
+        "minBuyAmount": "1990000000000000000000",
+        "recipient": "0x00000000000000000000000000000000000000c3",
+        "expiresAfter": 4,
+        "state": "filled",
+        "placedAtL2Block": 3,
+        "placedAtUnix": 1800000004,
+        "windowId": "2",
+        "rolledCount": 1,
+        "fill": {
+          "windowId": "2",
+          "amountOut": "995000000000000000000",
+          "feeAmount": "50000000000000",
+          "routeFeeAmount": "0",
+          "impactAmount": "0",
+          "priceX96": "157679811384524484259578419010541",
+          "crossed": false,
+          "settlementId": "0x7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c"
+        }
+      },
+      "schemaVersion": 1,
+      "seq": 44,
+      "atUnix": 1800000026
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "2",
+        "state": "settling",
+        "slots": 2,
+        "openedAtL2Block": 5,
+        "openedAtUnix": 1800000012,
+        "syncL2Block": null,
+        "orderIds": [
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+          "0xd4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4"
+        ],
+        "selectedOrderIds": [],
+        "settlementId": null,
+        "grossIn": "750000000000000000",
+        "residualIn": "0",
+        "residualSide": null,
+        "nettingRatio": null
+      },
+      "schemaVersion": 1,
+      "seq": 45,
+      "atUnix": 1800000026
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "2",
+        "state": "settled",
+        "slots": 2,
+        "openedAtL2Block": 5,
+        "openedAtUnix": 1800000012,
+        "syncL2Block": 9,
+        "orderIds": [
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+          "0xd4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4"
+        ],
+        "selectedOrderIds": [],
+        "settlementId": "0x7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c",
+        "grossIn": "750000000000000000",
+        "residualIn": "499950000000000000",
+        "residualSide": "SELL_A_FOR_B",
+        "nettingRatio": 0.33340000000000003
+      },
+      "schemaVersion": 1,
+      "seq": 46,
+      "atUnix": 1800000026
+    },
+    {
+      "kind": "settlement",
+      "settlement": {
+        "schemaVersion": 1,
+        "id": "0x7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c",
+        "windowId": "2",
+        "outcome": "settled",
+        "leg": {
+          "windowId": "2",
+          "residualSide": "SELL_A_FOR_B",
+          "residualIn": "499950000000000000",
+          "minPriceX96": "0",
+          "maxPriceX96": "0",
+          "deadline": 0
+        },
+        "result": {
+          "amountIn": "499950000000000000",
+          "amountOut": "999000000000000000000",
+          "referencePriceX96": "158456325028528675187087900672000",
+          "executionPriceX96": "158297868703500146511900812771328",
+          "post": {
+            "sqrtPriceX96": "3543191142285914205922034323214",
+            "liquidity": "1000000000000000000000000",
+            "tick": 76014
+          },
+          "l1Block": 21000001
+        },
+        "l1Receipt": null,
+        "rollbackCause": null,
+        "l1GasSpent": false,
+        "filledOrderIds": [
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3"
+        ],
+        "droppedOrderIds": [],
+        "submittedAtUnix": 1800000016,
+        "settledAtUnix": 1800000016,
+        "amortisation": null
+      },
+      "schemaVersion": 1,
+      "seq": 47,
+      "atUnix": 1800000026
+    },
+    {
+      "kind": "mirror",
+      "mirror": {
+        "schemaVersion": 1,
+        "windowId": "2",
+        "state": {
+          "sqrtPriceX96": "3543191142285914205922034323214",
+          "liquidity": "1000000000000000000000000",
+          "tick": 76014
+        },
+        "referencePriceX96": "158456325028528675187087900672000",
+        "l1Block": 21000001,
+        "mirrorTimestamp": 1800000016,
+        "ageSlots": 0,
+        "source": "settlement",
+        "observedAtUnix": 1800000026
+      },
+      "schemaVersion": 1,
+      "seq": 48,
+      "atUnix": 1800000026
+    },
+    {
+      "kind": "order",
+      "order": {
+        "schemaVersion": 1,
+        "id": "0xd4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4",
+        "owner": "0x00000000000000000000000000000000000000d4",
+        "side": "SELL_B_FOR_A",
+        "sellAmount": "500000000000000000000",
+        "minBuyAmount": "200000000000000000",
+        "recipient": "0x00000000000000000000000000000000000000d4",
+        "expiresAfter": 4,
+        "state": "rolled",
+        "placedAtL2Block": 7,
+        "placedAtUnix": 1800000012,
+        "windowId": "3",
+        "rolledCount": 1,
+        "fill": null
+      },
+      "schemaVersion": 1,
+      "seq": 49,
+      "atUnix": 1800000026
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "3",
+        "state": "open",
+        "slots": 2,
+        "openedAtL2Block": 9,
+        "openedAtUnix": 1800000026,
+        "syncL2Block": null,
+        "orderIds": [
+          "0xd4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4"
+        ],
+        "selectedOrderIds": [],
+        "settlementId": null,
+        "grossIn": "250000000000000000",
+        "residualIn": "0",
+        "residualSide": null,
+        "nettingRatio": null
+      },
+      "schemaVersion": 1,
+      "seq": 50,
+      "atUnix": 1800000026
+    },
+    {
+      "kind": "settlement",
+      "settlement": {
+        "schemaVersion": 1,
+        "id": "0x7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c",
+        "windowId": "2",
+        "outcome": "rolled_back",
+        "leg": {
+          "windowId": "2",
+          "residualSide": "SELL_A_FOR_B",
+          "residualIn": "499950000000000000",
+          "minPriceX96": "156871761778243388435217021665280",
+          "maxPriceX96": "160040888278813961938958779678720",
+          "deadline": 1800000024
+        },
+        "result": {
+          "amountIn": "499950000000000000",
+          "amountOut": "999000000000000000000",
+          "referencePriceX96": "158456325028528675187087900672000",
+          "executionPriceX96": "158297868703500146511900812771328",
+          "post": {
+            "sqrtPriceX96": "3543191142285914205922034323214",
+            "liquidity": "1000000000000000000000000",
+            "tick": 76014
+          },
+          "l1Block": 21000001
+        },
+        "l1Receipt": null,
+        "rollbackCause": "bundle_missed",
+        "l1GasSpent": false,
+        "filledOrderIds": [
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3"
+        ],
+        "droppedOrderIds": [],
+        "submittedAtUnix": 1800000024,
+        "settledAtUnix": null,
+        "amortisation": null
+      },
+      "schemaVersion": 1,
+      "seq": 51,
+      "atUnix": 1800000030
+    },
+    {
+      "kind": "order",
+      "order": {
+        "schemaVersion": 1,
+        "id": "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+        "owner": "0x00000000000000000000000000000000000000c3",
+        "side": "SELL_A_FOR_B",
+        "sellAmount": "500000000000000000",
+        "minBuyAmount": "1990000000000000000000",
+        "recipient": "0x00000000000000000000000000000000000000c3",
+        "expiresAfter": 4,
+        "state": "open",
+        "placedAtL2Block": 3,
+        "placedAtUnix": 1800000004,
+        "windowId": "2",
+        "rolledCount": 1,
+        "fill": null
+      },
+      "schemaVersion": 1,
+      "seq": 52,
+      "atUnix": 1800000030
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "2",
+        "state": "rolled_back",
+        "slots": 2,
+        "openedAtL2Block": 5,
+        "openedAtUnix": 1800000012,
+        "syncL2Block": 9,
+        "orderIds": [
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+          "0xd4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4"
+        ],
+        "selectedOrderIds": [],
+        "settlementId": "0x7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c7c",
+        "grossIn": "750000000000000000",
+        "residualIn": "499950000000000000",
+        "residualSide": "SELL_A_FOR_B",
+        "nettingRatio": 0.33340000000000003
+      },
+      "schemaVersion": 1,
+      "seq": 53,
+      "atUnix": 1800000030
+    },
+    {
+      "kind": "window",
+      "window": {
+        "schemaVersion": 1,
+        "windowId": "2",
+        "state": "open",
+        "slots": 2,
+        "openedAtL2Block": 5,
+        "openedAtUnix": 1800000012,
+        "syncL2Block": null,
+        "orderIds": [
+          "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+          "0xd4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4"
+        ],
+        "selectedOrderIds": [],
+        "settlementId": null,
+        "grossIn": "750000000000000000",
+        "residualIn": "499950000000000000",
+        "residualSide": "SELL_A_FOR_B",
+        "nettingRatio": 0.33340000000000003
+      },
+      "schemaVersion": 1,
+      "seq": 54,
+      "atUnix": 1800000030
+    }
+  ]
+}

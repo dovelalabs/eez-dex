@@ -10,8 +10,9 @@
     "./schema": "./schema/index.ts"
   },
   "scripts": {
+    "start": "node src/cli.ts",
     "lint": "tsc --noEmit",
-    "test": "node --test \"test/**/*.test.ts\"",
+    "test": "node --test --test-timeout=60000 \"test/**/*.test.ts\"",
     "ci": "npm run lint && npm test"
   },
   "engines": {
