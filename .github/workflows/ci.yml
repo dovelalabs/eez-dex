@@ -1,20 +1,27 @@
-# RL-4, first clause: the unit and fork suites run on every PR.
+# RL-4: what runs on every pull request, and what runs nightly.
 #
-# Two jobs, matching the two commands a developer runs locally:
+# Four jobs, matching the commands a developer runs locally:
 #
-#   check  `make check`         lint plus every package's tests
-#   fork   `make contracts-fork` the mainnet-fork suites, TS-2 and TS-B
+#   check     `make check`                       lint plus every package's tests
+#   fork      `make contracts-fork`              the mainnet-fork suites, TS-2 and TS-B
+#   scenario  `dex-scenario.sh --self-test`      WP-4's hermetic half
+#   enclave   `dex-scenario.sh --matrix --pr`    the A.6 rows that need Kurtosis
 #
 # Toolchains are pinned rather than floated: recorded gas per residual size
 # feeds EC-1's fee ceiling, and it is only comparable across runs when the
 # compiler and the pinned block are both fixed.
 #
-# RL-4's scenario half is NOT wired here — it belongs to Phase 4a (WP-4).
-# `scenario/dex-scenario.sh` is still a stub that exits 1 and would fail every
-# PR. What Phase 4a adds to this file: a `scenario` job running the happy path
-# and the first failure rows on every PR through the framework's Kurtosis
-# entry point (UP-3), and a nightly schedule running the full failure matrix
-# (HX-3) plus the 200-slot window soak (HX-4).
+# **The scenario is split deliberately.** Most of WP-4 is arithmetic — the
+# settlement oracle, the recorder, the A.6 assertions, `MockPool`'s curve — and
+# all of it runs on an ordinary runner in under a minute, on every PR. Only the
+# rows that genuinely need a network wait for one. That split is what keeps
+# RL-4's first clause a real gate rather than a job that is always skipped.
+#
+# The enclave jobs need a runner with Docker, Kurtosis, and the framework's
+# `:ci` images already built — a remote Kurtosis run builds nothing (UP-3).
+# They are gated on the `EEZ_ENCLAVE_RUNNER` repository variable naming that
+# runner. Until it is set they do not run, and the job summary says so rather
+# than reporting a pass: a skipped row is not a passing one.
 
 name: ci
 
@@ -22,6 +29,11 @@ on:
   pull_request:
   push:
     branches: [main]
+  schedule:
+    # Nightly, after the day's merges: the full failure matrix and the
+    # 200-slot soak (RL-4, HX-3, HX-4).
+    - cron: "17 3 * * *"
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -134,3 +146,167 @@ jobs:
         env:
           ETH_RPC: ${{ secrets.ETH_RPC || 'https://eth.drpc.org' }}
         run: make contracts-fork
+
+  # WP-4's hermetic half: everything about the scenario that does not need a
+  # network. Shellcheck over every script, the oracle and recorder suites, the
+  # `ext:` ops against UP-2's output contract, the bundle and args file against
+  # the seam they consume, the HX-5 fixtures against the frozen schema, and
+  # `MockPool`'s curve against `MockPool` itself on a local anvil.
+  scenario:
+    name: scenario --self-test
+    runs-on: ubuntu-24.04
+    if: github.event_name != 'schedule'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: ${{ env.FOUNDRY_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: scenario/package-lock.json
+
+      # The self-test fails rather than skips when shellcheck is absent, so
+      # installing it here is what makes the shell lint real.
+      - name: Install shellcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          shellcheck --version
+
+      - name: Cache Foundry build output
+        uses: actions/cache@v4
+        with:
+          path: |
+            contracts/out
+            contracts/cache
+          key: foundry-${{ env.FOUNDRY_VERSION }}-${{ hashFiles('contracts/foundry.toml', 'contracts/remappings.txt', 'contracts/src/**/*.sol', 'contracts/test/**/*.sol') }}
+          restore-keys: foundry-${{ env.FOUNDRY_VERSION }}-
+
+      - run: npm ci --no-audit --no-fund
+        working-directory: scenario
+
+      - run: scenario/dex-scenario.sh --self-test
+
+  # RL-4's first clause: the happy path and the first failure rows, on every
+  # pull request, through the framework's Kurtosis entry point (UP-3).
+  enclave:
+    name: scenario --matrix --pr
+    runs-on: ${{ vars.EEZ_ENCLAVE_RUNNER || 'ubuntu-24.04' }}
+    if: vars.EEZ_ENCLAVE_RUNNER != '' && github.event_name != 'schedule'
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: ${{ env.FOUNDRY_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Rust
+        run: |
+          rustup toolchain install "$RUST_VERSION" --profile minimal
+          rustup default "$RUST_VERSION"
+
+      - run: npm ci --no-audit --no-fund
+        working-directory: scenario
+
+      # UP-1: the deployment bundle layers this repository's artifacts onto the
+      # framework's deploy image, which the runner is expected to have built.
+      - run: scenario/bundle/build.sh
+
+      - name: Happy path (HX-2)
+        run: scenario/dex-scenario.sh
+
+      - name: The first failure rows (HX-3)
+        run: scenario/dex-scenario.sh --matrix --pr
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scenario-run
+          path: |
+            scenario/.run/run.json
+            scenario/.run/readings.json
+            scenario/.run/observations.jsonl
+            scenario/.run/settler.log
+
+  # RL-4's second clause: the full failure matrix and the 200-slot soak,
+  # nightly. The soak's seed is fixed so a failure is reproducible from the
+  # log alone (HX-4).
+  nightly:
+    name: scenario --matrix + --soak
+    runs-on: ${{ vars.EEZ_ENCLAVE_RUNNER || 'ubuntu-24.04' }}
+    if: vars.EEZ_ENCLAVE_RUNNER != '' && github.event_name == 'schedule'
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: ${{ env.FOUNDRY_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Rust
+        run: |
+          rustup toolchain install "$RUST_VERSION" --profile minimal
+          rustup default "$RUST_VERSION"
+
+      - run: npm ci --no-audit --no-fund
+        working-directory: scenario
+
+      - run: scenario/bundle/build.sh
+
+      - name: The full failure matrix (HX-3)
+        run: scenario/dex-scenario.sh --matrix
+
+      - name: The window soak (HX-4)
+        run: scenario/dex-scenario.sh --soak --slots 200 --seed 1
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nightly-run
+          path: |
+            scenario/.run/run.json
+            scenario/.run/readings.json
+            scenario/.run/soak-plan.json
+            scenario/.run/settler.log
+
+  # A green tick on a pull request must mean the enclave rows ran, or say out
+  # loud that they did not. A job that is simply absent looks the same as one
+  # that passed.
+  enclave-status:
+    name: enclave rows
+    runs-on: ubuntu-24.04
+    if: github.event_name == 'pull_request'
+    needs: [scenario]
+    steps:
+      - name: Report whether RL-4's enclave half ran
+        run: |
+          if [ -n "${{ vars.EEZ_ENCLAVE_RUNNER }}" ]; then
+            echo "The enclave rows ran on ${{ vars.EEZ_ENCLAVE_RUNNER }}."
+          else
+            echo "::warning::RL-4's enclave rows did NOT run: no EEZ_ENCLAVE_RUNNER is configured."
+            echo "The happy path and the failure matrix need a runner with Docker, Kurtosis"
+            echo "and the framework's :ci images. Set the EEZ_ENCLAVE_RUNNER repository"
+            echo "variable to that runner's label to turn them on."
+          fi
