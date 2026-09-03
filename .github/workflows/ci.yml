@@ -140,12 +140,49 @@ jobs:
           key: foundry-rpc-${{ hashFiles('contracts/test/fork/**/*.sol') }}
           restore-keys: foundry-rpc-
 
+      # The keyless endpoint answers CI's shared runner IPs with HTTP 408
+      # ("request timeout on the free plan") often enough to red a green tree.
+      # It fails inside vm.createSelectFork, in setUp(), before a single
+      # assertion is evaluated, so the run proves nothing either way. That is
+      # an endpoint limit, never a contract failure - the same distinction the
+      # Makefile draws where it forks with `--threads 1`.
+      #
+      # A warm RPC cache cannot help here: fork instantiation reads the chain
+      # id and the block header from the provider, never from
+      # ~/.foundry/cache/rpc, so it needs the network even when both pinned
+      # blocks are already on disk. Retrying is the only cover, and the
+      # backoff is what gives the next attempt its chance.
+      #
+      # So retry on that signature alone. Any other failure is the suites'
+      # own and fails on the first attempt, as does a run that exhausts the
+      # attempts. The only path to a pass is `make contracts-fork` exiting 0,
+      # which is the Makefile's verdict - zero discovery, a short count and
+      # any [SKIP] all still fail - so a retry can never turn "proved
+      # nothing" green. It can only re-run a suite that never got to speak.
       - name: Run the mainnet-fork suites
         # The keyless fallback keeps the job running on a fork of the
         # repository, where the secret is not available.
         env:
           ETH_RPC: ${{ secrets.ETH_RPC || 'https://eth.drpc.org' }}
-        run: make contracts-fork
+        run: |
+          set -euo pipefail
+          attempts=3
+          log="$(mktemp)"; trap 'rm -f "$log"' EXIT
+          for attempt in $(seq 1 "$attempts"); do
+            if make contracts-fork 2>&1 | tee "$log"; then
+              exit 0
+            fi
+            if ! grep -q 'could not instantiate forked environment' "$log"; then
+              echo "::error::the fork suites failed on their own terms, not on the endpoint"
+              exit 1
+            fi
+            echo "::warning::attempt $attempt of $attempts hit the endpoint's rate limit, not a contract failure"
+            if [ "$attempt" -lt "$attempts" ]; then
+              sleep $((attempt * 15))
+            fi
+          done
+          echo "::error::the endpoint rate-limited every attempt; the fork gate proved nothing"
+          exit 1
 
   # WP-4's hermetic half: everything about the scenario that does not need a
   # network. Shellcheck over every script, the oracle and recorder suites, the
