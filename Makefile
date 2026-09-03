@@ -8,7 +8,7 @@
 # appending their own target is the merge conflict this prevents.
 
 .PHONY: check lint test fix pin pin-check deps \
-        contracts settler indexer frontend scenario \
+        contracts settler indexer frontend scenario scenario-unit \
         lint-contracts lint-settler lint-indexer lint-frontend lint-scenario \
         clean
 
@@ -18,7 +18,7 @@ check: lint test
 
 lint: pin-check lint-contracts lint-settler lint-indexer lint-frontend lint-scenario
 
-test: contracts settler indexer frontend
+test: contracts settler indexer frontend scenario-unit
 
 # Format and auto-fix everything `lint` checks.
 fix:
@@ -137,23 +137,38 @@ frontend/node_modules: frontend/package.json
 	@touch frontend/node_modules
 
 # --------------------------------------------------------------- scenario ---
-# The enclave scenario is not part of `check`: it needs Kurtosis and Docker.
+# The package splits in two, and only one half belongs in the gate.
+#
+# `scenario-unit` is the hermetic half — the oracle, the recorder and the A.6
+# assertions (TS-4), which are arithmetic over fixtures and need no network.
+# It is in `check` like every other package's suite.
+#
+# `scenario` is the enclave run: it needs Kurtosis and Docker, so it stays out.
 # RL-4 runs the happy path and the first failure rows in CI, the full matrix
 # and the soak nightly.
 
 scenario:
 	scenario/dex-scenario.sh
 
-lint-scenario:
+scenario-unit: scenario/node_modules
+	cd scenario && npm test
+
+lint-scenario: scenario/node_modules
+	cd scenario && npm run lint
 	@if command -v shellcheck >/dev/null 2>&1; then \
 		shellcheck scenario/*.sh scripts/*.sh; \
 	else \
 		echo "make: shellcheck not installed, skipping shell lint"; \
 	fi
 
+scenario/node_modules: scenario/package.json
+	cd scenario && npm install --no-audit --no-fund
+	@touch scenario/node_modules
+
 # ------------------------------------------------------------------ clean ---
 
 clean:
 	cd contracts && forge clean
 	cd settler && cargo clean
-	rm -rf indexer/node_modules indexer/dist frontend/node_modules frontend/dist
+	rm -rf indexer/node_modules indexer/dist frontend/node_modules frontend/dist \
+	       scenario/node_modules
