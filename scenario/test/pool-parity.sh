@@ -73,15 +73,27 @@ deploy() {
 }
 send() { cast send --rpc-url "$RPC" --private-key "$KEY" "$@" >/dev/null; }
 
+# Numeric order over two lowercase 0x addresses, which a string comparison is
+# only in the C locale.
+address_below() {
+    local LC_ALL=C
+    [[ "$1" < "$2" ]]
+}
+
 # A is the pool's token0, which is the orientation every price in this
 # repository is quoted in (A.1). Deploy B until it sorts above A.
-TOKEN_A="$(deploy MockWETH)"
+# Both sides each round: redeploying only B leaves the outcome hostage to where
+# A landed, and the retries run out instead of converging (see the bundle).
+TOKEN_A=""
 TOKEN_B=""
-for _ in 1 2 3 4 5 6 7 8; do
-    candidate="$(deploy MockERC20 "constructor(string,string,uint8)" "parity USD" PUSD 18)"
-    [[ "$candidate" > "$TOKEN_A" ]] && { TOKEN_B="$candidate"; break; }
+for _ in $(seq 1 16); do
+    TOKEN_A="$(deploy MockWETH)"
+    TOKEN_B="$(deploy MockERC20 "constructor(string,string,uint8)" "parity USD" PUSD 18)"
+    address_below "$TOKEN_A" "$TOKEN_B" && break
+    TOKEN_A=""
+    TOKEN_B=""
 done
-[[ -n "$TOKEN_B" ]] || die "could not place B above A in address order"
+[[ -n "$TOKEN_A" && -n "$TOKEN_B" ]] || die "could not place A below B in address order"
 
 SQRT_PRICE="$(cd "$SCENARIO" && node --input-type=module -e "
   import {sqrtPriceForPrice} from './lib/pool.ts';

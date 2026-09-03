@@ -79,12 +79,15 @@ dex_sqrt_for() {
     ")
 }
 
-# dex_place_burst <wave> <tolerance-bps> — the eight-order burst A.6 opens with.
+# dex_place_burst <wave> <tolerance-bps> [count] — the eight-order burst A.6
+# opens with, or `count` orders cycling through the same accounts, which is
+# what FE-9's director asks for.
 # Limits are set against the *mirror* the book is quoting, which is what makes
 # a later drift beyond some of them a real exclusion rather than an arranged one.
 dex_place_burst() {
-    local wave="$1" tolerance="${2:-30}" i side sell min
-    for (( i = 0; i < DEX_TRADER_COUNT; i++ )); do
+    local wave="$1" tolerance="${2:-30}" count="${3:-$DEX_TRADER_COUNT}" i trader side sell min
+    for (( i = 0; i < count; i++ )); do
+        trader=$(( i % DEX_TRADER_COUNT ))
         if (( i % 2 == 0 )); then
             side=0
             sell="$(dex_mul "$(( (i / 2) + 1 ))" 1000000000000000000)"
@@ -93,7 +96,7 @@ dex_place_burst() {
             sell="$(dex_mul "$(( (i / 2) + 1 ))" 3000000000000000000000)"
         fi
         min="$(dex_limit_for "$side" "$sell" "$(( tolerance + i * 5 ))")"
-        dex_plan "$wave" place "$i $side $sell $min ${DEX_EXPIRES_AFTER:-2}"
+        dex_plan "$wave" place "$trader $side $sell $min ${DEX_EXPIRES_AFTER:-2}"
     done
 }
 

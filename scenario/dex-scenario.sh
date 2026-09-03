@@ -8,6 +8,9 @@
 #   scenario/dex-scenario.sh --soak --slots 200 --seed 1
 #   scenario/dex-scenario.sh --record            rewrite the HX-5 fixtures
 #   scenario/dex-scenario.sh --self-test         the hermetic half; no enclave
+#   scenario/dex-scenario.sh --op place --count 8   one op, against a running
+#   scenario/dex-scenario.sh --op drift --bps 50    enclave — this is the seam
+#   scenario/dex-scenario.sh --op stall --slots 2   FE-9's director drives
 #
 # Options: --keep leaves the enclave running, --profile full|genesis selects
 # the build profile (RD-2 §1: profile is configuration, never a fork).
@@ -35,6 +38,9 @@ DEX_ARTIFACTS="${DEX_ARTIFACTS:-$DEX_SCENARIO_DIR/bundle/artifacts}"
 export DEX_SCENARIO_DIR DEX_ROOT DEX_RUN_DIR DEX_PLAN_DIR DEX_ARTIFACTS
 
 MODE=happy
+OP=""
+COUNT=8
+BPS=50
 ROWS=()
 SLOTS=200
 SEED=1
@@ -44,6 +50,9 @@ DEX_PROFILE=full
 while (( $# )); do
     case "$1" in
         --matrix)     MODE=matrix ;;
+        --op)         MODE=op; OP="$2"; shift ;;
+        --count)      COUNT="$2"; shift ;;
+        --bps)        BPS="$2"; shift ;;
         --soak)       MODE=soak ;;
         --record)     MODE=record ;;
         --self-test)  MODE=self-test ;;
@@ -103,6 +112,9 @@ mkdir -p "$DEX_RUN_DIR"
 DEX_OBSERVER_PID=""
 
 cleanup() {
+    # An op runs against an enclave someone else brought up — the demo's, or a
+    # `--keep` run's. It starts nothing and so it tears nothing down.
+    [[ "$MODE" == "op" ]] && return 0
     dex_observer_stop || true
     dex_settler_stop || true
     dex_enclave_down || true
@@ -324,7 +336,67 @@ run_record() {
     summary "HX-5 recorded run"
 }
 
+# --- one op, against a running enclave ----------------------------------------
+
+# FE-9's director proxies each of its three controls to exactly this, with an
+# argv it builds itself (`indexer/src/server/director.ts`). The demo is the
+# only caller that matters, and it is why this mode exists: the failure matrix
+# drives the same ops through the same wave harness, but inside a run it owns.
+run_op() {
+    dex_endpoints
+    dex_deployments
+
+    case "$OP" in
+        place)
+            (( COUNT >= 1 && COUNT <= 64 )) || die "--count must be between 1 and 64"
+            step "placing $COUNT orders into the open window"
+            dex_plan_reset
+            dex_place_burst 1 30 "$COUNT"
+            dex_wave_run 1
+            ;;
+        drift)
+            (( BPS > -10000 && BPS < 10000 )) || die "--bps must be between -9999 and 9999"
+            step "moving the L1 pool by $BPS bps"
+            dex_plan_reset
+            dex_plan 1 drift "$(dex_sqrt_shift_bps "$BPS")"
+            dex_wave_run 1
+            ;;
+        stall)
+            (( SLOTS >= 1 && SLOTS <= 12 )) || die "--slots must be between 1 and 12"
+            step "stalling the builder for $SLOTS L1 slots"
+            kurtosis service stop "$DEX_ENCLAVE" el-2-reth-builder-lighthouse >/dev/null 2>&1 \
+                || die "could not stop the builder service"
+            sleep $(( SLOTS * 12 + 2 ))
+            kurtosis service start "$DEX_ENCLAVE" el-2-reth-builder-lighthouse >/dev/null 2>&1 \
+                || die "could not restart the builder service"
+            ;;
+        *)
+            die "unknown op '$OP'; the director's three are place, drift and stall"
+            ;;
+    esac
+    say "op $OP done"
+}
+
+# dex_sqrt_shift_bps <bps> — the pool's current price moved by `bps`, as a
+# sqrtPriceX96 the drift op can set. Read from the pool rather than from a
+# constant, so two drifts in a row compose the way an operator expects.
+dex_sqrt_shift_bps() {
+    local sqrt shifted
+    sqrt="$(dex_pool_sqrt)"
+    shifted=$(( 10000 + $1 ))
+    (cd "$DEX_SCENARIO_DIR" && node --input-type=module -e "
+      import {sqrtPriceForPrice} from './lib/pool.ts';
+      import {Q96, mulDiv, spotPriceX96} from './lib/math.ts';
+      const price = spotPriceX96(${sqrt}n);
+      const moved = mulDiv(price, ${shifted}n, 10000n);
+      // Back to the scaled whole-number price sqrtPriceForPrice takes, in
+      // millionths of one B per A — the same scale the soak plan uses.
+      process.stdout.write(sqrtPriceForPrice(mulDiv(moved, 1000000n, Q96), 1000000n).toString());
+    ")
+}
+
 case "$MODE" in
+    op)     run_op ;;
     happy)  run_happy ;;
     matrix) run_matrix ;;
     soak)   run_soak ;;

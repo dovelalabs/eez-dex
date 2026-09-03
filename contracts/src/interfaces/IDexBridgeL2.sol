@@ -24,6 +24,18 @@ interface IDexBridgeL2 {
     /// locked on L1.
     function mint(address l1Token, address to, uint256 amount) external;
 
-    /// @notice Burns the L2 representation, the L2 half of a withdrawal.
+    /// @notice Burns the L2 representation, the L2 half of a withdrawal. The
+    /// L1 reserve is released to `from`'s own L1 address.
     function burn(address l1Token, address from, uint256 amount) external;
+
+    /// @notice Burns the L2 representation and releases the L1 reserve to
+    /// `l1Recipient` — the settlement frame's ERC-20 sell side, where the
+    /// recipient is `SettlementRouter` and not the burner (CT-5).
+    /// @dev Added in Phase 6: CT-5 puts the released reserve at the router, so
+    /// the swap that follows it in the same L1 frame has its sell side. `burn`
+    /// cannot express that, and a frame built on it releases the reserve to
+    /// `WindowBook`'s address on L1 — where nothing is deployed — and reverts
+    /// in the router with the reserve stranded. `DexBridgeL2` already
+    /// implemented this; only the frozen interface was missing it.
+    function releaseTo(address l1Token, address from, uint256 amount, address l1Recipient) external;
 }

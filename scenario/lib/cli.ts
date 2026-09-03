@@ -16,6 +16,8 @@
  *   node lib/cli.ts validate <run.json>
  *   node lib/cli.ts assert <run.json> <readings.json>
  *   node lib/cli.ts soak-plan '<json>'        HX-4's seeded order flow
+ *   node lib/cli.ts soak-run '<json>'         that plan against the oracle
+ *   node lib/cli.ts acceptance '<json>'       RD-2 §10's evidence, as JSON
  *   node lib/cli.ts fixtures <directory>      regenerate the HX-5 fixtures
  *   node lib/cli.ts observe <config.json> <outdir>   watch a run, live
  */
@@ -33,6 +35,8 @@ import { describeRun, validate } from "./validate.ts";
 import { assertRun } from "./assert.ts";
 import type { Readings } from "./assert.ts";
 import { soakPlan } from "./soak.ts";
+import { runSimulatedSoak } from "./simulated-soak.ts";
+import { acceptance } from "./acceptance.ts";
 import { fixtureObservations, writeFixtures } from "./fixture.ts";
 import { observerFor, writeObserved } from "./observe.ts";
 import type { ObserveConfig } from "./observe.ts";
@@ -164,6 +168,23 @@ function main(argv: readonly string[]): number {
     case "soak-plan": {
       const input = readJson(rest[0]) as Record<string, unknown>;
       process.stdout.write(`${JSON.stringify(soakPlan(input), null, 2)}\n`);
+      return 0;
+    }
+
+    case "soak-run": {
+      const input = (rest[0] === undefined ? {} : readJson(rest[0])) as Record<string, unknown>;
+      const seed = input["seed"] === undefined ? undefined : String(input["seed"]);
+      const slots = input["slots"] === undefined ? undefined : Number(input["slots"]);
+      const report = runSimulatedSoak(seed, slots);
+      process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+      return report.failures === 0 ? 0 : 1;
+    }
+
+    case "acceptance": {
+      const input = (rest[0] === undefined ? {} : readJson(rest[0])) as Record<string, unknown>;
+      const seed = input["seed"] === undefined ? undefined : String(input["seed"]);
+      const slots = input["slots"] === undefined ? undefined : Number(input["slots"]);
+      process.stdout.write(`${JSON.stringify(acceptance(seed, slots), null, 2)}\n`);
       return 0;
     }
 

@@ -112,16 +112,27 @@ export function amortisations(state: StreamState): readonly Amortisation[] {
     .filter((a): a is Amortisation => a !== null);
 }
 
-/** FE-6's cumulative half, summed from the same per-settlement figures. */
+/**
+ * FE-6's cumulative half, summed from the same per-settlement figures.
+ *
+ * A rolled-back settlement contributes its **gas and not its fills**. The gas
+ * was spent — the `postBatch` skip is the one rollback that is not free — but
+ * the fills were undone (SV-4, A.4), and this fold has already put those
+ * orders back to `open`. Counting them here would leave the counter claiming
+ * fills the same stream says did not stand.
+ */
 export function cumulative(state: StreamState): CumulativeAmortisation {
   let fills = 0;
   let l1 = 0n;
   let counterfactual = 0n;
   const perSettlement = amortisations(state);
 
-  for (const entry of perSettlement) {
-    fills += entry.fills;
+  for (const settlement of state.settlements.values()) {
+    const entry = settlement.amortisation;
+    if (entry === null) continue;
     l1 += BigInt(entry.l1GasCostWei);
+    if (settlement.outcome === "rolled_back") continue;
+    fills += entry.fills;
     counterfactual += BigInt(entry.counterfactualGasCostWei);
   }
 

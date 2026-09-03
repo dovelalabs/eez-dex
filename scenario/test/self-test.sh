@@ -111,6 +111,40 @@ for contract in MockWETH MockERC20 MockPool UniswapV3Adapter SettlementRouter De
     fi
 done
 
+# The pair's ordering decides which token is the pool's `token0`, and it is
+# decided by comparing two addresses as strings. Extracted from the bundle
+# rather than copied, so this cannot pass against a function the bundle does
+# not have. Regression (phase 6): an enclave run failed to place A below B —
+# only B was redeployed, so an A high in the address space made every draw fail
+# the same way and the retries ran out instead of converging.
+ADDRESS_BELOW="$(sed -n '/^address_below()/,/^}/p' "$DEPLOY_SH")"
+if [[ -z "$ADDRESS_BELOW" ]]; then
+    check "HX-1" "the bundle compares addresses through address_below" 1
+else
+    ORDER_FAILURES=0
+    for locale in C en_US.UTF-8; do
+        LC_ALL="$locale" bash -c "$ADDRESS_BELOW"'
+            a=0x5fbdb2315678afecb367f032d93f642f64180aa3
+            b=0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
+            c=0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0
+            address_below "$a" "$b" || exit 1
+            address_below "$b" "$a" && exit 1
+            address_below "$c" "$b" || exit 1   # a digit sorts below a letter
+            address_below "$b" "$c" && exit 1
+            exit 0
+        ' || ORDER_FAILURES=$((ORDER_FAILURES + 1))
+    done
+    check "HX-1" "address_below orders addresses numerically in any locale" "$ORDER_FAILURES"
+fi
+
+# shellcheck disable=SC2016  # the pattern is source text, not a shell string
+if grep -q 'ASSET_A="$(deploy MockWETH)"' "$DEPLOY_SH" \
+    && sed -n '/^for attempt in/,/^done$/p' "$DEPLOY_SH" | grep -q 'deploy MockWETH'; then
+    check "HX-1" "the pair's ordering retry redeploys both sides, not only B" 0
+else
+    check "HX-1" "the pair's ordering retry redeploys both sides, not only B" 1
+fi
+
 # HX-1 packages the frozen mocks; it never forks them.
 if grep -rq "contracts/test/mocks" "$DEX_SCENARIO_DIR" --include='*.sol' 2>/dev/null; then
     check "HX-1" "no Solidity is forked into scenario/" 1
@@ -267,6 +301,46 @@ for metric in fills_per_settlement escrow_invariant_drift_wei selection_omitted_
         check "A.5" "'$metric' is a frozen name in settler/src/config.rs" 1
     fi
 done
+
+# ── FE-9: the seam the demo director drives ───────────────────────────────────
+#
+# `indexer/src/server/director.ts` builds an argv and spawns this scenario with
+# it. Neither package can check the other alone, which is how the two came to
+# disagree — the director sent `--op place --count 8` at a script with no
+# `--op`. This asserts the argv the *indexer itself* produces is one this
+# script accepts, for all three controls.
+
+step "FE-9 director seam"
+DIRECTOR_ARGV="$(node --input-type=module -e "
+  import {DIRECTOR_CONTROLS, directorArgv} from '$ROOT/indexer/src/server/director.ts';
+  for (const control of DIRECTOR_CONTROLS) process.stdout.write(directorArgv(control, {}).join(' ') + '\n');
+" 2>/dev/null)" || DIRECTOR_ARGV=""
+
+if [[ -z "$DIRECTOR_ARGV" ]]; then
+    check "FE-9" "the director's argv could be read from the indexer" 1
+else
+    while read -r argv; do
+        [[ -n "$argv" ]] || continue
+        # No enclave here, so the run dies later — at the endpoints. What is
+        # asserted is that it got past the option parser and the dispatch.
+        OUT="$( (cd "$ROOT" && eval "scenario/dex-scenario.sh $argv") 2>&1 || true)"
+        if grep -qE "unknown option|unknown op '" <<<"$OUT"; then
+            check "FE-9" "the scenario accepts the director's argv: $argv" 1
+            printf '%s\n' "$OUT" | tail -3
+        else
+            check "FE-9" "the scenario accepts the director's argv: $argv" 0
+        fi
+    done <<<"$DIRECTOR_ARGV"
+fi
+
+# ── UP-1: the bundle, actually run ────────────────────────────────────────────
+
+step "UP-1 the bundle deploys"
+if "$HERE/bundle-deploy.sh"; then
+    check "UP-1" "the bundle deploys against a local chain and its bindings are usable" 0
+else
+    check "UP-1" "the bundle deploys against a local chain and its bindings are usable" 1
+fi
 
 # ── HX-1: the curve, against the contract ─────────────────────────────────────
 
