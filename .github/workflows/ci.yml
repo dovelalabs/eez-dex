@@ -73,6 +73,7 @@ jobs:
           cache-dependency-path: |
             indexer/package-lock.json
             frontend/package-lock.json
+            scenario/package-lock.json
 
       # `make lint-scenario` soft-skips when shellcheck is absent, which is
       # right for a developer and wrong for a gate. CI installs it and proves
