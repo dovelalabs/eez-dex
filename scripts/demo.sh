@@ -97,7 +97,9 @@ dex_settler_start
 # --- 3. the gateway ----------------------------------------------------------
 
 step "starting the indexer on :$INDEXER_PORT"
-( cd "$ROOT/indexer" && npm install --no-audit --no-fund --silent >/dev/null 2>&1 || true )
+if ! (cd "$ROOT/indexer" && npm install --no-audit --no-fund --silent >/dev/null 2>&1); then
+    say "npm install failed in indexer/; starting with whatever node_modules holds"
+fi
 # DEX_L1_RPC, DEX_L2_RPC, DEX_WINDOW_BOOK and DEX_POOL all arrive by sourcing
 # the enclave's deployments.env (HX-1), which shellcheck cannot follow.
 # shellcheck disable=SC2153
@@ -119,7 +121,9 @@ say "the gateway is serving http://127.0.0.1:$INDEXER_PORT/snapshot (log: $DEX_R
 # --- 4. the frontend ---------------------------------------------------------
 
 step "starting the frontend on :$FRONTEND_PORT"
-( cd "$ROOT/frontend" && npm install --no-audit --no-fund --silent >/dev/null 2>&1 || true )
+if ! (cd "$ROOT/frontend" && npm install --no-audit --no-fund --silent >/dev/null 2>&1); then
+    say "npm install failed in frontend/; starting with whatever node_modules holds"
+fi
 FRONTEND_URL="http://127.0.0.1:$FRONTEND_PORT/?mode=demo&indexer=http://127.0.0.1:$INDEXER_PORT"
 # PROFILE=devnet is what compiles the director's panel *in* (FE-9); every
 # other profile resolves `@demo-controls` to a module that renders nothing.
